@@ -1,0 +1,14 @@
+{
+  "locale" : "US",
+  "people" : [
+    {
+      "nationality" : "US",
+      "person_id" : "0",
+      "attributes" : [
+        { "name" : "postal_address.city", "format" : "raw" },
+        { "name" : "postal_address.state", "format" : "raw" },
+        { "name" : "postal_address.zip_code_5_digit", "format" : "raw" }
+      ]
+    }
+  ]
+}
