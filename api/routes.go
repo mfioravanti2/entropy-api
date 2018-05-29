@@ -4,6 +4,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/api/attribute"
 	"github.com/mfioravanti2/entropy-api/api/country"
+	"github.com/mfioravanti2/entropy-api/api/sys"
 )
 
 func newRoutes() model.Routes {
@@ -11,6 +12,7 @@ func newRoutes() model.Routes {
 
 	routes = country.AddHandlers( routes )
 	routes = attribute.AddHandlers( routes )
+	routes = sys.AddHandlers( routes )
 
 	return routes
 }
