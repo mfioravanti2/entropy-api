@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 )
 
-// var countries map[string]string
 var countries model.Countries
 
 func init() {
@@ -31,8 +30,31 @@ func GetCountries() []string {
 	return names
 }
 
-func GetAttributes( country string ) model.Attributes {
-	var attributes model.Attributes
+func GetAttributes( countryCode string ) []string {
+	var names []string
 
-	return attributes
+	for _, country := range countries {
+		if country.Name == countryCode {
+			jsonData, err := ioutil.ReadFile("data/sources/" + country.File)
+			if err != nil {
+				panic(err)
+			}
+
+			var entropy model.Entropy
+
+			err = json.Unmarshal(jsonData, &entropy)
+			if err != nil {
+				panic(err)
+			}
+
+			for _, attribute := range entropy.Attributes {
+				names = append(names, attribute.Name)
+			}
+
+			break
+		}
+	}
+
+
+	return names
 }

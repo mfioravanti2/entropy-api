@@ -3,9 +3,9 @@
   "threshold" : 28.2759,
   "k" : 20000,
   "heuristics" : [
-    { "match" : [],
+    { "match" : [ "postal_address.city", "postal_address.state", "postal_address.zip_code_5_digit" ],
       "insert" : [],
-      "remove" : []
+      "remove" : ["postal_address.city", "postal_address.state"]
     }
   ],
   "attributes" : [

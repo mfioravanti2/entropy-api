@@ -1,10 +1,10 @@
 package country
 
 import (
-	"encoding/json"
 	"net/http"
 	"github.com/mfioravanti2/entropy-api/data"
 	"github.com/mfioravanti2/entropy-api/model"
+	"encoding/json"
 )
 
 func AddHandlers(r model.Routes) model.Routes {
@@ -14,11 +14,18 @@ func AddHandlers(r model.Routes) model.Routes {
 }
 
 func List(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-type", "application/json; charset=UTF-8")
-	w.WriteHeader( http.StatusOK )
+	var countries []string
+	countries = data.GetCountries()
 
-	if err := json.NewEncoder(w).Encode(data.GetCountries()); err != nil {
-		panic(err)
+	if len(countries) > 0 {
+		w.Header().Set("Content-type", "application/json; charset=UTF-8")
+		w.WriteHeader( http.StatusOK )
+
+		if err := json.NewEncoder(w).Encode(countries); err != nil {
+			panic(err)
+		}
+	} else {
+		w.WriteHeader( http.StatusNoContent )
 	}
 }
 
