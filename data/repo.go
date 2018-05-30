@@ -2,8 +2,11 @@ package data
 
 import (
 	"io/ioutil"
-	"github.com/mfioravanti2/entropy-api/model"
 	"encoding/json"
+	"errors"
+	"github.com/mfioravanti2/entropy-api/model"
+	"github.com/mfioravanti2/entropy-api/model/source"
+	"os"
 )
 
 var countries model.Countries
@@ -30,31 +33,55 @@ func GetCountries() []string {
 	return names
 }
 
-func GetAttributes( countryCode string ) []string {
-	var names []string
-
+func getModelFile(countryCode string) (string, error) {
 	for _, country := range countries {
 		if country.Name == countryCode {
-			jsonData, err := ioutil.ReadFile("data/sources/" + country.File)
-			if err != nil {
-				panic(err)
-			}
-
-			var entropy model.Entropy
-
-			err = json.Unmarshal(jsonData, &entropy)
-			if err != nil {
-				panic(err)
-			}
-
-			for _, attribute := range entropy.Attributes {
-				names = append(names, attribute.Name)
-			}
-
-			break
+			return country.File, nil
 		}
 	}
 
+	return "", errors.New("country file not found")
+}
+
+func GetModel(countryCode string) (source.Model, error) {
+	var countryFile, localFile string
+	var countryModel source.Model
+
+	countryFile, err := getModelFile(countryCode)
+	if err != nil {
+		return countryModel, err
+	}
+
+	localFile = "data/sources/" + countryFile
+	if _, err := os.Stat(localFile); os.IsNotExist(err) {
+		return countryModel, os.ErrNotExist
+	}
+
+	jsonData, err := ioutil.ReadFile(localFile)
+	if err != nil {
+		return countryModel, err
+	}
+
+	err = json.Unmarshal(jsonData, &countryModel)
+	if err != nil {
+		return countryModel, err
+	}
+
+	return countryModel, nil
+}
+
+func GetAttributes( countryCode string ) []string {
+	var names []string
+	var countryModel source.Model
+
+	countryModel, err := GetModel( countryCode )
+	if err != nil {
+		panic(err)
+	}
+
+	for _, attribute := range countryModel.Attributes {
+		names = append(names, attribute.Name)
+	}
 
 	return names
 }

@@ -1,31 +1,50 @@
-package country
+package scores
 
 import (
 	"net/http"
-	"github.com/mfioravanti2/entropy-api/data"
 	"github.com/mfioravanti2/entropy-api/model"
 	"encoding/json"
+	"github.com/mfioravanti2/entropy-api/model/request"
+	"io/ioutil"
+	"io"
+	"github.com/mfioravanti2/entropy-api/model/response"
+	"github.com/mfioravanti2/entropy-api/calc"
 )
 
 func AddHandlers(r model.Routes) model.Routes {
-	r = append( r, model.Route{"CountryList", "GET", "/v1/countries", List} )
+	r = append( r, model.Route{"ScoreCalc", "POST", "/v1/scores", Calc} )
 
 	return r
 }
 
-func List(w http.ResponseWriter, r *http.Request) {
-	var countries []string
-	countries = data.GetCountries()
+func Calc(w http.ResponseWriter, r *http.Request) {
+	var entropy request.Request
 
-	if len(countries) > 0 {
-		w.Header().Set("Content-type", "application/json; charset=UTF-8")
-		w.WriteHeader( http.StatusOK )
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 50 * 1024))
+	if err != nil {
+		panic(err)
+	}
+	if err := r.Body.Close(); err != nil {
+		panic(err)
+	}
 
-		if err := json.NewEncoder(w).Encode(countries); err != nil {
+	if err := json.Unmarshal(body, &entropy); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader( http.StatusUnprocessableEntity )
+		if err := json.NewEncoder(w).Encode(err); err != nil {
 			panic(err)
 		}
-	} else {
-		w.WriteHeader( http.StatusNoContent )
+	}
+
+	var score response.Response
+	if score, err = calc.Calc( &entropy ); err != nil {
+		panic(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(score); err != nil {
+		panic(err)
 	}
 }
 

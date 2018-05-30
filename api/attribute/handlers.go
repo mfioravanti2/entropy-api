@@ -2,10 +2,12 @@ package attribute
 
 import (
 	"net/http"
+	"encoding/json"
+	"strings"
+
 	"github.com/gorilla/mux"
 	"github.com/mfioravanti2/entropy-api/data"
 	"github.com/mfioravanti2/entropy-api/model"
-	"encoding/json"
 )
 
 func AddHandlers(r model.Routes) model.Routes {
@@ -16,7 +18,7 @@ func AddHandlers(r model.Routes) model.Routes {
 
 func List(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	countryId := vars["countryId"]
+	countryId := strings.ToLower(vars["countryId"])
 
 	var attributes []string
 	attributes = data.GetAttributes(countryId)
