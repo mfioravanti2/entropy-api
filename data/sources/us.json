@@ -11,15 +11,15 @@
   "attributes" : [
     { "name" : "postal_address.city",
       "formats" : [
-        { "format" : "raw", "score" : 0 }
+        { "format" : "raw", "score" : 0.0 }
       ] },
     { "name" : "postal_address.state",
       "formats" : [
-        { "format" : "raw", "score" : 0 }
+        { "format" : "raw", "score" : 0.0 }
       ]  },
     { "name" : "postal_address.zip_code_5_digit",
       "formats" : [
-        { "format" : "raw", "score" : 0 }
+        { "format" : "raw", "score" : 0.0 }
       ] }
   ]
 }

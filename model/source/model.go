@@ -1,32 +1,55 @@
 package source
 
-type heuristic struct {
+import (
+	"errors"
+	"fmt"
+)
+
+type Heuristic struct {
 	Match  []string `json:"match"`
 	Insert []string `json:"insert"`
 	Remove []string `json:"remove"`
 }
 
-type heuristics []heuristic
+type Heuristics []Heuristic
 
-type format struct {
+type Format struct {
 	Format string `json:"format"`
-	Score  int    `json:"score"`
+	Score  float64    `json:"score"`
 }
 
-type formats []format
+type Formats []Format
 
-type attribute struct {
+type Attribute struct {
 	Name    string `json:"name"`
-	Formats formats `json:"formats"`
+	Formats Formats `json:"formats"`
 }
 
-type attributes []attribute
+type Attributes []Attribute
 
 type Model struct {
 	Locale     string  `json:"locale"`
 	Threshold  float64 `json:"threshold"`
 	K          int     `json:"k"`
-	Heuristics heuristics `json:"heuristics"`
-	Attributes attributes `json:"attributes"`
+	Heuristics Heuristics `json:"heuristics"`
+	Attributes Attributes `json:"attributes"`
+}
+
+func GetScore( m Model, n string, t string ) (float64,error) {
+	var a Attribute
+	var f Format
+
+	for _, a = range m.Attributes {
+		if a.Name == n {
+			for _, f = range a.Formats {
+				if f.Format == t {
+					return f.Score, nil
+				}
+			}
+		}
+	}
+
+	s := fmt.Sprintf("attribute (%s/%s) not found in country (%s)", n, t, m.Locale)
+	return 0.0, errors.New(s)
 }
 
