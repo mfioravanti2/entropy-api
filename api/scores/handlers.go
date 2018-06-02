@@ -23,40 +23,17 @@ func AddHandlers(r model.Routes) model.Routes {
 }
 
 func Calc(w http.ResponseWriter, r *http.Request) {
-	var entropy request.Request
-
-	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 50 * 1024))
-	if err != nil {
-		panic(err)
-	}
-	if err := r.Body.Close(); err != nil {
-		panic(err)
-	}
-
-	if err := json.Unmarshal(body, &entropy); err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader( http.StatusUnprocessableEntity )
-		if err := json.NewEncoder(w).Encode(err); err != nil {
-			panic(err)
-		}
-	}
-
-	var score response.Response
-	if score, err = calc.Calc( &entropy, "raw" ); err != nil {
-		panic(err)
-	}
-
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(score); err != nil {
-		panic(err)
-	}
+	score( w, r, "raw")
 }
 
 func CalcFormat(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	formatId := strings.ToLower(vars["formatId"])
 
+	score( w, r, formatId )
+}
+
+func score(w http.ResponseWriter, r *http.Request, formatId string) {
 	var entropy request.Request
 
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 50 * 1024))

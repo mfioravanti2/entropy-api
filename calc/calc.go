@@ -21,6 +21,7 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 
 	nations := make( map[string]source.Model )
 	h_total = 0.0
+	attributes = mapset.NewSet()
 
 	nationality = strings.ToLower( r.Locale )
 	if nations[nationality], err = data.GetModel(nationality); err != nil {
@@ -81,6 +82,16 @@ func SetToArray( m mapset.Set ) []string {
 	return a
 }
 
+func containsAll( m mapset.Set, s []string) bool {
+	for _, e := range s {
+		if !m.Contains(e) {
+			return false
+		}
+	}
+
+	return true
+}
+
 func calcPerson( p request.Person, s source.Model, formatId string ) (mapset.Set, float64) {
 	var h_p float64 = 0.0
 	var changed bool = false
@@ -94,9 +105,7 @@ func calcPerson( p request.Person, s source.Model, formatId string ) (mapset.Set
 		changed = false
 
 		for _, h := range s.Heuristics {
-			h_s := ArrayToSet(h.Match)
-
-			if a_p.Contains( h_s ) {
+			if containsAll(a_p, h.Match) {
 				if len(h.Remove) > 0 {
 					r_s := ArrayToSet( h.Remove )
 					a_p = a_p.Difference( r_s )
