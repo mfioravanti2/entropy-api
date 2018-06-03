@@ -3,6 +3,7 @@ package source
 import (
 	"errors"
 	"fmt"
+	"time"
 )
 
 type Heuristic struct {
@@ -31,6 +32,8 @@ type Model struct {
 	Locale     string  `json:"locale"`
 	Threshold  float64 `json:"threshold"`
 	K          int     `json:"k"`
+	ModelVersion string `json:"version"`
+	ModelDate time.Time `json:"timestamp"`
 	Heuristics Heuristics `json:"heuristics"`
 	Attributes Attributes `json:"attributes"`
 }
