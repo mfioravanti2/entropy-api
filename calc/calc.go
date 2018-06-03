@@ -10,6 +10,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/model/request"
 	"github.com/mfioravanti2/entropy-api/data"
 	"github.com/mfioravanti2/entropy-api/model/source"
+	"github.com/mfioravanti2/entropy-api/api/sys"
 )
 
 func Calc( r *request.Request, formatId string ) (response.Response, error) {
@@ -50,6 +51,7 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 	score.Pii = h_total >= h_t
 	score.Score = h_total
 	score.RunDate = time.Now()
+	score.ApiVersion = sys.SysInfo.ApiVersion
 
 	for val := range attributes.Iterator().C {
 		if str, ok := val.(string); ok {

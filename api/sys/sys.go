@@ -7,8 +7,10 @@ import (
 )
 
 type SysHealth struct {
-	Version string `json:"version"`
+	ApiVersion string `json:"api_version"`
 }
+
+var SysInfo = SysHealth{"0.0.1"}
 
 func AddHandlers(r model.Routes) model.Routes {
 	r = append( r, model.Route{"SysHealth", "GET", "/v1/sys/health", Health} )
@@ -20,7 +22,7 @@ func Health(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "application/json; charset=UTF-8")
 	w.WriteHeader( http.StatusOK )
 
-	if err := json.NewEncoder(w).Encode(SysHealth{"0.0.1"}); err != nil {
+	if err := json.NewEncoder(w).Encode(SysInfo); err != nil {
 		panic(err)
 	}
 }
