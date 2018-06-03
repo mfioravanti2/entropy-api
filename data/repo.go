@@ -1,73 +1,74 @@
 package data
 
 import (
+	"strings"
 	"io/ioutil"
 	"encoding/json"
 	"errors"
+	"os"
+
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/model/source"
-	"os"
 )
 
-var countries model.Countries
+var modelCache map[string]source.Model
 
 func init() {
+	reload()
+}
+
+func reload() {
 	jsonData, err := ioutil.ReadFile("data/sources/sources.json")
 	if err != nil {
 		panic(err)
 	}
 
+	var countries model.Countries
 	err = json.Unmarshal(jsonData, &countries)
 	if err != nil {
 		panic(err)
+	}
+
+	modelCache = make( map[string]source.Model )
+	for _, country := range countries {
+		countryCode := strings.ToLower( country.Name )
+		localFile := "data/sources/" + country.File
+		if _, err := os.Stat(localFile); os.IsNotExist(err) {
+			panic(os.ErrNotExist)
+		}
+
+		jsonData, err := ioutil.ReadFile(localFile)
+		if err != nil {
+			panic(err)
+		}
+
+		var countryModel source.Model
+		err = json.Unmarshal(jsonData, &countryModel)
+		if err != nil {
+			panic(err)
+		}
+
+		modelCache[countryCode] = countryModel
 	}
 }
 
 func GetCountries() []string {
 	var names []string
 
-	for _, country := range countries {
-		names = append(names, country.Name)
+	for countryCode, _ := range modelCache {
+		names = append(names, countryCode)
 	}
 
 	return names
 }
 
-func getModelFile(countryCode string) (string, error) {
-	for _, country := range countries {
-		if country.Name == countryCode {
-			return country.File, nil
-		}
-	}
-
-	return "", errors.New("country file not found")
-}
-
 func GetModel(countryCode string) (source.Model, error) {
-	var countryFile, localFile string
+	if countryModel, ok := modelCache[countryCode]; ok {
+		return countryModel, nil
+	}
+
 	var countryModel source.Model
-
-	countryFile, err := getModelFile(countryCode)
-	if err != nil {
-		return countryModel, err
-	}
-
-	localFile = "data/sources/" + countryFile
-	if _, err := os.Stat(localFile); os.IsNotExist(err) {
-		return countryModel, os.ErrNotExist
-	}
-
-	jsonData, err := ioutil.ReadFile(localFile)
-	if err != nil {
-		return countryModel, err
-	}
-
-	err = json.Unmarshal(jsonData, &countryModel)
-	if err != nil {
-		return countryModel, err
-	}
-
-	return countryModel, nil
+	return countryModel, errors.New("country model not found")
 }
 
 func GetAttributes( countryCode string ) []string {
