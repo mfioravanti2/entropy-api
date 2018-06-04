@@ -53,7 +53,7 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 	score.Data.Pii = h_total >= h_t
 	score.Data.Score = h_total
 	score.Data.RunDate = time.Now()
-	score.Data.ApiVersion = sys.SysInfo.ApiVersion
+	score.Data.ApiVersion = sys.VERSION
 
 	for val := range attributes.Iterator().C {
 		if str, ok := val.(string); ok {
