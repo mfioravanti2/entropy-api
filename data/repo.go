@@ -9,6 +9,7 @@ import (
 
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/model/source"
+	"fmt"
 )
 
 var modelCache map[string]source.Model
@@ -63,12 +64,18 @@ func GetCountries() []string {
 }
 
 func GetModel(countryCode string) (source.Model, error) {
+	var countryModel source.Model
+	if len(countryCode) != 2 {
+		s := fmt.Sprintf("country code not specified")
+		return countryModel, errors.New(s)
+	}
+
 	if countryModel, ok := modelCache[countryCode]; ok {
 		return countryModel, nil
 	}
 
-	var countryModel source.Model
-	return countryModel, errors.New("country model not found")
+	s := fmt.Sprintf("country model (%s) not found", countryCode)
+	return countryModel, errors.New(s)
 }
 
 func GetAttributes( countryCode string ) []string {

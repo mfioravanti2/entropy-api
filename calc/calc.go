@@ -26,7 +26,8 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 
 	nationality = strings.ToLower( r.Locale )
 	if nations[nationality], err = data.GetModel(nationality); err != nil {
-		panic(err)
+		score.Errors.Messages = append( score.Errors.Messages, err.Error() )
+		return score, err
 	}
 	h_t = nations[r.Locale].Threshold
 
@@ -35,7 +36,8 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 
 		if _, ok := nations[nation]; !ok {
 			if nations[nation], err = data.GetModel(nation); err != nil {
-				panic(err)
+				score.Errors.Messages = append( score.Errors.Messages, err.Error() )
+				return score, err
 			}
 
 			if nations[nation].Threshold < h_t {
@@ -48,14 +50,14 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 		h_total += h_p
 	}
 
-	score.Pii = h_total >= h_t
-	score.Score = h_total
-	score.RunDate = time.Now()
-	score.ApiVersion = sys.SysInfo.ApiVersion
+	score.Data.Pii = h_total >= h_t
+	score.Data.Score = h_total
+	score.Data.RunDate = time.Now()
+	score.Data.ApiVersion = sys.SysInfo.ApiVersion
 
 	for val := range attributes.Iterator().C {
 		if str, ok := val.(string); ok {
-			score.Attributes = append( score.Attributes, response.Attribute{ str, formatId, 0.0})
+			score.Data.Attributes = append( score.Data.Attributes, response.Attribute{ str, formatId, 0.0})
 		}
 	}
 

@@ -44,21 +44,28 @@ func score(w http.ResponseWriter, r *http.Request, formatId string) {
 		panic(err)
 	}
 
+	var score response.Response
+
 	if err := json.Unmarshal(body, &entropy); err != nil {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader( http.StatusUnprocessableEntity )
-		if err := json.NewEncoder(w).Encode(err); err != nil {
+
+		score.Errors.Messages = append( score.Errors.Messages, "invalid request object, expected json format" )
+		if err := json.NewEncoder(w).Encode(score); err != nil {
 			panic(err)
 		}
-	}
-
-	var score response.Response
-	if score, err = calc.Calc( &entropy, formatId ); err != nil {
-		panic(err)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+
+	if score, err = calc.Calc( &entropy, formatId ); err != nil {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+
+	} else {
+		w.WriteHeader(http.StatusOK)
+	}
+
 	if err := json.NewEncoder(w).Encode(score); err != nil {
 		panic(err)
 	}
