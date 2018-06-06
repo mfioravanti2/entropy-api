@@ -13,6 +13,11 @@ import (
 	"github.com/mfioravanti2/entropy-api/api/sys"
 )
 
+type Attribute struct {
+	Name string
+	Locale string
+}
+
 func Calc( r *request.Request, formatId string ) (response.Response, error) {
 	var err error
 	var score response.Response
@@ -46,7 +51,7 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 		}
 
 		a_p, h_p = calcPerson( p, nations[nation], formatId )
-		attributes = attributes.Union( a_p )
+		attributes = attributes.Union( ConvertSet( a_p, nation) )
 		h_total += h_p
 	}
 
@@ -56,8 +61,12 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 	score.Data.ApiVersion = sys.VERSION
 
 	for val := range attributes.Iterator().C {
-		if str, ok := val.(string); ok {
-			score.Data.Attributes = append( score.Data.Attributes, response.Attribute{ str, formatId, 0.0})
+		if a, ok := val.(Attribute); ok {
+			s, err := source.GetScore(nations[a.Locale], a.Name, formatId)
+			if err == nil {
+				r := response.Attribute{Name: a.Name, Locale: a.Locale, Format: formatId, Score: s}
+				score.Data.Attributes = append(score.Data.Attributes, r)
+			}
 		}
 	}
 
@@ -72,6 +81,18 @@ func ArrayToSet( a []string ) mapset.Set {
 	}
 
 	return m
+}
+
+func ConvertSet( m mapset.Set, locale string ) mapset.Set {
+	f := mapset.NewSet()
+
+	for val := range m.Iterator().C {
+		if str, ok := val.(string); ok {
+			f.Add(Attribute{ Name: str, Locale: locale })
+		}
+	}
+
+	return f
 }
 
 func SetToArray( m mapset.Set ) []string {

@@ -4,6 +4,7 @@ import "time"
 
 type Attribute struct {
 	Name   string  `json:"name"`
+	Locale string    `json:"locale,omitempty"`
 	Format string  `json:"format"`
 	Score  float64 `json:"score"`
 }
