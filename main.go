@@ -1,16 +1,12 @@
 package main
 
 import (
-	"flag"
-
 	"github.com/mfioravanti2/entropy-api/command"
+	"github.com/mfioravanti2/entropy-api/cli"
 )
 
 func main() {
-	hostPtr := flag.String("host", "127.0.0.1", "Hostname")
-	portPtr := flag.Int("port", 8080, "TCP port")
-	flag.Parse()
-
-	command.Run( *hostPtr, *portPtr )
+	config := cli.DefaultConfig()
+	command.Run( config )
 }
 
