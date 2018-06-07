@@ -38,6 +38,12 @@ type Model struct {
 	Attributes Attributes `json:"attributes"`
 }
 
+type Threshold struct {
+	Locale     string  `json:"locale"`
+	Threshold  float64 `json:"threshold"`
+	K          int     `json:"k"`
+}
+
 func GetScore( m Model, n string, t string ) (float64,error) {
 	var a Attribute
 	var f Format

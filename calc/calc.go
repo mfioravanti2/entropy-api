@@ -35,7 +35,7 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 		score.Errors.Messages = append( score.Errors.Messages, err.Error() )
 		return score, err
 	}
-	h_t = nations[r.Locale].Threshold
+	t := source.Threshold{ Locale: r.Locale, Threshold: nations[r.Locale].Threshold, K: nations[r.Locale].K}
 
 	for _, p := range r.People {
 		nation := strings.ToLower( p.Nationality )
@@ -47,8 +47,8 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 				return score, err
 			}
 
-			if nations[nation].Threshold < h_t {
-				h_t = nations[nation].Threshold
+			if nations[nation].Threshold < t.Threshold {
+				t = source.Threshold{ Locale: r.Locale, Threshold: nations[nation].Threshold, K: nations[nation].K}
 			}
 		}
 
@@ -57,8 +57,11 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 		h_total += h_p
 	}
 
+	h_t = t.Threshold
+
 	score.Data = new(response.Data)
 	score.Data.Pii = h_total >= h_t
+	score.Data.Locale = t.Locale
 	score.Data.Score = h_total
 	score.Data.RunDate = time.Now()
 	score.Data.ApiVersion = sys.VERSION
@@ -67,7 +70,7 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 		if a, ok := val.(Attribute); ok {
 			s, err := source.GetScore(nations[a.Locale], a.Name, formatId)
 			if err == nil {
-				r := response.Attribute{Name: a.Name, Locale: a.Locale, Format: formatId, Score: s}
+				r := response.Attribute{Name: a.Name, Locale: strings.ToUpper(a.Locale), Format: formatId, Score: s}
 				score.Data.Attributes = append(score.Data.Attributes, r)
 			}
 		}
