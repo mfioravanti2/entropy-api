@@ -25,7 +25,7 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 	var h_t, h_p, h_total float64
 	var nationality string
 
-	nations := make( map[string]source.Model )
+	nations := make( map[string]*source.Model )
 	h_total = 0.0
 	attributes = mapset.NewSet()
 
@@ -36,7 +36,7 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 		score.Errors.Messages = append( score.Errors.Messages, err.Error() )
 		return score, err
 	}
-	nations[nationality] = *m
+	nations[nationality] = m
 	t := source.Threshold{ Locale: r.Locale, Threshold: m.Threshold, K: m.K}
 
 	for _, p := range r.People {
@@ -55,7 +55,7 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 				t = source.Threshold{ Locale: r.Locale, Threshold: n.Threshold, K: n.K}
 			}
 
-			nations[nation] = *n
+			nations[nation] = n
 		}
 
 		a_p, h_p = calcPerson( p, nations[nation], formatId )
@@ -129,7 +129,7 @@ func containsAll( m mapset.Set, s []string) bool {
 	return true
 }
 
-func calcPerson( p request.Person, s source.Model, formatId string ) (mapset.Set, float64) {
+func calcPerson( p request.Person, s *source.Model, formatId string ) (mapset.Set, float64) {
 	var h_p float64 = 0.0
 	var changed bool = false
 	a_p := mapset.NewSet()

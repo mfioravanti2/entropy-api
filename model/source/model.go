@@ -44,7 +44,7 @@ type Threshold struct {
 	K          int     `json:"k"`
 }
 
-func GetScore( m Model, n string, t string ) (float64,error) {
+func GetScore( m *Model, n string, t string ) (float64,error) {
 	var a Attribute
 	var f Format
 

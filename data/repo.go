@@ -6,13 +6,13 @@ import (
 	"encoding/json"
 	"errors"
 	"os"
+	"fmt"
 
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/model/source"
-	"fmt"
 )
 
-var modelCache map[string]source.Model
+var modelCache map[string]*source.Model
 
 func init() {
 	reload()
@@ -30,7 +30,7 @@ func reload() {
 		panic(err)
 	}
 
-	modelCache = make( map[string]source.Model )
+	modelCache = make( map[string]*source.Model )
 	for _, country := range countries {
 		countryCode := strings.ToLower( country.Name )
 		localFile := "data/sources/" + country.File
@@ -49,7 +49,7 @@ func reload() {
 			panic(err)
 		}
 
-		modelCache[countryCode] = countryModel
+		modelCache[countryCode] = &countryModel
 	}
 }
 
@@ -64,18 +64,18 @@ func GetCountries() []string {
 }
 
 func GetModel(countryCode string) (*source.Model, error) {
-	var countryModel source.Model
+	var countryModel *source.Model
 	if len(countryCode) != 2 {
 		s := fmt.Sprintf("country code not specified")
-		return &countryModel, errors.New(s)
+		return countryModel, errors.New(s)
 	}
 
 	if countryModel, ok := modelCache[countryCode]; ok {
-		return &countryModel, nil
+		return countryModel, nil
 	}
 
-	s := fmt.Sprintf("country model (%s) not found", countryCode)
-	return &countryModel, errors.New(s)
+	s := fmt.Sprintf("country model (%s) not found", strings.ToUpper(countryCode))
+	return countryModel, errors.New(s)
 }
 
 func GetAttributes( countryCode string ) []string {
