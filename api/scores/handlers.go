@@ -23,7 +23,7 @@ func AddHandlers(r model.Routes) model.Routes {
 }
 
 func Calc(w http.ResponseWriter, r *http.Request) {
-	score( w, r, "raw")
+	score( w, r, "mean")
 }
 
 func CalcFormat(w http.ResponseWriter, r *http.Request) {

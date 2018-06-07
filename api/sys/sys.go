@@ -41,7 +41,7 @@ func Health(w http.ResponseWriter, r *http.Request) {
 	var SysInfo SysHealth
 	SysInfo.ApiVersion = VERSION
 
-	var m source.Model
+	var m *source.Model
 	var err error
 	var countries []string
 	countries = data.GetCountries()

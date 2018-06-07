@@ -63,24 +63,24 @@ func GetCountries() []string {
 	return names
 }
 
-func GetModel(countryCode string) (source.Model, error) {
+func GetModel(countryCode string) (*source.Model, error) {
 	var countryModel source.Model
 	if len(countryCode) != 2 {
 		s := fmt.Sprintf("country code not specified")
-		return countryModel, errors.New(s)
+		return &countryModel, errors.New(s)
 	}
 
 	if countryModel, ok := modelCache[countryCode]; ok {
-		return countryModel, nil
+		return &countryModel, nil
 	}
 
 	s := fmt.Sprintf("country model (%s) not found", countryCode)
-	return countryModel, errors.New(s)
+	return &countryModel, errors.New(s)
 }
 
 func GetAttributes( countryCode string ) []string {
 	var names []string
-	var countryModel source.Model
+	var countryModel *source.Model
 
 	countryModel, err := GetModel( countryCode )
 	if err != nil {

@@ -30,26 +30,32 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 	attributes = mapset.NewSet()
 
 	nationality = strings.ToLower( r.Locale )
-	if nations[nationality], err = data.GetModel(nationality); err != nil {
+	var m *source.Model
+	if m, err = data.GetModel(nationality); err != nil {
 		score.Errors = new(response.Errors)
 		score.Errors.Messages = append( score.Errors.Messages, err.Error() )
 		return score, err
 	}
-	t := source.Threshold{ Locale: r.Locale, Threshold: nations[r.Locale].Threshold, K: nations[r.Locale].K}
+	nations[nationality] = *m
+	t := source.Threshold{ Locale: r.Locale, Threshold: m.Threshold, K: m.K}
 
 	for _, p := range r.People {
 		nation := strings.ToLower( p.Nationality )
 
 		if _, ok := nations[nation]; !ok {
-			if nations[nation], err = data.GetModel(nation); err != nil {
+			var n *source.Model
+
+			if n, err = data.GetModel(nation); err != nil {
 				score.Errors = new(response.Errors)
 				score.Errors.Messages = append( score.Errors.Messages, err.Error() )
 				return score, err
 			}
 
-			if nations[nation].Threshold < t.Threshold {
-				t = source.Threshold{ Locale: r.Locale, Threshold: nations[nation].Threshold, K: nations[nation].K}
+			if n.Threshold < t.Threshold {
+				t = source.Threshold{ Locale: r.Locale, Threshold: n.Threshold, K: n.K}
 			}
+
+			nations[nation] = *n
 		}
 
 		a_p, h_p = calcPerson( p, nations[nation], formatId )
@@ -68,7 +74,7 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 
 	for val := range attributes.Iterator().C {
 		if a, ok := val.(Attribute); ok {
-			s, err := source.GetScore(nations[a.Locale], a.Name, formatId)
+			s, err := source.GetScore( nations[a.Locale], a.Name, formatId)
 			if err == nil {
 				r := response.Attribute{Name: a.Name, Locale: strings.ToUpper(a.Locale), Format: formatId, Score: s}
 				score.Data.Attributes = append(score.Data.Attributes, r)

@@ -15,27 +15,27 @@ type Heuristic struct {
 type Heuristics []Heuristic
 
 type Format struct {
-	Format string `json:"format"`
+	Format string     `json:"format"`
 	Score  float64    `json:"score"`
 }
 
 type Formats []Format
 
 type Attribute struct {
-	Name    string `json:"name"`
+	Name    string  `json:"name"`
 	Formats Formats `json:"formats"`
 }
 
 type Attributes []Attribute
 
 type Model struct {
-	Locale     string  `json:"locale"`
-	Threshold  float64 `json:"threshold"`
-	K          int     `json:"k"`
-	ModelVersion string `json:"version"`
-	ModelDate time.Time `json:"timestamp"`
-	Heuristics Heuristics `json:"heuristics"`
-	Attributes Attributes `json:"attributes"`
+	Locale       string     `json:"locale"`
+	Threshold    float64    `json:"threshold"`
+	K            int        `json:"k"`
+	ModelVersion string     `json:"version"`
+	ModelDate    time.Time  `json:"timestamp"`
+	Heuristics   Heuristics `json:"heuristics"`
+	Attributes   Attributes `json:"attributes"`
 }
 
 type Threshold struct {
