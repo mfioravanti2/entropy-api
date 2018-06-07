@@ -25,6 +25,6 @@ type Errors struct {
 }
 
 type Response struct {
-	Data   Data `json:"data"`
-	Errors   Errors `json:"errors,omitempty"`
+	Data   *Data `json:"data,omitempty"`
+	Errors *Errors `json:"errors,omitempty"`
 }

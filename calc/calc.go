@@ -31,6 +31,7 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 
 	nationality = strings.ToLower( r.Locale )
 	if nations[nationality], err = data.GetModel(nationality); err != nil {
+		score.Errors = new(response.Errors)
 		score.Errors.Messages = append( score.Errors.Messages, err.Error() )
 		return score, err
 	}
@@ -41,6 +42,7 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 
 		if _, ok := nations[nation]; !ok {
 			if nations[nation], err = data.GetModel(nation); err != nil {
+				score.Errors = new(response.Errors)
 				score.Errors.Messages = append( score.Errors.Messages, err.Error() )
 				return score, err
 			}
@@ -55,6 +57,7 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 		h_total += h_p
 	}
 
+	score.Data = new(response.Data)
 	score.Data.Pii = h_total >= h_t
 	score.Data.Score = h_total
 	score.Data.RunDate = time.Now()

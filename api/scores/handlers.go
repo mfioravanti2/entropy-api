@@ -36,7 +36,7 @@ func CalcFormat(w http.ResponseWriter, r *http.Request) {
 func score(w http.ResponseWriter, r *http.Request, formatId string) {
 	var entropy request.Request
 
-	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 50 * 1024))
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 50 * 1024 ))
 	if err != nil {
 		panic(err)
 	}
@@ -44,19 +44,13 @@ func score(w http.ResponseWriter, r *http.Request, formatId string) {
 		panic(err)
 	}
 
-	var score response.Response
-
 	if err := json.Unmarshal(body, &entropy); err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader( http.StatusUnprocessableEntity )
-
-		score.Errors.Messages = append( score.Errors.Messages, "invalid request object, expected json format" )
-		if err := json.NewEncoder(w).Encode(score); err != nil {
-			panic(err)
-		}
+		var s = "invalid request object, expected json format"
+		handleError( w, r, http.StatusUnprocessableEntity, s )
 		return
 	}
 
+	var score response.Response
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	if score, err = calc.Calc( &entropy, formatId ); err != nil {
@@ -66,6 +60,19 @@ func score(w http.ResponseWriter, r *http.Request, formatId string) {
 		w.WriteHeader(http.StatusOK)
 	}
 
+	if err := json.NewEncoder(w).Encode(score); err != nil {
+		panic(err)
+	}
+}
+
+func handleError(w http.ResponseWriter, r *http.Request, statusCode int, msg string) {
+	var score response.Response
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader( statusCode )
+
+	score.Errors = new(response.Errors)
+	score.Errors.Messages = append( score.Errors.Messages, msg )
 	if err := json.NewEncoder(w).Encode(score); err != nil {
 		panic(err)
 	}
