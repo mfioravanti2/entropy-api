@@ -63,7 +63,7 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 	score.Data.Pii = h_total >= h_t
 	score.Data.Locale = t.Locale
 	score.Data.Score = h_total
-	score.Data.RunDate = time.Now()
+	score.Data.RunDate = time.Now().UTC()
 	score.Data.ApiVersion = sys.VERSION
 
 	for val := range attributes.Iterator().C {

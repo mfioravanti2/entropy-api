@@ -3,22 +3,24 @@ package sys
 import (
 	"net/http"
 	"encoding/json"
-	"github.com/mfioravanti2/entropy-api/model"
 	"time"
+	"strings"
+
 	"github.com/mfioravanti2/entropy-api/data"
+	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/model/source"
 )
 
 type ModelVersion struct {
-	CountryCode string `json:"country"`
-	Timestamp time.Time `json:"timestamp"`
-	Version string `json:"version"`
+	CountryCode string    `json:"country"`
+	Timestamp   time.Time `json:"timestamp"`
+	Version     string    `json:"version"`
 }
 
 type ModelVersions []ModelVersion
 
 type SysHealth struct {
-	ApiVersion string `json:"api_version"`
+	ApiVersion    string        `json:"api_version"`
 	ModelVersions ModelVersions `json:"model_versions"`
 }
 
@@ -26,10 +28,8 @@ const (
 	VERSION = "0.0.1"
 )
 
-//var SysInfo = SysHealth{"0.0.1"}
-
 func AddHandlers(r model.Routes) model.Routes {
-	r = append( r, model.Route{"SysHealth", "GET", "/v1/sys/health", Health} )
+	r = append( r, model.Route{ Name: "SysHealth", Method: "GET", Pattern: "/v1/sys/health", HandlerFunc: Health} )
 
 	return r
 }
@@ -48,7 +48,8 @@ func Health(w http.ResponseWriter, r *http.Request) {
 	for _, country := range countries {
 		m, err = data.GetModel(country)
 		if err == nil {
-			SysInfo.ModelVersions = append( SysInfo.ModelVersions, ModelVersion{ country, m.ModelDate, m.ModelVersion})
+			m := ModelVersion{ CountryCode: strings.ToUpper( country ), Timestamp: m.ModelDate.UTC(), Version: m.ModelVersion}
+			SysInfo.ModelVersions = append( SysInfo.ModelVersions, m)
 		}
 	}
 

@@ -18,7 +18,7 @@ type LogEntry struct {
 func Logger(inner http.Handler, name string) http.Handler {
 	return http.HandlerFunc( func( w http.ResponseWriter, r *http.Request){
 		var logEntry LogEntry
-		logEntry = LogEntry{time.Now(), r.Method, r.RequestURI, name}
+		logEntry = LogEntry{Time: time.Now().UTC(), Method: r.Method, URI: r.RequestURI, Name: name}
 
 		entryJson, err := json.Marshal(logEntry)
 		if err != nil {
