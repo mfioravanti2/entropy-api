@@ -2,7 +2,7 @@
   "locale" : "US",
   "threshold" : 28.2759,
   "k" : 20000,
-  "version" : "0.0.1",
+  "version" : "0.0.2",
   "timestamp" : "2018-06-07T01:00:59.522941442Z",
   "heuristics" : [
     { "match" : [ "postal_address.city", "postal_address.state", "postal_address.zip_code_5_digit" ],
