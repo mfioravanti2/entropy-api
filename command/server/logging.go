@@ -1,32 +1,31 @@
 package server
 
 import (
+	"context"
 	"net/http"
-	"time"
-	"log"
-	"encoding/json"
-	"fmt"
+
+	"go.uber.org/zap"
+	"github.com/google/uuid"
+
+	"github.com/mfioravanti2/entropy-api/command/server/logging"
 )
 
-type LogEntry struct {
-	Time time.Time `json:"time"`
-	Method string `json:"method"`
-	URI string `json:"uri"`
-	Name string `json:"name"`
-}
+var httpContext = context.Background()
 
 func Logger(inner http.Handler, name string) http.Handler {
 	return http.HandlerFunc( func( w http.ResponseWriter, r *http.Request){
-		var logEntry LogEntry
-		logEntry = LogEntry{Time: time.Now().UTC(), Method: r.Method, URI: r.RequestURI, Name: name}
-
-		entryJson, err := json.Marshal(logEntry)
+		rqId, err := uuid.NewRandom()
 		if err != nil {
-			fmt.Println(err)
-			return
+			panic(err)
 		}
 
-		log.Printf( "%s", string(entryJson))
+		rqCtx := logging.WithRqId(httpContext, rqId.String())
+		logger := logging.Logger(rqCtx)
+
+		logger.Info(name,
+			zap.String("method", r.Method),
+			zap.String("url", r.RequestURI),
+		)
 
 		inner.ServeHTTP(w,r)
 	})
