@@ -93,3 +93,22 @@ func GetAttributes( countryCode string ) []string {
 
 	return names
 }
+
+func GetAttribute( countryCode string, attributeName string ) (source.Attribute, error) {
+	var err error
+	var attribute source.Attribute
+
+	countryModel, err := GetModel( countryCode )
+	if err != nil {
+		return attribute, err
+	}
+
+	for _, attribute := range countryModel.Attributes {
+		if attribute.Name == attributeName {
+			return attribute, nil
+		}
+	}
+
+	s := fmt.Sprintf("attribute (%s) for country (%s) not found", attributeName, strings.ToUpper(countryCode))
+	return attribute, errors.New(s)
+}
