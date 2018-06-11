@@ -2,8 +2,8 @@
   "locale" : "US",
   "threshold" : 28.2759,
   "k" : 20000,
-  "version" : "0.0.5",
-  "timestamp" : "2018-06-11T22:37:17.7672021Z",
+  "version" : "0.0.6",
+  "timestamp" : "2018-06-11T22:57:32.1395125Z",
   "heuristics" : [
     { "match" : [ "postal_address.city", "postal_address.state", "postal_address.zip_code_5_digit" ],
       "insert" : [],
@@ -20,6 +20,10 @@
     { "match" : [ "name.given", "name.given.initial" ],
       "insert" : [],
       "remove" : ["name.given"]
+    },
+    { "match" : [ "name.surname", "name.surname.initial" ],
+      "insert" : [],
+      "remove" : ["name.surname"]
     }
   ],
   "attributes" : [
@@ -89,6 +93,32 @@
         { "format" : "naive", "score" : 4.7004 },
         { "format" : "mean", "score" : 4.11 },
         { "format" : "rare", "score" : 11.2083 }
+      ] },
+    { "name" : "name.surname",
+      "notes" : "",
+      "sources" : [
+        { "title" : "Frequently Occurring Surnames from the 2010 Census",
+          "organization": "USCB",
+          "date" : "2016-12-27T00:00:00Z",
+          "uri" : "https://www.census.gov/topics/population/genealogy/data/2010_surnames.html"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 17.3079 },
+        { "format" : "mean", "score" : 13.5987 },
+        { "format" : "rare", "score" : 21.3412 }
+      ] },
+    { "name" : "name.surname.initial",
+      "notes" : "",
+      "sources" : [
+        { "title" : "Frequently Occurring Surnames from the 2010 Census",
+          "organization": "USCB",
+          "date" : "2016-12-27T00:00:00Z",
+          "uri" : "https://www.census.gov/topics/population/genealogy/data/2010_surnames.html"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 4.7004 },
+        { "format" : "mean", "score" : 4.2461 },
+        { "format" : "rare", "score" : 11.344 }
       ] }
   ]
 }
