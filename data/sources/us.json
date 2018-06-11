@@ -2,8 +2,8 @@
   "locale" : "US",
   "threshold" : 28.2759,
   "k" : 20000,
-  "version" : "0.0.4",
-  "timestamp" : "2018-06-09T20:01:16.069201Z",
+  "version" : "0.0.5",
+  "timestamp" : "2018-06-11T22:37:17.7672021Z",
   "heuristics" : [
     { "match" : [ "postal_address.city", "postal_address.state", "postal_address.zip_code_5_digit" ],
       "insert" : [],
@@ -16,6 +16,10 @@
     { "match" : [ "postal_address.state", "postal_address.zip_code_5_digit" ],
       "insert" : [],
       "remove" : ["postal_address.state"]
+    },
+    { "match" : [ "name.given", "name.given.initial" ],
+      "insert" : [],
+      "remove" : ["name.given"]
     }
   ],
   "attributes" : [
@@ -59,6 +63,32 @@
         { "format" : "naive", "score" : 15.3920 },
         { "format" : "mean", "score" : 13.8299 },
         { "format" : "rare", "score" : 0.0 }
+      ] },
+    { "name" : "name.given",
+      "notes" : "",
+      "sources" : [
+        { "title" : "Beyond the Top 1000 Names",
+          "organization": "SSA",
+          "date" : "2017-01-01T00:00:00Z",
+          "uri" : "https://www.ssa.gov/oact/babynames/limits.html"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 16.5128 },
+        { "format" : "mean", "score" : 10.6278 },
+        { "format" : "rare", "score" : 25.8084 }
+      ] },
+    { "name" : "name.given.initial",
+      "notes" : "",
+      "sources" : [
+        { "title" : "Beyond the Top 1000 Names",
+          "organization": "SSA",
+          "date" : "2017-01-01T00:00:00Z",
+          "uri" : "https://www.ssa.gov/oact/babynames/limits.html"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 4.7004 },
+        { "format" : "mean", "score" : 4.11 },
+        { "format" : "rare", "score" : 11.2083 }
       ] }
   ]
 }
