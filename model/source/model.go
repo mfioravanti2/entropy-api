@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"time"
+	"net/url"
 )
 
 type Heuristic struct {
@@ -21,8 +22,19 @@ type Format struct {
 
 type Formats []Format
 
+type Source struct {
+	Title string     `json:"title"`
+	Org   string     `json:"organization"`
+	Date  time.Time  `json:"date"`
+	URI   url.URL    `json:"url"`
+}
+
+type Sources []Source
+
 type Attribute struct {
 	Name    string  `json:"name"`
+	Notes   string  `json:"notes"`
+	Sources Sources `json:"sources"`
 	Formats Formats `json:"formats"`
 }
 
@@ -58,7 +70,7 @@ func GetScore( m *Model, n string, t string ) (float64,error) {
 		}
 	}
 
-	s := fmt.Sprintf("attribute (%s/%s) not found in country (%s)", n, t, m.Locale)
+	s := fmt.Sprintf("attribute (%s) or format (%s) not found in country (%s)", n, t, m.Locale)
 	return 0.0, errors.New(s)
 }
 

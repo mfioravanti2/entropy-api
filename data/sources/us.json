@@ -2,7 +2,7 @@
   "locale" : "US",
   "threshold" : 28.2759,
   "k" : 20000,
-  "version" : "0.0.3",
+  "version" : "0.0.4",
   "timestamp" : "2018-06-09T20:01:16.069201Z",
   "heuristics" : [
     { "match" : [ "postal_address.city", "postal_address.state", "postal_address.zip_code_5_digit" ],
@@ -19,19 +19,42 @@
     }
   ],
   "attributes" : [
+    { "name" : "sex",
+      "notes" : "",
+      "sources" : [
+        { "title" : "the World Factbook",
+          "organization": "CIA",
+          "date" : "2017-01-01T00:00:00Z",
+          "uri" : "https://www.cia.gov/library/publications/the-world-factbook/fields/2018.html#us"},
+        { "title" : "How Sexually Dimorphic Are We? Review and Synthesis",
+          "organization": "American Journal of Human Biology",
+          "date" : "2000-02-11T00:00:00Z",
+          "uri" : "https://doi.org/10.1002/(SICI)1520-6300(200003/04)12:2%3C151::AID-AJHB1%3E3.0.CO;2-F"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 1.585 },
+        { "format" : "mean", "score" : 1.107 },
+        { "format" : "rare", "score" : 5.8783 }
+      ] },
     { "name" : "postal_address.city",
+      "notes" : "",
+      "sources" : [],
       "formats" : [
         { "format" : "naive", "score" : 13.9329 },
         { "format" : "mean", "score" : 10.8483 },
-        { "format" : "rare", "score" : 0.0 }
+        { "format" : "rare", "score" : 27.5346 }
       ] },
     { "name" : "postal_address.state",
+      "notes" : "",
+      "sources" : [],
       "formats" : [
         { "format" : "naive", "score" : 5.6439 },
         { "format" : "mean", "score" : 5.0044 },
         { "format" : "rare", "score" : 0.0 }
       ]  },
     { "name" : "postal_address.zip_code_5_digit",
+      "notes" : "",
+      "sources" : [],
       "formats" : [
         { "format" : "naive", "score" : 15.3920 },
         { "format" : "mean", "score" : 13.8299 },

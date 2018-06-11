@@ -20,6 +20,7 @@ type Attribute struct {
 
 func Calc( r *request.Request, formatId string ) (response.Response, error) {
 	var err error
+	var errors []error
 	var score response.Response
 	var attributes, a_p mapset.Set
 	var h_t, h_p, h_total float64
@@ -58,9 +59,19 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 			nations[nation] = n
 		}
 
-		a_p, h_p = calcPerson( p, nations[nation], formatId )
+		a_p, h_p, errors = calcPerson( p, nations[nation], formatId )
 		attributes = attributes.Union( ConvertSet( a_p, nation) )
 		h_total += h_p
+
+		if len(errors) > 0 {
+			if score.Errors == nil {
+				score.Errors = new(response.Errors)
+			}
+
+			for _, e := range errors {
+				score.Errors.Messages = append( score.Errors.Messages, e.Error() )
+			}
+		}
 	}
 
 	h_t = t.Threshold
@@ -129,9 +140,10 @@ func containsAll( m mapset.Set, s []string) bool {
 	return true
 }
 
-func calcPerson( p request.Person, s *source.Model, formatId string ) (mapset.Set, float64) {
+func calcPerson( p request.Person, s *source.Model, formatId string ) (mapset.Set, float64, []error) {
 	var h_p float64 = 0.0
 	var changed bool = false
+	var errors []error
 	a_p := mapset.NewSet()
 
 	for _, a := range p.Attributes {
@@ -167,9 +179,11 @@ func calcPerson( p request.Person, s *source.Model, formatId string ) (mapset.Se
 			h_i, err := source.GetScore(s, str, formatId)
 			if err == nil {
 				h_p += h_i
+			} else {
+				errors = append( errors, err )
 			}
 		}
 	}
 
-	return a_p, h_p
+	return a_p, h_p, errors
 }
