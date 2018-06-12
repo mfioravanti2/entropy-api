@@ -2,8 +2,8 @@
   "locale" : "US",
   "threshold" : 28.2759,
   "k" : 20000,
-  "version" : "0.0.9",
-  "timestamp" : "2018-06-12T21:05:49.338955392Z",
+  "version" : "0.0.10",
+  "timestamp" : "2018-06-12T21:10:28.342719781Z",
   "heuristics" : [
     { "match" : [ "postal_address.city", "postal_address.state", "postal_address.zip_code_5_digit" ],
       "insert" : [],
@@ -84,11 +84,16 @@
       ] },
     { "name" : "postal_address.state",
       "notes" : "",
-      "sources" : [],
+      "sources" : [
+        { "title" : "State Population Totals and Components of Change: 2010-2017",
+          "organization": "US CB",
+          "date" : "2018-05-18T00:00:00Z",
+          "uri" : "https://www.census.gov/data/tables/2017/demo/popest/state-total.html"}
+      ],
       "formats" : [
         { "format" : "naive", "score" : 5.6439 },
         { "format" : "mean", "score" : 5.0044 },
-        { "format" : "rare", "score" : 0.0 }
+        { "format" : "rare", "score" : 9.0946 }
       ]  },
     { "name" : "postal_address.zip_code_5_digit",
       "notes" : "US CB ZCTA (5-digit code)",
