@@ -2,8 +2,8 @@
   "locale" : "US",
   "threshold" : 28.2759,
   "k" : 20000,
-  "version" : "0.0.10",
-  "timestamp" : "2018-06-12T21:10:28.342719781Z",
+  "version" : "0.0.11",
+  "timestamp" : "2018-06-12T21:40:46.361314309Z",
   "heuristics" : [
     { "match" : [ "postal_address.city", "postal_address.state", "postal_address.zip_code_5_digit" ],
       "insert" : [],
@@ -36,6 +36,10 @@
     { "match" : [ "name.surname", "name.surname.initial" ],
       "insert" : [],
       "remove" : ["name.surname.initial"]
+    },
+    { "match" : [ "phone.nanpa.full" ],
+      "insert" : ["phone.nanpa.country_code", "phone.nanpa.area_code", "phone.nanpa.central_office", "phone.nanpa.subscriber_number"],
+      "remove" : ["phone.nanpa.full"]
     }
   ],
   "attributes" : [
@@ -185,6 +189,71 @@
         { "format" : "naive", "score" : 4.7004 },
         { "format" : "mean", "score" : 4.2461 },
         { "format" : "rare", "score" : 11.344 }
+      ] },
+    { "name" : "phone.nanpa.full",
+      "notes" : "",
+      "sources" : [
+        { "title" : "",
+          "organization": "North American Numbering Plan Administration (NANPA)",
+          "date" : "2018-01-01T00:00:00Z",
+          "uri" : "https://www.nationalnanpa.com/index.html"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 0 },
+        { "format" : "mean", "score" : 0 },
+        { "format" : "rare", "score" : 0 }
+      ] },
+    { "name" : "phone.nanpa.country_code",
+      "notes" : "NOTE: place holder, relies on Heuristic expansion for scores",
+      "sources" : [
+        { "title" : "",
+          "organization": "North American Numbering Plan Administration (NANPA)",
+          "date" : "2018-01-01T00:00:00Z",
+          "uri" : "https://www.nationalnanpa.com/index.html"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 0 },
+        { "format" : "mean", "score" : 0 },
+        { "format" : "rare", "score" : 0 }
+      ] },
+    { "name" : "phone.nanpa.area_code",
+      "notes" : "NANPA Numbering Plan Area (NPA) (i.e. Area Code)",
+      "sources" : [
+        { "title" : "NPA Database",
+          "organization": "North American Numbering Plan Administration (NANPA)",
+          "date" : "2018-01-01T00:00:00Z",
+          "uri" : "https://www.nationalnanpa.com/reports/reports_npa.html"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 4.7004 },
+        { "format" : "mean", "score" : 4.2461 },
+        { "format" : "rare", "score" : 11.344 }
+      ] },
+    { "name" : "phone.nanpa.central_office",
+      "notes" : "NANPA Central Office Codes (COC)",
+      "sources" : [
+        { "title" : "Central Office Code Assignment Records",
+          "organization": "North American Numbering Plan Administration (NANPA)",
+          "date" : "2018-01-01T00:00:00Z",
+          "uri" : "https://www.nationalnanpa.com/reports/reports_cocodes_assign.html"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 4.7004 },
+        { "format" : "mean", "score" : 4.2461 },
+        { "format" : "rare", "score" : 11.344 }
+      ] },
+    { "name" : "phone.nanpa.subscriber_number",
+      "notes" : "NANPA Line or Subscriber number",
+      "sources" : [
+        { "title" : "",
+          "organization": "North American Numbering Plan Administration (NANPA)",
+          "date" : "2018-01-01T00:00:00Z",
+          "uri" : "https://www.nationalnanpa.com/index.html"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 9.9658 },
+        { "format" : "mean", "score" : 9.9658 },
+        { "format" : "rare", "score" :9.9658 }
       ] }
   ]
 }
