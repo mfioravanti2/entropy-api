@@ -2,8 +2,8 @@
   "locale" : "US",
   "threshold" : 28.2759,
   "k" : 20000,
-  "version" : "0.0.6",
-  "timestamp" : "2018-06-11T22:57:32.1395125Z",
+  "version" : "0.0.7",
+  "timestamp" : "2018-06-12T00:17:16.305205542Z",
   "heuristics" : [
     { "match" : [ "postal_address.city", "postal_address.state", "postal_address.zip_code_5_digit" ],
       "insert" : [],
@@ -46,7 +46,12 @@
       ] },
     { "name" : "postal_address.city",
       "notes" : "",
-      "sources" : [],
+      "sources" : [
+        { "title" : "Population, Housing Units, Area, and Density: 2010 - State -- Place and (in selected states) County Subdivision",
+          "organization": "US CB",
+          "date" : "2010-01-01T00:00:00Z",
+          "uri" : "https://factfinder.census.gov/bkmk/table/1.0/en/DEC/10_SF1/GCTPH1.ST10/0400000US34"}
+      ],
       "formats" : [
         { "format" : "naive", "score" : 13.9329 },
         { "format" : "mean", "score" : 10.8483 },
