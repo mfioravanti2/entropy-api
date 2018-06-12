@@ -2,8 +2,8 @@
   "locale" : "US",
   "threshold" : 28.2759,
   "k" : 20000,
-  "version" : "0.0.8",
-  "timestamp" : "2018-06-12T21:00:37.693028388Z",
+  "version" : "0.0.9",
+  "timestamp" : "2018-06-12T21:05:49.338955392Z",
   "heuristics" : [
     { "match" : [ "postal_address.city", "postal_address.state", "postal_address.zip_code_5_digit" ],
       "insert" : [],
@@ -17,21 +17,25 @@
       "insert" : [],
       "remove" : ["postal_address.state"]
     },
+    { "match" : [ "postal_address.city", "postal_address.city.cdp" ],
+      "insert" : [],
+      "remove" : ["postal_address.city"]
+    },
     { "match" : [ "postal_address.zip_code_5_digit", "postal_address.zip_code_5_digit.zcta_3_digit_code" ],
       "insert" : [],
-      "remove" : ["postal_address.zip_code_5_digit"]
+      "remove" : ["postal_address.zip_code_5_digit.zcta_3_digit_code"]
     },
     { "match" : [ "postal_address.zip_code_5_digit", "postal_address.zip_code_5_digit.zcta_2_digit_code" ],
       "insert" : [],
-      "remove" : ["postal_address.zip_code_5_digit"]
+      "remove" : ["postal_address.zip_code_5_digit.zcta_2_digit_code"]
     },
     { "match" : [ "name.given", "name.given.initial" ],
       "insert" : [],
-      "remove" : ["name.given"]
+      "remove" : ["name.given.initial"]
     },
     { "match" : [ "name.surname", "name.surname.initial" ],
       "insert" : [],
-      "remove" : ["name.surname"]
+      "remove" : ["name.surname.initial"]
     }
   ],
   "attributes" : [
@@ -63,7 +67,20 @@
       "formats" : [
         { "format" : "naive", "score" : 13.9329 },
         { "format" : "mean", "score" : 10.8483 },
-        { "format" : "rare", "score" : 27.5346 }
+        { "format" : "rare", "score" : 27.5347 }
+      ] },
+    { "name" : "postal_address.city.cdp",
+      "notes" : "Cities including Census Designated Places (CDPs)",
+      "sources" : [
+        { "title" : "Population, Housing Units, Area, and Density: 2010 - State -- Place and (in selected states) County Subdivision",
+          "organization": "US CB",
+          "date" : "2010-01-01T00:00:00Z",
+          "uri" : "https://factfinder.census.gov/bkmk/table/1.0/en/DEC/10_SF1/GCTPH1.ST10/0400000US34"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 14.5627 },
+        { "format" : "mean", "score" : 11.5576 },
+        { "format" : "rare", "score" : 27.7798 }
       ] },
     { "name" : "postal_address.state",
       "notes" : "",
