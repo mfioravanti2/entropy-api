@@ -2,8 +2,8 @@
   "locale" : "US",
   "threshold" : 28.2759,
   "k" : 20000,
-  "version" : "0.0.7",
-  "timestamp" : "2018-06-12T00:17:16.305205542Z",
+  "version" : "0.0.8",
+  "timestamp" : "2018-06-12T21:00:37.693028388Z",
   "heuristics" : [
     { "match" : [ "postal_address.city", "postal_address.state", "postal_address.zip_code_5_digit" ],
       "insert" : [],
@@ -16,6 +16,14 @@
     { "match" : [ "postal_address.state", "postal_address.zip_code_5_digit" ],
       "insert" : [],
       "remove" : ["postal_address.state"]
+    },
+    { "match" : [ "postal_address.zip_code_5_digit", "postal_address.zip_code_5_digit.zcta_3_digit_code" ],
+      "insert" : [],
+      "remove" : ["postal_address.zip_code_5_digit"]
+    },
+    { "match" : [ "postal_address.zip_code_5_digit", "postal_address.zip_code_5_digit.zcta_2_digit_code" ],
+      "insert" : [],
+      "remove" : ["postal_address.zip_code_5_digit"]
     },
     { "match" : [ "name.given", "name.given.initial" ],
       "insert" : [],
@@ -66,12 +74,43 @@
         { "format" : "rare", "score" : 0.0 }
       ]  },
     { "name" : "postal_address.zip_code_5_digit",
-      "notes" : "",
-      "sources" : [],
+      "notes" : "US CB ZCTA (5-digit code)",
+      "sources" : [
+        { "title" : "2012-2016 American Community Survey 5-Year Estimates",
+          "organization": "US CB",
+          "date" : "2016-01-01T00:00:00Z",
+          "uri" : "https://factfinder.census.gov/bkmk/table/1.0/en/ACS/16_5YR/B01003/0100000US.86000"}
+      ],
       "formats" : [
-        { "format" : "naive", "score" : 15.3920 },
-        { "format" : "mean", "score" : 13.8299 },
-        { "format" : "rare", "score" : 0.0 }
+        { "format" : "naive", "score" : 15.0014 },
+        { "format" : "mean", "score" : 13.8142 },
+        { "format" : "rare", "score" : 27.2628 }
+      ] },
+    { "name" : "postal_address.zip_code_5_digit.zcta_3_digit_code",
+      "notes" : "US CB ZCTA (3-digit code)",
+      "sources" : [
+        { "title" : "2012-2016 American Community Survey 5-Year Estimates",
+          "organization": "US CB",
+          "date" : "2016-01-01T00:00:00Z",
+          "uri" : "https://factfinder.census.gov/bkmk/table/1.0/en/ACS/16_5YR/B01003/0100000US.86000"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 9.796 },
+        { "format" : "mean", "score" : 9.1619 },
+        { "format" : "rare", "score" : 18.8178 }
+      ] },
+    { "name" : "postal_address.zip_code_5_digit.zcta_2_digit_code",
+      "notes" : "US CB ZCTA (2-digit code)",
+      "sources" : [
+        { "title" : "2012-2016 American Community Survey 5-Year Estimates",
+          "organization": "US CB",
+          "date" : "2016-01-01T00:00:00Z",
+          "uri" : "https://factfinder.census.gov/bkmk/table/1.0/en/ACS/16_5YR/B01003/0100000US.86000"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 6.6294 },
+        { "format" : "mean", "score" : 6.3288 },
+        { "format" : "rare", "score" : 10.7895 }
       ] },
     { "name" : "name.given",
       "notes" : "",
