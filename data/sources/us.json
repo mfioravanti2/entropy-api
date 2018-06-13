@@ -238,9 +238,9 @@
           "uri" : "https://www.nationalnanpa.com/reports/reports_cocodes_assign.html"}
       ],
       "formats" : [
-        { "format" : "naive", "score" : 4.7004 },
-        { "format" : "mean", "score" : 4.2461 },
-        { "format" : "rare", "score" : 11.344 }
+        { "format" : "naive", "score" : 9.6257 },
+        { "format" : "mean", "score" : 9.6257 },
+        { "format" : "rare", "score" : 9.6257 }
       ] },
     { "name" : "phone.nanpa.subscriber_number",
       "notes" : "NANPA Line or Subscriber number",
