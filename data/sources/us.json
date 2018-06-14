@@ -50,11 +50,11 @@
         { "title" : "the World Factbook",
           "organization": "CIA",
           "date" : "2017-01-01T00:00:00Z",
-          "uri" : "https://www.cia.gov/library/publications/the-world-factbook/fields/2018.html#us"},
+          "url" : "https://www.cia.gov/library/publications/the-world-factbook/fields/2018.html#us"},
         { "title" : "How Sexually Dimorphic Are We? Review and Synthesis",
           "organization": "American Journal of Human Biology",
           "date" : "2000-02-11T00:00:00Z",
-          "uri" : "https://doi.org/10.1002/(SICI)1520-6300(200003/04)12:2%3C151::AID-AJHB1%3E3.0.CO;2-F"}
+          "url" : "https://doi.org/10.1002/(SICI)1520-6300(200003/04)12:2%3C151::AID-AJHB1%3E3.0.CO;2-F"}
       ],
       "formats" : [
         { "format" : "naive", "score" : 1.585 },
@@ -68,7 +68,7 @@
         { "title" : "Population, Housing Units, Area, and Density: 2010 - State -- Place and (in selected states) County Subdivision",
           "organization": "US CB",
           "date" : "2010-01-01T00:00:00Z",
-          "uri" : "https://factfinder.census.gov/bkmk/table/1.0/en/DEC/10_SF1/GCTPH1.ST10/0400000US34"}
+          "url" : "https://factfinder.census.gov/bkmk/table/1.0/en/DEC/10_SF1/GCTPH1.ST10/0400000US34"}
       ],
       "formats" : [
         { "format" : "naive", "score" : 13.9329 },
@@ -82,7 +82,7 @@
         { "title" : "Population, Housing Units, Area, and Density: 2010 - State -- Place and (in selected states) County Subdivision",
           "organization": "US CB",
           "date" : "2010-01-01T00:00:00Z",
-          "uri" : "https://factfinder.census.gov/bkmk/table/1.0/en/DEC/10_SF1/GCTPH1.ST10/0400000US34"}
+          "url" : "https://factfinder.census.gov/bkmk/table/1.0/en/DEC/10_SF1/GCTPH1.ST10/0400000US34"}
       ],
       "formats" : [
         { "format" : "naive", "score" : 14.5627 },
@@ -96,7 +96,7 @@
         { "title" : "State Population Totals and Components of Change: 2010-2017",
           "organization": "US CB",
           "date" : "2018-05-18T00:00:00Z",
-          "uri" : "https://www.census.gov/data/tables/2017/demo/popest/state-total.html"}
+          "url" : "https://www.census.gov/data/tables/2017/demo/popest/state-total.html"}
       ],
       "formats" : [
         { "format" : "naive", "score" : 5.6439 },
@@ -110,7 +110,7 @@
         { "title" : "2012-2016 American Community Survey 5-Year Estimates",
           "organization": "US CB",
           "date" : "2016-01-01T00:00:00Z",
-          "uri" : "https://factfinder.census.gov/bkmk/table/1.0/en/ACS/16_5YR/B01003/0100000US.86000"}
+          "url" : "https://factfinder.census.gov/bkmk/table/1.0/en/ACS/16_5YR/B01003/0100000US.86000"}
       ],
       "formats" : [
         { "format" : "naive", "score" : 15.0014 },
@@ -124,7 +124,7 @@
         { "title" : "2012-2016 American Community Survey 5-Year Estimates",
           "organization": "US CB",
           "date" : "2016-01-01T00:00:00Z",
-          "uri" : "https://factfinder.census.gov/bkmk/table/1.0/en/ACS/16_5YR/B01003/0100000US.86000"}
+          "url" : "https://factfinder.census.gov/bkmk/table/1.0/en/ACS/16_5YR/B01003/0100000US.86000"}
       ],
       "formats" : [
         { "format" : "naive", "score" : 9.796 },
@@ -138,7 +138,7 @@
         { "title" : "2012-2016 American Community Survey 5-Year Estimates",
           "organization": "US CB",
           "date" : "2016-01-01T00:00:00Z",
-          "uri" : "https://factfinder.census.gov/bkmk/table/1.0/en/ACS/16_5YR/B01003/0100000US.86000"}
+          "url" : "https://factfinder.census.gov/bkmk/table/1.0/en/ACS/16_5YR/B01003/0100000US.86000"}
       ],
       "formats" : [
         { "format" : "naive", "score" : 6.6294 },
@@ -152,7 +152,7 @@
         { "title" : "Beyond the Top 1000 Names",
           "organization": "SSA",
           "date" : "2017-01-01T00:00:00Z",
-          "uri" : "https://www.ssa.gov/oact/babynames/limits.html"}
+          "url" : "https://www.ssa.gov/oact/babynames/limits.html"}
       ],
       "formats" : [
         { "format" : "naive", "score" : 16.5128 },
@@ -166,7 +166,7 @@
         { "title" : "Beyond the Top 1000 Names",
           "organization": "SSA",
           "date" : "2017-01-01T00:00:00Z",
-          "uri" : "https://www.ssa.gov/oact/babynames/limits.html"}
+          "url" : "https://www.ssa.gov/oact/babynames/limits.html"}
       ],
       "formats" : [
         { "format" : "naive", "score" : 4.7004 },
@@ -180,7 +180,7 @@
         { "title" : "Frequently Occurring Surnames from the 2010 Census",
           "organization": "USCB",
           "date" : "2016-12-27T00:00:00Z",
-          "uri" : "https://www.census.gov/topics/population/genealogy/data/2010_surnames.html"}
+          "url" : "https://www.census.gov/topics/population/genealogy/data/2010_surnames.html"}
       ],
       "formats" : [
         { "format" : "naive", "score" : 17.3079 },
@@ -194,7 +194,7 @@
         { "title" : "Frequently Occurring Surnames from the 2010 Census",
           "organization": "USCB",
           "date" : "2016-12-27T00:00:00Z",
-          "uri" : "https://www.census.gov/topics/population/genealogy/data/2010_surnames.html"}
+          "url" : "https://www.census.gov/topics/population/genealogy/data/2010_surnames.html"}
       ],
       "formats" : [
         { "format" : "naive", "score" : 4.7004 },
@@ -208,7 +208,7 @@
         { "title" : "",
           "organization": "North American Numbering Plan Administration (NANPA)",
           "date" : "2018-01-01T00:00:00Z",
-          "uri" : "https://www.nationalnanpa.com/index.html"}
+          "url" : "https://www.nationalnanpa.com/index.html"}
       ],
       "formats" : [
         { "format" : "naive", "score" : 0 },
@@ -222,7 +222,7 @@
         { "title" : "",
           "organization": "North American Numbering Plan Administration (NANPA)",
           "date" : "2018-01-01T00:00:00Z",
-          "uri" : "https://www.nationalnanpa.com/index.html"}
+          "url" : "https://www.nationalnanpa.com/index.html"}
       ],
       "formats" : [
         { "format" : "naive", "score" : 0 },
@@ -236,7 +236,7 @@
         { "title" : "NPA Database",
           "organization": "North American Numbering Plan Administration (NANPA)",
           "date" : "2018-01-01T00:00:00Z",
-          "uri" : "https://www.nationalnanpa.com/reports/reports_npa.html"}
+          "url" : "https://www.nationalnanpa.com/reports/reports_npa.html"}
       ],
       "formats" : [
         { "format" : "naive", "score" : 4.7004 },
@@ -250,7 +250,7 @@
         { "title" : "Central Office Code Assignment Records",
           "organization": "North American Numbering Plan Administration (NANPA)",
           "date" : "2018-01-01T00:00:00Z",
-          "uri" : "https://www.nationalnanpa.com/reports/reports_cocodes_assign.html"}
+          "url" : "https://www.nationalnanpa.com/reports/reports_cocodes_assign.html"}
       ],
       "formats" : [
         { "format" : "naive", "score" : 9.6257 },
@@ -264,7 +264,7 @@
         { "title" : "",
           "organization": "North American Numbering Plan Administration (NANPA)",
           "date" : "2018-01-01T00:00:00Z",
-          "uri" : "https://www.nationalnanpa.com/index.html"}
+          "url" : "https://www.nationalnanpa.com/index.html"}
       ],
       "formats" : [
         { "format" : "naive", "score" : 9.9658 },

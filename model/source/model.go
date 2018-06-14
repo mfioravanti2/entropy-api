@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"time"
-	"net/url"
 )
 
 type Heuristic struct {
@@ -26,7 +25,7 @@ type Source struct {
 	Title string     `json:"title"`
 	Org   string     `json:"organization"`
 	Date  time.Time  `json:"date"`
-	URI   url.URL    `json:"url"`
+	URI   string     `json:"url"`
 }
 
 type Sources []Source
