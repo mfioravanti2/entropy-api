@@ -88,13 +88,13 @@ func GetAttributes( countryCode string ) []string {
 	}
 
 	for _, attribute := range countryModel.Attributes {
-		names = append(names, attribute.Name)
+		names = append(names, attribute.Mnemonic)
 	}
 
 	return names
 }
 
-func GetAttribute( countryCode string, attributeName string ) (source.Attribute, error) {
+func GetAttribute( countryCode string, attributeMnemonic string ) (source.Attribute, error) {
 	var err error
 	var attribute source.Attribute
 
@@ -104,11 +104,11 @@ func GetAttribute( countryCode string, attributeName string ) (source.Attribute,
 	}
 
 	for _, attribute := range countryModel.Attributes {
-		if attribute.Name == attributeName {
+		if attribute.Mnemonic == attributeMnemonic {
 			return attribute, nil
 		}
 	}
 
-	s := fmt.Sprintf("attribute (%s) for country (%s) not found", attributeName, strings.ToUpper(countryCode))
+	s := fmt.Sprintf("attribute (%s) for country (%s) not found", attributeMnemonic, strings.ToUpper(countryCode))
 	return attribute, errors.New(s)
 }

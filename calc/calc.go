@@ -14,8 +14,8 @@ import (
 )
 
 type Attribute struct {
-	Name string
-	Locale string
+	Mnemonic string
+	Locale   string
 }
 
 func Calc( r *request.Request, formatId string ) (response.Response, error) {
@@ -85,9 +85,9 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 
 	for val := range attributes.Iterator().C {
 		if a, ok := val.(Attribute); ok {
-			s, err := source.GetScore( nations[a.Locale], a.Name, formatId)
+			s, err := source.GetScore( nations[a.Locale], a.Mnemonic, formatId)
 			if err == nil {
-				r := response.Attribute{Name: a.Name, Locale: strings.ToUpper(a.Locale), Format: formatId, Score: s}
+				r := response.Attribute{Mnemonic: a.Mnemonic, Locale: strings.ToUpper(a.Locale), Format: formatId, Score: s}
 				score.Data.Attributes = append(score.Data.Attributes, r)
 			}
 		}
@@ -111,7 +111,7 @@ func ConvertSet( m mapset.Set, locale string ) mapset.Set {
 
 	for val := range m.Iterator().C {
 		if str, ok := val.(string); ok {
-			f.Add(Attribute{ Name: str, Locale: locale })
+			f.Add(Attribute{ Mnemonic: str, Locale: locale })
 		}
 	}
 
@@ -147,7 +147,7 @@ func calcPerson( p request.Person, s *source.Model, formatId string ) (mapset.Se
 	a_p := mapset.NewSet()
 
 	for _, a := range p.Attributes {
-		a_p.Add(a.Name)
+		a_p.Add(a.Mnemonic)
 	}
 
 	for {

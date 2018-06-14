@@ -3,10 +3,10 @@ package response
 import "time"
 
 type Attribute struct {
-	Name   string  `json:"name"`
-	Locale string  `json:"locale,omitempty"`
-	Format string  `json:"format"`
-	Score  float64 `json:"score"`
+	Mnemonic string  `json:"mnemonic"`
+	Locale   string  `json:"locale,omitempty"`
+	Format   string  `json:"format"`
+	Score    float64 `json:"score"`
 }
 
 type Attributes []Attribute

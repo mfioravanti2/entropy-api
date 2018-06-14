@@ -32,10 +32,10 @@ type Source struct {
 type Sources []Source
 
 type Attribute struct {
-	Name    string  `json:"name"`
-	Notes   string  `json:"notes"`
-	Sources Sources `json:"sources"`
-	Formats Formats `json:"formats"`
+	Mnemonic string  `json:"mnemonic"`
+	Notes    string  `json:"notes"`
+	Sources  Sources `json:"sources"`
+	Formats  Formats `json:"formats"`
 }
 
 type Attributes []Attribute
@@ -61,16 +61,19 @@ func GetScore( m *Model, n string, t string ) (float64,error) {
 	var f Format
 
 	for _, a = range m.Attributes {
-		if a.Name == n {
+		if a.Mnemonic == n {
 			for _, f = range a.Formats {
 				if f.Format == t {
 					return f.Score, nil
 				}
 			}
+
+			s := fmt.Sprintf("attribute (%s) with format (%s) not found in country (%s)", n, t, m.Locale)
+			return 0.0, errors.New(s)
 		}
 	}
 
-	s := fmt.Sprintf("attribute (%s) or format (%s) not found in country (%s)", n, t, m.Locale)
+	s := fmt.Sprintf("attribute (%s) not found in country (%s)", n, m.Locale)
 	return 0.0, errors.New(s)
 }
 

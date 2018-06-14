@@ -1,8 +1,8 @@
 package request
 
 type Attribute struct {
-	Name   string `json:"name"`
-	Format string `json:"format"`
+	Mnemonic string `json:"mnemonic"`
+	Format   string `json:"format"`
 }
 
 type Attributes []Attribute

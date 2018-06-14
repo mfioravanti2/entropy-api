@@ -43,7 +43,7 @@
     }
   ],
   "attributes" : [
-    { "name" : "sex",
+    { "mnemonic" : "sex",
       "notes" : "",
       "sources" : [
         { "title" : "the World Factbook",
@@ -60,7 +60,7 @@
         { "format" : "mean", "score" : 1.107 },
         { "format" : "rare", "score" : 5.8783 }
       ] },
-    { "name" : "postal_address.city",
+    { "mnemonic" : "postal_address.city",
       "notes" : "",
       "sources" : [
         { "title" : "Population, Housing Units, Area, and Density: 2010 - State -- Place and (in selected states) County Subdivision",
@@ -73,7 +73,7 @@
         { "format" : "mean", "score" : 10.8483 },
         { "format" : "rare", "score" : 27.5347 }
       ] },
-    { "name" : "postal_address.city.cdp",
+    { "mnemonic" : "postal_address.city.cdp",
       "notes" : "Cities including Census Designated Places (CDPs)",
       "sources" : [
         { "title" : "Population, Housing Units, Area, and Density: 2010 - State -- Place and (in selected states) County Subdivision",
@@ -86,7 +86,7 @@
         { "format" : "mean", "score" : 11.5576 },
         { "format" : "rare", "score" : 27.7798 }
       ] },
-    { "name" : "postal_address.state",
+    { "mnemonic" : "postal_address.state",
       "notes" : "",
       "sources" : [
         { "title" : "State Population Totals and Components of Change: 2010-2017",
@@ -99,7 +99,7 @@
         { "format" : "mean", "score" : 5.0044 },
         { "format" : "rare", "score" : 9.0946 }
       ]  },
-    { "name" : "postal_address.zip_code_5_digit",
+    { "mnemonic" : "postal_address.zip_code_5_digit",
       "notes" : "US CB ZCTA (5-digit code)",
       "sources" : [
         { "title" : "2012-2016 American Community Survey 5-Year Estimates",
@@ -112,7 +112,7 @@
         { "format" : "mean", "score" : 13.8142 },
         { "format" : "rare", "score" : 27.2628 }
       ] },
-    { "name" : "postal_address.zip_code_5_digit.zcta_3_digit_code",
+    { "mnemonic" : "postal_address.zip_code_5_digit.zcta_3_digit_code",
       "notes" : "US CB ZCTA (3-digit code)",
       "sources" : [
         { "title" : "2012-2016 American Community Survey 5-Year Estimates",
@@ -125,7 +125,7 @@
         { "format" : "mean", "score" : 9.1619 },
         { "format" : "rare", "score" : 18.8178 }
       ] },
-    { "name" : "postal_address.zip_code_5_digit.zcta_2_digit_code",
+    { "mnemonic" : "postal_address.zip_code_5_digit.zcta_2_digit_code",
       "notes" : "US CB ZCTA (2-digit code)",
       "sources" : [
         { "title" : "2012-2016 American Community Survey 5-Year Estimates",
@@ -138,7 +138,7 @@
         { "format" : "mean", "score" : 6.3288 },
         { "format" : "rare", "score" : 10.7895 }
       ] },
-    { "name" : "name.given",
+    { "mnemonic" : "name.given",
       "notes" : "",
       "sources" : [
         { "title" : "Beyond the Top 1000 Names",
@@ -151,7 +151,7 @@
         { "format" : "mean", "score" : 10.6278 },
         { "format" : "rare", "score" : 25.8084 }
       ] },
-    { "name" : "name.given.initial",
+    { "mnemonic" : "name.given.initial",
       "notes" : "",
       "sources" : [
         { "title" : "Beyond the Top 1000 Names",
@@ -164,7 +164,7 @@
         { "format" : "mean", "score" : 4.11 },
         { "format" : "rare", "score" : 11.2083 }
       ] },
-    { "name" : "name.surname",
+    { "mnemonic" : "name.surname",
       "notes" : "",
       "sources" : [
         { "title" : "Frequently Occurring Surnames from the 2010 Census",
@@ -177,7 +177,7 @@
         { "format" : "mean", "score" : 13.5987 },
         { "format" : "rare", "score" : 21.3412 }
       ] },
-    { "name" : "name.surname.initial",
+    { "mnemonic" : "name.surname.initial",
       "notes" : "",
       "sources" : [
         { "title" : "Frequently Occurring Surnames from the 2010 Census",
@@ -190,7 +190,7 @@
         { "format" : "mean", "score" : 4.2461 },
         { "format" : "rare", "score" : 11.344 }
       ] },
-    { "name" : "phone.nanpa.full",
+    { "mnemonic" : "phone.nanpa.full",
       "notes" : "",
       "sources" : [
         { "title" : "",
@@ -203,7 +203,7 @@
         { "format" : "mean", "score" : 0 },
         { "format" : "rare", "score" : 0 }
       ] },
-    { "name" : "phone.nanpa.country_code",
+    { "mnemonic" : "phone.nanpa.country_code",
       "notes" : "NOTE: place holder, relies on Heuristic expansion for scores",
       "sources" : [
         { "title" : "",
@@ -216,7 +216,7 @@
         { "format" : "mean", "score" : 0 },
         { "format" : "rare", "score" : 0 }
       ] },
-    { "name" : "phone.nanpa.area_code",
+    { "mnemonic" : "phone.nanpa.area_code",
       "notes" : "NANPA Numbering Plan Area (NPA) (i.e. Area Code)",
       "sources" : [
         { "title" : "NPA Database",
@@ -229,7 +229,7 @@
         { "format" : "mean", "score" : 4.2461 },
         { "format" : "rare", "score" : 11.344 }
       ] },
-    { "name" : "phone.nanpa.central_office",
+    { "mnemonic" : "phone.nanpa.central_office",
       "notes" : "NANPA Central Office Codes (COC)",
       "sources" : [
         { "title" : "Central Office Code Assignment Records",
@@ -242,7 +242,7 @@
         { "format" : "mean", "score" : 9.6257 },
         { "format" : "rare", "score" : 9.6257 }
       ] },
-    { "name" : "phone.nanpa.subscriber_number",
+    { "mnemonic" : "phone.nanpa.subscriber_number",
       "notes" : "NANPA Line or Subscriber number",
       "sources" : [
         { "title" : "",
