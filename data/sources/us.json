@@ -43,7 +43,8 @@
     }
   ],
   "attributes" : [
-    { "mnemonic" : "sex",
+    { "name" : "Sex",
+      "mnemonic" : "sex",
       "notes" : "",
       "sources" : [
         { "title" : "the World Factbook",
@@ -60,7 +61,8 @@
         { "format" : "mean", "score" : 1.107 },
         { "format" : "rare", "score" : 5.8783 }
       ] },
-    { "mnemonic" : "postal_address.city",
+    { "name" : "USPS Postal Address Part: City",
+      "mnemonic" : "postal_address.city",
       "notes" : "",
       "sources" : [
         { "title" : "Population, Housing Units, Area, and Density: 2010 - State -- Place and (in selected states) County Subdivision",
@@ -73,7 +75,8 @@
         { "format" : "mean", "score" : 10.8483 },
         { "format" : "rare", "score" : 27.5347 }
       ] },
-    { "mnemonic" : "postal_address.city.cdp",
+    { "name" : "USPS Postal Address Part: City (including CDPs)",
+      "mnemonic" : "postal_address.city.cdp",
       "notes" : "Cities including Census Designated Places (CDPs)",
       "sources" : [
         { "title" : "Population, Housing Units, Area, and Density: 2010 - State -- Place and (in selected states) County Subdivision",
@@ -86,7 +89,8 @@
         { "format" : "mean", "score" : 11.5576 },
         { "format" : "rare", "score" : 27.7798 }
       ] },
-    { "mnemonic" : "postal_address.state",
+    { "name" : "USPS Postal Address Part: US State",
+      "mnemonic" : "postal_address.state",
       "notes" : "",
       "sources" : [
         { "title" : "State Population Totals and Components of Change: 2010-2017",
@@ -99,7 +103,8 @@
         { "format" : "mean", "score" : 5.0044 },
         { "format" : "rare", "score" : 9.0946 }
       ]  },
-    { "mnemonic" : "postal_address.zip_code_5_digit",
+    { "name" : "USPS Postal Address Part: 5-digit Zip Code",
+      "mnemonic" : "postal_address.zip_code_5_digit",
       "notes" : "US CB ZCTA (5-digit code)",
       "sources" : [
         { "title" : "2012-2016 American Community Survey 5-Year Estimates",
@@ -112,7 +117,8 @@
         { "format" : "mean", "score" : 13.8142 },
         { "format" : "rare", "score" : 27.2628 }
       ] },
-    { "mnemonic" : "postal_address.zip_code_5_digit.zcta_3_digit_code",
+    { "name" : "USPS Postal Address Part: 3-digits of 5-digit Zip Code",
+      "mnemonic" : "postal_address.zip_code_5_digit.zcta_3_digit_code",
       "notes" : "US CB ZCTA (3-digit code)",
       "sources" : [
         { "title" : "2012-2016 American Community Survey 5-Year Estimates",
@@ -125,7 +131,8 @@
         { "format" : "mean", "score" : 9.1619 },
         { "format" : "rare", "score" : 18.8178 }
       ] },
-    { "mnemonic" : "postal_address.zip_code_5_digit.zcta_2_digit_code",
+    { "name" : "USPS Postal Address Part: 2-digits of 5-digit Zip Code",
+      "mnemonic" : "postal_address.zip_code_5_digit.zcta_2_digit_code",
       "notes" : "US CB ZCTA (2-digit code)",
       "sources" : [
         { "title" : "2012-2016 American Community Survey 5-Year Estimates",
@@ -138,7 +145,8 @@
         { "format" : "mean", "score" : 6.3288 },
         { "format" : "rare", "score" : 10.7895 }
       ] },
-    { "mnemonic" : "name.given",
+    { "name" : "Name Part: Given/First Name",
+      "mnemonic" : "name.given",
       "notes" : "",
       "sources" : [
         { "title" : "Beyond the Top 1000 Names",
@@ -151,7 +159,8 @@
         { "format" : "mean", "score" : 10.6278 },
         { "format" : "rare", "score" : 25.8084 }
       ] },
-    { "mnemonic" : "name.given.initial",
+    { "name" : "Name Part: Given/First Name (1st Initial)",
+      "mnemonic" : "name.given.initial",
       "notes" : "",
       "sources" : [
         { "title" : "Beyond the Top 1000 Names",
@@ -164,7 +173,8 @@
         { "format" : "mean", "score" : 4.11 },
         { "format" : "rare", "score" : 11.2083 }
       ] },
-    { "mnemonic" : "name.surname",
+    { "name" : "Name Part: Surname/Family Name",
+      "mnemonic" : "name.surname",
       "notes" : "",
       "sources" : [
         { "title" : "Frequently Occurring Surnames from the 2010 Census",
@@ -177,7 +187,8 @@
         { "format" : "mean", "score" : 13.5987 },
         { "format" : "rare", "score" : 21.3412 }
       ] },
-    { "mnemonic" : "name.surname.initial",
+    { "name" : "Name Part: Surname/Family Name (1st Initial)",
+      "mnemonic" : "name.surname.initial",
       "notes" : "",
       "sources" : [
         { "title" : "Frequently Occurring Surnames from the 2010 Census",
@@ -190,7 +201,8 @@
         { "format" : "mean", "score" : 4.2461 },
         { "format" : "rare", "score" : 11.344 }
       ] },
-    { "mnemonic" : "phone.nanpa.full",
+    { "name" : "Phone Number",
+      "mnemonic" : "phone.nanpa.full",
       "notes" : "",
       "sources" : [
         { "title" : "",
@@ -203,7 +215,8 @@
         { "format" : "mean", "score" : 0 },
         { "format" : "rare", "score" : 0 }
       ] },
-    { "mnemonic" : "phone.nanpa.country_code",
+    { "name" : "Phone Number Part: Country Code",
+      "mnemonic" : "phone.nanpa.country_code",
       "notes" : "NOTE: place holder, relies on Heuristic expansion for scores",
       "sources" : [
         { "title" : "",
@@ -216,7 +229,8 @@
         { "format" : "mean", "score" : 0 },
         { "format" : "rare", "score" : 0 }
       ] },
-    { "mnemonic" : "phone.nanpa.area_code",
+    { "name" : "Phone Number Part: Area Code",
+      "mnemonic" : "phone.nanpa.area_code",
       "notes" : "NANPA Numbering Plan Area (NPA) (i.e. Area Code)",
       "sources" : [
         { "title" : "NPA Database",
@@ -229,7 +243,8 @@
         { "format" : "mean", "score" : 4.2461 },
         { "format" : "rare", "score" : 11.344 }
       ] },
-    { "mnemonic" : "phone.nanpa.central_office",
+    { "name" : "Phone Number Part: Central Office Code",
+      "mnemonic" : "phone.nanpa.central_office",
       "notes" : "NANPA Central Office Codes (COC)",
       "sources" : [
         { "title" : "Central Office Code Assignment Records",
@@ -242,7 +257,8 @@
         { "format" : "mean", "score" : 9.6257 },
         { "format" : "rare", "score" : 9.6257 }
       ] },
-    { "mnemonic" : "phone.nanpa.subscriber_number",
+    { "name" : "Phone Number Part: Subscriber Number",
+      "mnemonic" : "phone.nanpa.subscriber_number",
       "notes" : "NANPA Line or Subscriber number",
       "sources" : [
         { "title" : "",

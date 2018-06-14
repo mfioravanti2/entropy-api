@@ -32,6 +32,7 @@ type Source struct {
 type Sources []Source
 
 type Attribute struct {
+	Name     string  `json:"name"`
 	Mnemonic string  `json:"mnemonic"`
 	Notes    string  `json:"notes"`
 	Sources  Sources `json:"sources"`
