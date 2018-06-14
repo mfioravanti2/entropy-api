@@ -15,19 +15,23 @@ import (
 var modelCache map[string]*source.Model
 
 func init() {
-	reload()
+	if err := Reload(); err != nil {
+		panic(err)
+	}
 }
 
-func reload() {
+func Reload() error {
 	jsonData, err := ioutil.ReadFile("data/sources/sources.json")
 	if err != nil {
-		panic(err)
+		s := fmt.Sprintf("unable to load source file")
+		return errors.New(s)
 	}
 
 	var countries model.Countries
 	err = json.Unmarshal(jsonData, &countries)
 	if err != nil {
-		panic(err)
+		s := fmt.Sprintf("unable to parse source file, expected json format")
+		return errors.New(s)
 	}
 
 	modelCache = make( map[string]*source.Model )
@@ -35,22 +39,27 @@ func reload() {
 		countryCode := strings.ToLower( country.Name )
 		localFile := "data/sources/" + country.File
 		if _, err := os.Stat(localFile); os.IsNotExist(err) {
-			panic(os.ErrNotExist)
+			s := fmt.Sprintf("country model file (%s), does not exist", country.File)
+			return errors.New(s)
 		}
 
 		jsonData, err := ioutil.ReadFile(localFile)
 		if err != nil {
-			panic(err)
+			s := fmt.Sprintf("unable to read country model file (%s)", country.File)
+			return errors.New(s)
 		}
 
 		var countryModel source.Model
 		err = json.Unmarshal(jsonData, &countryModel)
 		if err != nil {
-			panic(err)
+			s := fmt.Sprintf("unable to parse country model file (%s), expected json format", country.File)
+			return errors.New(s)
 		}
 
 		modelCache[countryCode] = &countryModel
 	}
+
+	return nil
 }
 
 func GetCountries() []string {

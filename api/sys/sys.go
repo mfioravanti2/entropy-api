@@ -30,6 +30,7 @@ const (
 
 func AddHandlers(r model.Routes) model.Routes {
 	r = append( r, model.Route{ Name: "SysHealth", Method: "GET", Pattern: "/v1/sys/health", HandlerFunc: Health} )
+	r = append( r, model.Route{ Name: "SysReload", Method: "GET", Pattern: "/v1/sys/reload", HandlerFunc: Reload} )
 
 	return r
 }
@@ -58,4 +59,12 @@ func Health(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func Reload(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-type", "application/json; charset=UTF-8")
 
+	if err := data.Reload(); err == nil {
+		w.WriteHeader( http.StatusOK )
+	} else {
+		w.WriteHeader( http.StatusInternalServerError )
+	}
+}
