@@ -284,6 +284,20 @@
         { "format" : "naive", "score" : 8.5157 },
         { "format" : "mean", "score" : 8.5127 },
         { "format" : "rare", "score" : 10.4782 }
+      ] },
+    { "name" : "Age",
+      "mnemonic" : "age",
+      "notes" : "Age in Years (Whole number)",
+      "sources" : [
+        { "title" : "Annual Estimates of the Resident Population by Single Year of Age and Sex for the United States: April 1, 2010 to July 1, 2016",
+          "organization": "U.S. Census Bureau, Population Division",
+          "date" : "2018-06-01T00:00:00Z",
+          "url" : "https://factfinder.census.gov/bkmk/table/1.0/en/PEP/2016/PEPSYASEXN"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 6.6582 },
+        { "format" : "mean", "score" : 6.4081 },
+        { "format" : "rare", "score" : 13.2241 }
       ] }
   ]
 }
