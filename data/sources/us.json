@@ -270,6 +270,20 @@
         { "format" : "naive", "score" : 9.9658 },
         { "format" : "mean", "score" : 9.9658 },
         { "format" : "rare", "score" :9.9658 }
+      ] },
+    { "name" : "Birthday",
+      "mnemonic" : "birthday",
+      "notes" : "MM/DD of Date of Birth",
+      "sources" : [
+        { "title" : "Vital Statistics Online: Birth Data Files",
+          "organization": "CDC",
+          "date" : "2018-05-03T00:00:00Z",
+          "url" : "https://www.cdc.gov/nchs/data_access/vitalstatsonline.htm"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 8.5157 },
+        { "format" : "mean", "score" : 8.5127 },
+        { "format" : "rare", "score" : 10.4782 }
       ] }
   ]
 }
