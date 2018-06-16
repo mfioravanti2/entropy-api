@@ -10,6 +10,7 @@ import (
 
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/model/source"
+	"sort"
 )
 
 var modelCache map[string]*source.Model
@@ -99,6 +100,8 @@ func GetAttributes( countryCode string ) []string {
 	for _, attribute := range countryModel.Attributes {
 		names = append(names, attribute.Mnemonic)
 	}
+	
+	sort.Strings(names)
 
 	return names
 }
