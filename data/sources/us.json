@@ -2,8 +2,8 @@
   "locale" : "US",
   "threshold" : 28.2759,
   "k" : 20000,
-  "version" : "0.0.13",
-  "timestamp" : "2018-06-16T20:48:44.062869686Z",
+  "version" : "0.0.14",
+  "timestamp" : "2018-06-16T21:05:42.140016277Z",
   "heuristics" : [
     { "match" : [ "postal_address.city", "postal_address.state", "postal_address.zip_code_5_digit" ],
       "insert" : [],
@@ -306,8 +306,8 @@
       ],
       "formats" : [
         { "format" : "naive", "score" : 9.6257 },
-        { "format" : "mean", "score" : 9.6257 },
-        { "format" : "rare", "score" : 9.6257 }
+        { "format" : "mean", "score" : 9.5997 },
+        { "format" : "rare", "score" : 16.3299 }
       ] },
     { "name" : "Phone Number Part: Subscriber Number",
       "mnemonic" : "phone.nanpa.subscriber_number",
