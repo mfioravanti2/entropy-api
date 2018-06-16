@@ -7,10 +7,10 @@ import (
 	"errors"
 	"os"
 	"fmt"
+	"sort"
 
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/model/source"
-	"sort"
 )
 
 var modelCache map[string]*source.Model
@@ -88,22 +88,22 @@ func GetModel(countryCode string) (*source.Model, error) {
 	return countryModel, errors.New(s)
 }
 
-func GetAttributes( countryCode string ) []string {
+func GetAttributes( countryCode string ) ([]string, error) {
 	var names []string
 	var countryModel *source.Model
 
 	countryModel, err := GetModel( countryCode )
 	if err != nil {
-		panic(err)
+		return names, err
 	}
 
 	for _, attribute := range countryModel.Attributes {
 		names = append(names, attribute.Mnemonic)
 	}
-	
+
 	sort.Strings(names)
 
-	return names
+	return names, nil
 }
 
 func GetAttribute( countryCode string, attributeMnemonic string ) (source.Attribute, error) {

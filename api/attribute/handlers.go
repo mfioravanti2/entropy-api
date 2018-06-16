@@ -21,8 +21,12 @@ func List(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	countryId := strings.ToLower(vars["countryId"])
 
+	var err error
 	var attributes []string
-	attributes = data.GetAttributes(countryId)
+	attributes, err = data.GetAttributes(countryId)
+	if err != nil {
+		panic(err)
+	}
 
 	w.Header().Set("Content-type", "application/json; charset=UTF-8")
 	if len(attributes) > 0 {
