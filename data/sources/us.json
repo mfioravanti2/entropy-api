@@ -272,7 +272,7 @@
         { "format" : "rare", "score" :9.9658 }
       ] },
     { "name" : "Birthday",
-      "mnemonic" : "birthday",
+      "mnemonic" : "date_of_birth.birthday",
       "notes" : "MM/DD of Date of Birth",
       "sources" : [
         { "title" : "Vital Statistics Online: Birth Data Files",
@@ -285,8 +285,50 @@
         { "format" : "mean", "score" : 8.5127 },
         { "format" : "rare", "score" : 10.4782 }
       ] },
+    { "name" : "Month of Birth",
+      "mnemonic" : "date_of_birth.month",
+      "notes" : "MM from Date of Birth (i.e. YYYY/MM/DD)",
+      "sources" : [
+        { "title" : "Vital Statistics Online: Birth Data Files",
+          "organization": "CDC",
+          "date" : "2018-05-03T00:00:00Z",
+          "url" : "https://www.cdc.gov/nchs/data_access/vitalstatsonline.htm"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 3.585 },
+        { "format" : "mean", "score" : 3.5834 },
+        { "format" : "rare", "score" : 3.7181 }
+      ] },
+    { "name" : "Day of Birth",
+      "mnemonic" : "date_of_birth.day",
+      "notes" : "DD from Date of Birth (i.e. YYYY/MM/DD)",
+      "sources" : [
+        { "title" : "Vital Statistics Online: Birth Data Files",
+          "organization": "CDC",
+          "date" : "2018-05-03T00:00:00Z",
+          "url" : "https://www.cdc.gov/nchs/data_access/vitalstatsonline.htm"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 4.9542 },
+        { "format" : "mean", "score" : 4.9492 },
+        { "format" : "rare", "score" : 5.7267 }
+      ] },
+    { "name" : "Year of Birth",
+      "mnemonic" : "date_of_birth.year",
+      "notes" : "YYYY from Date of Birth (i.e. YYYY/MM/DD), duplicate of Age",
+      "sources" : [
+        { "title" : "Annual Estimates of the Resident Population by Single Year of Age and Sex for the United States: April 1, 2010 to July 1, 2016",
+          "organization": "U.S. Census Bureau, Population Division",
+          "date" : "2018-06-01T00:00:00Z",
+          "url" : "https://factfinder.census.gov/bkmk/table/1.0/en/PEP/2016/PEPSYASEXN"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 6.6582 },
+        { "format" : "mean", "score" : 6.4081 },
+        { "format" : "rare", "score" : 13.2241 }
+      ] },
     { "name" : "Age",
-      "mnemonic" : "age",
+      "mnemonic" : "date_of_birth.age",
       "notes" : "Age in Years (Whole number)",
       "sources" : [
         { "title" : "Annual Estimates of the Resident Population by Single Year of Age and Sex for the United States: April 1, 2010 to July 1, 2016",
@@ -298,6 +340,24 @@
         { "format" : "naive", "score" : 6.6582 },
         { "format" : "mean", "score" : 6.4081 },
         { "format" : "rare", "score" : 13.2241 }
+      ] },
+    { "name" : "Date of Birth",
+      "mnemonic" : "date_of_birth",
+      "notes" : "Date of Birth (i.e. YYYY/MM/DD), joint entropy estimate based on Birthday and Age",
+      "sources" : [
+        { "title" : "Annual Estimates of the Resident Population by Single Year of Age and Sex for the United States: April 1, 2010 to July 1, 2016",
+          "organization": "U.S. Census Bureau, Population Division",
+          "date" : "2018-06-01T00:00:00Z",
+          "url" : "https://factfinder.census.gov/bkmk/table/1.0/en/PEP/2016/PEPSYASEXN"},
+        { "title" : "Vital Statistics Online: Birth Data Files",
+          "organization": "CDC",
+          "date" : "2018-05-03T00:00:00Z",
+          "url" : "https://www.cdc.gov/nchs/data_access/vitalstatsonline.htm"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 15.1739 },
+        { "format" : "mean", "score" : 14.9208 },
+        { "format" : "rare", "score" : 23.7023 }
       ] }
   ]
 }
