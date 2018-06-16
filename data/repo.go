@@ -70,6 +70,8 @@ func GetCountries() []string {
 		names = append(names, countryCode)
 	}
 
+	sort.Strings(names)
+
 	return names
 }
 

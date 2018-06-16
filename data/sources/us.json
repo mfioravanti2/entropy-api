@@ -2,8 +2,8 @@
   "locale" : "US",
   "threshold" : 28.2759,
   "k" : 20000,
-  "version" : "0.0.11",
-  "timestamp" : "2018-06-12T21:40:46.361314309Z",
+  "version" : "0.0.12",
+  "timestamp" : "2018-06-16T20:20:07.427665643Z",
   "heuristics" : [
     { "match" : [ "postal_address.city", "postal_address.state", "postal_address.zip_code_5_digit" ],
       "insert" : [],
