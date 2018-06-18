@@ -126,3 +126,40 @@ func GetAttribute( countryCode string, attributeMnemonic string ) (source.Attrib
 	s := fmt.Sprintf("attribute (%s) for country (%s) not found", attributeMnemonic, strings.ToUpper(countryCode))
 	return attribute, errors.New(s)
 }
+
+func GetHeuristics( countryCode string ) ([]string, error) {
+	var names []string
+	var countryModel *source.Model
+
+	countryModel, err := GetModel( countryCode )
+	if err != nil {
+		return names, err
+	}
+
+	for _, heuristic := range countryModel.Heuristics {
+		names = append(names, heuristic.Id)
+	}
+
+	sort.Strings(names)
+
+	return names, nil
+}
+
+func GetHeuristic( countryCode string, heuristicId string ) (source.Heuristic, error) {
+	var err error
+	var heuristic source.Heuristic
+
+	countryModel, err := GetModel( countryCode )
+	if err != nil {
+		return heuristic, err
+	}
+
+	for _, heuristic := range countryModel.Heuristics {
+		if heuristic.Id == heuristicId {
+			return heuristic, nil
+		}
+	}
+
+	s := fmt.Sprintf("heuristic (%s) for country (%s) not found", heuristicId, strings.ToUpper(countryCode))
+	return heuristic, errors.New(s)
+}
