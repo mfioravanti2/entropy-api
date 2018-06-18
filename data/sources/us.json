@@ -2,8 +2,8 @@
   "locale" : "US",
   "threshold" : 28.2759,
   "k" : 20000,
-  "version" : "0.0.15",
-  "timestamp" : "2018-06-17T23:59:38.014619491Z",
+  "version" : "0.0.16",
+  "timestamp" : "2018-06-18T23:27:13.790311053Z",
   "heuristics" : [
     { "id" : "bd363620-d0b8-4b10-9033-56d38b8dc4d3",
       "notes" : "",
@@ -476,6 +476,169 @@
         { "format" : "naive", "score" : 15.1739 },
         { "format" : "mean", "score" : 14.9208 },
         { "format" : "rare", "score" : 23.7023 }
+      ] },
+    { "id" : "bcc10021-4a9d-49ef-9b5b-142f428aea0d",
+      "name" : "USPS Postal Address Part: Street Number",
+      "mnemonic" : "postal_address.street.number",
+      "notes" : "",
+      "sources" : [
+        { "title" : "USPS Publication 28 - Postal Addressing Standards",
+          "organization": "U.S. Postal Service",
+          "date" : "2015-05-27T14:12:16Z",
+          "url" : "https://pe.usps.com/cpim/ftp/pubs/pub28/pub28.pdf"},
+        { "title" : "OpenAddresses Data (U.S. Northeast, Midwest, South and West collected datasets)",
+          "organization": "OpenAddresses.io",
+          "date" : "2018-05-22T00:00:00Z",
+          "url" : "https://openaddresses.io/"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 16.7088 },
+        { "format" : "mean", "score" : 12.9634 },
+        { "format" : "rare", "score" : 27.2493 }
+      ] },
+    { "id" : "678f7e85-a415-4023-80c1-daf838c15308",
+      "name" : "USPS Postal Address Part: Street Predirectional",
+      "mnemonic" : "postal_address.street.predirectional",
+      "notes" : "",
+      "sources" : [
+        { "title" : "USPS Publication 28 - Postal Addressing Standards",
+          "organization": "U.S. Postal Service",
+          "date" : "2015-05-27T14:12:16Z",
+          "url" : "https://pe.usps.com/cpim/ftp/pubs/pub28/pub28.pdf"},
+        { "title" : "OpenAddresses Data (U.S. Northeast, Midwest, South and West collected datasets)",
+          "organization": "OpenAddresses.io",
+          "date" : "2018-05-22T00:00:00Z",
+          "url" : "https://openaddresses.io/"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 3.7004 },
+        { "format" : "mean", "score" : 1.3381 },
+        { "format" : "rare", "score" : 21.0014 }
+      ] },
+    { "id" : "cab9445e-76de-47ca-b6de-80abaaa75a30",
+      "name" : "USPS Postal Address Part: Street Name",
+      "mnemonic" : "postal_address.street.name",
+      "notes" : "",
+      "sources" : [
+        { "title" : "USPS Publication 28 - Postal Addressing Standards",
+          "organization": "U.S. Postal Service",
+          "date" : "2015-05-27T14:12:16Z",
+          "url" : "https://pe.usps.com/cpim/ftp/pubs/pub28/pub28.pdf"},
+        { "title" : "OpenAddresses Data (U.S. Northeast, Midwest, South and West collected datasets)",
+          "organization": "OpenAddresses.io",
+          "date" : "2018-05-22T00:00:00Z",
+          "url" : "https://openaddresses.io/"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 20.1447 },
+        { "format" : "mean", "score" : 15.0281 },
+        { "format" : "rare", "score" : 27.2493 }
+      ] },
+    { "id" : "2d589ba0-199f-46a0-84cf-6f0be262624c",
+      "name" : "USPS Postal Address Part: Street Suffix",
+      "mnemonic" : "postal_address.street.suffix",
+      "notes" : "",
+      "sources" : [
+        { "title" : "USPS Publication 28 - Postal Addressing Standards",
+          "organization": "U.S. Postal Service",
+          "date" : "2015-05-27T14:12:16Z",
+          "url" : "https://pe.usps.com/cpim/ftp/pubs/pub28/pub28.pdf"},
+        { "title" : "OpenAddresses Data (U.S. Northeast, Midwest, South and West collected datasets)",
+          "organization": "OpenAddresses.io",
+          "date" : "2018-05-22T00:00:00Z",
+          "url" : "https://openaddresses.io/"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 8.1599 },
+        { "format" : "mean", "score" : 3.4598 },
+        { "format" : "rare", "score" : 27.2493 }
+      ] },
+    { "id" : "383046de-9453-4fdc-8896-b3913b28b994",
+      "name" : "USPS Postal Address Part: Street Postdirectional",
+      "mnemonic" : "postal_address.street.postdirectional",
+      "notes" : "",
+      "sources" : [
+        { "title" : "USPS Publication 28 - Postal Addressing Standards",
+          "organization": "U.S. Postal Service",
+          "date" : "2015-05-27T14:12:16Z",
+          "url" : "https://pe.usps.com/cpim/ftp/pubs/pub28/pub28.pdf"},
+        { "title" : "OpenAddresses Data (U.S. Northeast, Midwest, South and West collected datasets)",
+          "organization": "OpenAddresses.io",
+          "date" : "2018-05-22T00:00:00Z",
+          "url" : "https://openaddresses.io/"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 3.7004 },
+        { "format" : "mean", "score" : 0.4619 },
+        { "format" : "rare", "score" : 22.7899 }
+      ] },
+    { "id" : "3d2a5cc6-0049-4856-b6b1-09630d351522",
+      "name" : "USPS Postal Address Part: Unit Designator Type",
+      "mnemonic" : "postal_address.street.unit_designator_type",
+      "notes" : "",
+      "sources" : [
+        { "title" : "USPS Publication 28 - Postal Addressing Standards",
+          "organization": "U.S. Postal Service",
+          "date" : "2015-05-27T14:12:16Z",
+          "url" : "https://pe.usps.com/cpim/ftp/pubs/pub28/pub28.pdf"},
+        { "title" : "OpenAddresses Data (U.S. Northeast, Midwest, South and West collected datasets)",
+          "organization": "OpenAddresses.io",
+          "date" : "2018-05-22T00:00:00Z",
+          "url" : "https://openaddresses.io/"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 5.0 },
+        { "format" : "mean", "score" : 0.2723 },
+        { "format" : "rare", "score" : 27.2493 }
+      ] },
+    { "id" : "da2bf0ae-0e72-48da-8482-dee8ed78bc03",
+      "name" : "USPS Postal Address Part: Unit Designator Number",
+      "mnemonic" : "postal_address.street.unit_designator_number",
+      "notes" : "",
+      "sources" : [
+        { "title" : "USPS Publication 28 - Postal Addressing Standards",
+          "organization": "U.S. Postal Service",
+          "date" : "2015-05-27T14:12:16Z",
+          "url" : "https://pe.usps.com/cpim/ftp/pubs/pub28/pub28.pdf"},
+        { "title" : "OpenAddresses Data (U.S. Northeast, Midwest, South and West collected datasets)",
+          "organization": "OpenAddresses.io",
+          "date" : "2018-05-22T00:00:00Z",
+          "url" : "https://openaddresses.io/"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 18.1244 },
+        { "format" : "mean", "score" : 1.3573 },
+        { "format" : "rare", "score" : 27.2493 }
+      ] },
+    { "id" : "da2bf0ae-0e72-48da-8482-dee8ed78bc03",
+      "name" : "USPS Postal Address Part: +4 digit code",
+      "mnemonic" : "postal_address.plus_4_digit_code",
+      "notes" : "",
+      "sources" : [
+        { "title" : "USPS-B-3200 Intelligent Mail Barcode 4-State Specification Rev H",
+          "organization": "U.S. Postal Service",
+          "date" : "2015-04-20T00:00:00Z",
+          "url" : "https://ribbs.usps.gov/intelligentmail_mailpieces/documents/tech_guides/USPSB3200IntelligentMailBarcode4State.pdf"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 13.2877 },
+        { "format" : "mean", "score" : 13.2877 },
+        { "format" : "rare", "score" : 13.2877 }
+      ] },
+    { "id" : "da2bf0ae-0e72-48da-8482-dee8ed78bc03",
+      "name" : "USPS Postal Address Part: Delivery Point",
+      "mnemonic" : "postal_address.delivery_point",
+      "notes" : "",
+      "sources" : [
+        { "title" : "USPS-B-3200 Intelligent Mail Barcode 4-State Specification Rev H",
+          "organization": "U.S. Postal Service",
+          "date" : "2015-04-20T00:00:00Z",
+          "url" : "https://ribbs.usps.gov/intelligentmail_mailpieces/documents/tech_guides/USPSB3200IntelligentMailBarcode4State.pdf"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 6.6439 },
+        { "format" : "mean", "score" : 6.6439 },
+        { "format" : "rare", "score" : 6.6439 }
       ] }
   ]
 }
