@@ -9,6 +9,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/data"
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/model/source"
+	"github.com/mfioravanti2/entropy-api/command/server/logging"
 )
 
 type ModelVersion struct {
@@ -29,6 +30,9 @@ const (
 )
 
 func AddHandlers(r model.Routes) model.Routes {
+	logger := logging.Logger(nil)
+	logger.Info("AddHandlers(sys)")
+
 	r = append( r, model.Route{ Name: "SysHealth", Method: "GET", Pattern: "/v1/sys/health", HandlerFunc: Health} )
 	r = append( r, model.Route{ Name: "SysReload", Method: "GET", Pattern: "/v1/sys/reload", HandlerFunc: Reload} )
 

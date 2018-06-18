@@ -13,9 +13,13 @@ import (
 	"github.com/mfioravanti2/entropy-api/model/request"
 	"github.com/mfioravanti2/entropy-api/model/response"
 	"github.com/mfioravanti2/entropy-api/calc"
+	"github.com/mfioravanti2/entropy-api/command/server/logging"
 )
 
 func AddHandlers(r model.Routes) model.Routes {
+	logger := logging.Logger(nil)
+	logger.Info("AddHandlers(scores)")
+
 	r = append( r, model.Route{"ScoreCalc", "POST", "/v1/scores", Calc} )
 	r = append( r, model.Route{"ScoreCalcFormat", "POST", "/v1/scores/format/{formatId}", CalcFormat} )
 

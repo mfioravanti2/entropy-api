@@ -6,11 +6,16 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+
 	"github.com/mfioravanti2/entropy-api/data"
 	"github.com/mfioravanti2/entropy-api/model"
+	"github.com/mfioravanti2/entropy-api/command/server/logging"
 )
 
 func AddHandlers(r model.Routes) model.Routes {
+	logger := logging.Logger(nil)
+	logger.Info("AddHandlers(attribute)")
+
 	r = append( r, model.Route{"AttributeList", "GET", "/v1/countries/{countryId}/attributes", List})
 	r = append( r, model.Route{"AttributeDetails", "GET", "/v1/countries/{countryId}/attributes/{attributeId}", Detail})
 
