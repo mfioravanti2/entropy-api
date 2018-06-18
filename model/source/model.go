@@ -7,6 +7,8 @@ import (
 )
 
 type Heuristic struct {
+	Id     string   `json:"id"`
+	Notes  string   `json:"notes"`
 	Match  []string `json:"match"`
 	Insert []string `json:"insert"`
 	Remove []string `json:"remove"`
@@ -31,6 +33,7 @@ type Source struct {
 type Sources []Source
 
 type Attribute struct {
+	Id       string  `json:"id"`
 	Name     string  `json:"name"`
 	Mnemonic string  `json:"mnemonic"`
 	Notes    string  `json:"notes"`

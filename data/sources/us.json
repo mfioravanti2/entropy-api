@@ -2,100 +2,145 @@
   "locale" : "US",
   "threshold" : 28.2759,
   "k" : 20000,
-  "version" : "0.0.14",
-  "timestamp" : "2018-06-16T21:05:42.140016277Z",
+  "version" : "0.0.15",
+  "timestamp" : "2018-06-17T23:59:38.014619491Z",
   "heuristics" : [
-    { "match" : [ "postal_address.city", "postal_address.state", "postal_address.zip_code_5_digit" ],
+    { "id" : "bd363620-d0b8-4b10-9033-56d38b8dc4d3",
+      "notes" : "",
+      "match" : [ "postal_address.city", "postal_address.state", "postal_address.zip_code_5_digit" ],
       "insert" : [],
       "remove" : ["postal_address.city", "postal_address.state"]
     },
-    { "match" : [ "postal_address.city", "postal_address.zip_code_5_digit" ],
+    { "id" : "35cb863a-e7d1-4f48-beeb-c8303fefdd4a",
+      "notes" : "",
+      "match" : [ "postal_address.city", "postal_address.zip_code_5_digit" ],
       "insert" : [],
       "remove" : ["postal_address.city"]
     },
-    { "match" : [ "postal_address.state", "postal_address.zip_code_5_digit" ],
+    { "id" : "6bae3325-0159-4d34-83af-9be5b781c10c",
+      "notes" : "",
+      "match" : [ "postal_address.state", "postal_address.zip_code_5_digit" ],
       "insert" : [],
       "remove" : ["postal_address.state"]
     },
-    { "match" : [ "postal_address.city", "postal_address.city.cdp" ],
+    { "id" : "a64b0fda-ff99-49c1-bad2-ec1dc2b02b40",
+      "notes" : "",
+      "match" : [ "postal_address.city", "postal_address.city.cdp" ],
       "insert" : [],
       "remove" : ["postal_address.city"]
     },
-    { "match" : [ "postal_address.zip_code_5_digit", "postal_address.zip_code_5_digit.zcta_3_digit_code" ],
+    { "id" : "08fdddf2-a555-45a5-a1db-26031f03daba",
+      "notes" : "",
+      "match" : [ "postal_address.zip_code_5_digit", "postal_address.zip_code_5_digit.zcta_3_digit_code" ],
       "insert" : [],
       "remove" : ["postal_address.zip_code_5_digit.zcta_3_digit_code"]
     },
-    { "match" : [ "postal_address.zip_code_5_digit", "postal_address.zip_code_5_digit.zcta_2_digit_code" ],
+    { "id" : "587f309b-23d6-4796-a1e4-894c35f3f442",
+      "notes" : "",
+      "match" : [ "postal_address.zip_code_5_digit", "postal_address.zip_code_5_digit.zcta_2_digit_code" ],
       "insert" : [],
       "remove" : ["postal_address.zip_code_5_digit.zcta_2_digit_code"]
     },
-    { "match" : [ "name.given", "name.given.initial" ],
+    { "id" : "1a172ecc-69ea-4e3d-a5ab-58152e5660bd",
+      "notes" : "",
+      "match" : [ "name.given", "name.given.initial" ],
       "insert" : [],
       "remove" : ["name.given.initial"]
     },
-    { "match" : [ "name.surname", "name.surname.initial" ],
+    { "id" : "71005605-6be8-49b7-8ece-802af7c10e35",
+      "notes" : "",
+      "match" : [ "name.surname", "name.surname.initial" ],
       "insert" : [],
       "remove" : ["name.surname.initial"]
     },
-    { "match" : [ "phone.nanpa.full" ],
+    { "id" : "02294b1a-4bb7-443e-8b6c-768f303769da",
+      "notes" : "",
+      "match" : [ "phone.nanpa.full" ],
       "insert" : ["phone.nanpa.country_code", "phone.nanpa.area_code", "phone.nanpa.central_office", "phone.nanpa.subscriber_number"],
       "remove" : ["phone.nanpa.full"]
     },
-    { "match" : [ "date_of_birth.age", "date_of_birth" ],
+    { "id" : "6916fcca-2d6a-4534-944c-9a3ad2c69e89",
+      "notes" : "",
+      "match" : [ "date_of_birth.age", "date_of_birth" ],
       "insert" : [],
       "remove" : ["date_of_birth.age"]
     },
-    { "match" : [ "date_of_birth.birthday", "date_of_birth" ],
+    { "id" : "97ebc2b9-8812-4b91-ba7b-bb246acdf04c",
+      "notes" : "",
+      "match" : [ "date_of_birth.birthday", "date_of_birth" ],
       "insert" : [],
       "remove" : ["date_of_birth.birthday"]
     },
-    { "match" : [ "date_of_birth.day", "date_of_birth" ],
+    { "id" : "63db98a1-2c42-4ce0-861f-027ba0af6081",
+      "notes" : "",
+      "match" : [ "date_of_birth.day", "date_of_birth" ],
       "insert" : [],
       "remove" : ["date_of_birth.day"]
     },
-    { "match" : [ "date_of_birth.month", "date_of_birth" ],
+    { "id" : "b8e8a2de-5347-430d-867b-77dbf2ddd079",
+      "notes" : "",
+      "match" : [ "date_of_birth.month", "date_of_birth" ],
       "insert" : [],
       "remove" : ["date_of_birth.month"]
     },
-    { "match" : [ "date_of_birth.year", "date_of_birth" ],
+    { "id" : "55e19f73-f79f-4d5b-a203-ca956ddc7d23",
+      "notes" : "",
+      "match" : [ "date_of_birth.year", "date_of_birth" ],
       "insert" : [],
       "remove" : ["date_of_birth.year"]
     },
-    { "match" : [ "date_of_birth.month", "date_of_birth.birthday" ],
+    { "id" : "2ae0c657-24e8-4c15-9407-73947209c6e9",
+      "notes" : "",
+      "match" : [ "date_of_birth.month", "date_of_birth.birthday" ],
       "insert" : [],
       "remove" : ["date_of_birth.month"]
     },
-    { "match" : [ "date_of_birth.day", "date_of_birth.birthday" ],
+    { "id" : "08887e80-db3a-4c2c-8602-f368cc5ebe53",
+      "notes" : "",
+      "match" : [ "date_of_birth.day", "date_of_birth.birthday" ],
       "insert" : [],
       "remove" : ["date_of_birth.day"]
     },
-    { "match" : [ "date_of_birth.age", "date_of_birth.year" ],
+    { "id" : "322ab6c8-a64f-4558-968a-4d30af19a168",
+      "notes" : "",
+      "match" : [ "date_of_birth.age", "date_of_birth.year" ],
       "insert" : [],
       "remove" : ["date_of_birth.age"]
     },
-    { "match" : [ "date_of_birth.year", "date_of_birth.month", "date_of_birth.day" ],
+    { "id" : "21750aca-5d54-45dd-8022-6609c93a31b6",
+      "notes" : "",
+      "match" : [ "date_of_birth.year", "date_of_birth.month", "date_of_birth.day" ],
       "insert" : [ "date_of_birth" ],
       "remove" : ["date_of_birth.year", "date_of_birth.month", "date_of_birth.day"]
     },
-    { "match" : [ "date_of_birth.age", "date_of_birth.month", "date_of_birth.day" ],
+    { "id" : "5b2fe406-4bbc-4751-bd6e-b758af60c99a",
+      "notes" : "",
+      "match" : [ "date_of_birth.age", "date_of_birth.month", "date_of_birth.day" ],
       "insert" : [ "date_of_birth" ],
       "remove" : ["date_of_birth.age", "date_of_birth.month", "date_of_birth.day"]
     },
-    { "match" : [ "date_of_birth.year", "date_of_birth.birthday" ],
+    { "id" : "a2419af7-de6d-4113-9170-6e3eefb7acae",
+      "notes" : "",
+      "match" : [ "date_of_birth.year", "date_of_birth.birthday" ],
       "insert" : [ "date_of_birth" ],
       "remove" : ["date_of_birth.year", "date_of_birth.birthday"]
     },
-    { "match" : [ "date_of_birth.age", "date_of_birth.birthday" ],
+    { "id" : "336f44dc-b321-4396-b1d8-52497fa013ed",
+      "notes" : "",
+      "match" : [ "date_of_birth.age", "date_of_birth.birthday" ],
       "insert" : [ "date_of_birth" ],
       "remove" : ["date_of_birth.age", "date_of_birth.birthday"]
     },
-    { "match" : [ "date_of_birth.month", "date_of_birth.day" ],
+    { "id" : "3f799ea3-b4b2-4a4e-9714-5ceeb4afe3e3",
+      "notes" : "",
+      "match" : [ "date_of_birth.month", "date_of_birth.day" ],
       "insert" : [ "date_of_birth.birthday" ],
       "remove" : [ "date_of_birth.month", "date_of_birth.day"]
     }
   ],
   "attributes" : [
-    { "name" : "Sex",
+    { "id" : "7f1d9d68-b70e-4b3e-ab93-06abb77d6770",
+      "name" : "Sex",
       "mnemonic" : "sex",
       "notes" : "",
       "sources" : [
@@ -113,7 +158,8 @@
         { "format" : "mean", "score" : 1.107 },
         { "format" : "rare", "score" : 5.8783 }
       ] },
-    { "name" : "USPS Postal Address Part: City",
+    { "id" : "fe67a4b3-4bbc-4272-97c8-e232aea831f4",
+      "name" : "USPS Postal Address Part: City",
       "mnemonic" : "postal_address.city",
       "notes" : "",
       "sources" : [
@@ -127,7 +173,8 @@
         { "format" : "mean", "score" : 10.8483 },
         { "format" : "rare", "score" : 27.5347 }
       ] },
-    { "name" : "USPS Postal Address Part: City (including CDPs)",
+    { "id" : "587b8813-ff51-435f-9102-d520eaf76904",
+      "name" : "USPS Postal Address Part: City (including CDPs)",
       "mnemonic" : "postal_address.city.cdp",
       "notes" : "Cities including Census Designated Places (CDPs)",
       "sources" : [
@@ -141,7 +188,8 @@
         { "format" : "mean", "score" : 11.5576 },
         { "format" : "rare", "score" : 27.7798 }
       ] },
-    { "name" : "USPS Postal Address Part: US State",
+    { "id" : "dcabda3c-d905-491c-83de-8d262f8095aa",
+      "name" : "USPS Postal Address Part: US State",
       "mnemonic" : "postal_address.state",
       "notes" : "",
       "sources" : [
@@ -155,7 +203,8 @@
         { "format" : "mean", "score" : 5.0044 },
         { "format" : "rare", "score" : 9.0946 }
       ]  },
-    { "name" : "USPS Postal Address Part: 5-digit Zip Code",
+    { "id" : "56844b83-2c46-41cb-8270-7ccf7727921f",
+      "name" : "USPS Postal Address Part: 5-digit Zip Code",
       "mnemonic" : "postal_address.zip_code_5_digit",
       "notes" : "US CB ZCTA (5-digit code)",
       "sources" : [
@@ -169,7 +218,8 @@
         { "format" : "mean", "score" : 13.8142 },
         { "format" : "rare", "score" : 27.2628 }
       ] },
-    { "name" : "USPS Postal Address Part: 3-digits of 5-digit Zip Code",
+    { "id" : "ccdecca7-a83e-4835-b2bd-38fc59943e2c",
+      "name" : "USPS Postal Address Part: 3-digits of 5-digit Zip Code",
       "mnemonic" : "postal_address.zip_code_5_digit.zcta_3_digit_code",
       "notes" : "US CB ZCTA (3-digit code)",
       "sources" : [
@@ -183,7 +233,8 @@
         { "format" : "mean", "score" : 9.1619 },
         { "format" : "rare", "score" : 18.8178 }
       ] },
-    { "name" : "USPS Postal Address Part: 2-digits of 5-digit Zip Code",
+    { "id" : "d20c7a3a-165e-4202-b9da-b4d9c818b8e5",
+      "name" : "USPS Postal Address Part: 2-digits of 5-digit Zip Code",
       "mnemonic" : "postal_address.zip_code_5_digit.zcta_2_digit_code",
       "notes" : "US CB ZCTA (2-digit code)",
       "sources" : [
@@ -197,7 +248,8 @@
         { "format" : "mean", "score" : 6.3288 },
         { "format" : "rare", "score" : 10.7895 }
       ] },
-    { "name" : "Name Part: Given/First Name",
+    { "id" : "438ada51-538b-4ee2-a43b-a2e95e112905",
+      "name" : "Name Part: Given/First Name",
       "mnemonic" : "name.given",
       "notes" : "",
       "sources" : [
@@ -211,7 +263,8 @@
         { "format" : "mean", "score" : 10.6278 },
         { "format" : "rare", "score" : 25.8084 }
       ] },
-    { "name" : "Name Part: Given/First Name (1st Initial)",
+    { "id" : "07ebc810-a184-440c-9a8f-0967bd66d655",
+      "name" : "Name Part: Given/First Name (1st Initial)",
       "mnemonic" : "name.given.initial",
       "notes" : "",
       "sources" : [
@@ -225,7 +278,8 @@
         { "format" : "mean", "score" : 4.11 },
         { "format" : "rare", "score" : 11.2083 }
       ] },
-    { "name" : "Name Part: Surname/Family Name",
+    { "id" : "f22a71a1-e244-427c-9d87-9ba248b30ab6",
+      "name" : "Name Part: Surname/Family Name",
       "mnemonic" : "name.surname",
       "notes" : "",
       "sources" : [
@@ -239,7 +293,8 @@
         { "format" : "mean", "score" : 13.5987 },
         { "format" : "rare", "score" : 21.3412 }
       ] },
-    { "name" : "Name Part: Surname/Family Name (1st Initial)",
+    { "id" : "a2ad427c-bbc0-4668-b1f7-ee7199091146",
+      "name" : "Name Part: Surname/Family Name (1st Initial)",
       "mnemonic" : "name.surname.initial",
       "notes" : "",
       "sources" : [
@@ -253,7 +308,8 @@
         { "format" : "mean", "score" : 4.2461 },
         { "format" : "rare", "score" : 11.344 }
       ] },
-    { "name" : "Phone Number",
+    { "id" : "dd687220-9a22-43c2-9ad9-1a6ca2b9e78a",
+      "name" : "Phone Number",
       "mnemonic" : "phone.nanpa.full",
       "notes" : "",
       "sources" : [
@@ -267,7 +323,8 @@
         { "format" : "mean", "score" : 0 },
         { "format" : "rare", "score" : 0 }
       ] },
-    { "name" : "Phone Number Part: Country Code",
+    { "id" : "f916b412-f8c4-400f-95d7-60c159da434c",
+      "name" : "Phone Number Part: Country Code",
       "mnemonic" : "phone.nanpa.country_code",
       "notes" : "NOTE: place holder, relies on Heuristic expansion for scores",
       "sources" : [
@@ -281,7 +338,8 @@
         { "format" : "mean", "score" : 0 },
         { "format" : "rare", "score" : 0 }
       ] },
-    { "name" : "Phone Number Part: Area Code",
+    { "id" : "f25db280-afb1-494e-a28d-f5e461c30062",
+      "name" : "Phone Number Part: Area Code",
       "mnemonic" : "phone.nanpa.area_code",
       "notes" : "NANPA Numbering Plan Area (NPA) (i.e. Area Code)",
       "sources" : [
@@ -295,7 +353,8 @@
         { "format" : "mean", "score" : 4.2461 },
         { "format" : "rare", "score" : 11.344 }
       ] },
-    { "name" : "Phone Number Part: Central Office Code",
+    { "id" : "d34ab3a4-262b-4abd-adfc-5da69a0259d6",
+      "name" : "Phone Number Part: Central Office Code",
       "mnemonic" : "phone.nanpa.central_office",
       "notes" : "NANPA Central Office Codes (COC)",
       "sources" : [
@@ -309,7 +368,8 @@
         { "format" : "mean", "score" : 9.5997 },
         { "format" : "rare", "score" : 16.3299 }
       ] },
-    { "name" : "Phone Number Part: Subscriber Number",
+    { "id" : "df544e7d-aae6-42fa-ae2b-4cd2837f152e",
+      "name" : "Phone Number Part: Subscriber Number",
       "mnemonic" : "phone.nanpa.subscriber_number",
       "notes" : "NANPA Line or Subscriber number",
       "sources" : [
@@ -323,7 +383,8 @@
         { "format" : "mean", "score" : 9.9658 },
         { "format" : "rare", "score" :9.9658 }
       ] },
-    { "name" : "Birthday",
+    { "id" : "92501a2a-6824-451a-a95f-243f2161e0fa",
+      "name" : "Birthday",
       "mnemonic" : "date_of_birth.birthday",
       "notes" : "MM/DD of Date of Birth",
       "sources" : [
@@ -337,7 +398,8 @@
         { "format" : "mean", "score" : 8.5127 },
         { "format" : "rare", "score" : 10.4782 }
       ] },
-    { "name" : "Month of Birth",
+    { "id" : "5947a68a-6f64-4c23-be2b-7fcfc3d54c09",
+      "name" : "Month of Birth",
       "mnemonic" : "date_of_birth.month",
       "notes" : "MM from Date of Birth (i.e. YYYY/MM/DD)",
       "sources" : [
@@ -351,7 +413,8 @@
         { "format" : "mean", "score" : 3.5834 },
         { "format" : "rare", "score" : 3.7181 }
       ] },
-    { "name" : "Day of Birth",
+    { "id" : "9c67cd7b-6ff2-4ce1-87cb-cb249d737ded",
+      "name" : "Day of Birth",
       "mnemonic" : "date_of_birth.day",
       "notes" : "DD from Date of Birth (i.e. YYYY/MM/DD)",
       "sources" : [
@@ -365,7 +428,8 @@
         { "format" : "mean", "score" : 4.9492 },
         { "format" : "rare", "score" : 5.7267 }
       ] },
-    { "name" : "Year of Birth",
+    { "id" : "3b6ebd46-0ef1-41d5-96fd-0308622455b4",
+      "name" : "Year of Birth",
       "mnemonic" : "date_of_birth.year",
       "notes" : "YYYY from Date of Birth (i.e. YYYY/MM/DD), duplicate of Age",
       "sources" : [
@@ -379,7 +443,8 @@
         { "format" : "mean", "score" : 6.4081 },
         { "format" : "rare", "score" : 13.2241 }
       ] },
-    { "name" : "Age",
+    { "id" : "30c99b5e-398d-4c01-980b-e240001f48c8",
+      "name" : "Age",
       "mnemonic" : "date_of_birth.age",
       "notes" : "Age in Years (Whole number)",
       "sources" : [
@@ -393,7 +458,8 @@
         { "format" : "mean", "score" : 6.4081 },
         { "format" : "rare", "score" : 13.2241 }
       ] },
-    { "name" : "Date of Birth",
+    { "id" : "1819f5b2-8f2f-42c6-9d3e-d4379af923ce",
+      "name" : "Date of Birth",
       "mnemonic" : "date_of_birth",
       "notes" : "Date of Birth (i.e. YYYY/MM/DD), joint entropy estimate based on Birthday and Age",
       "sources" : [
