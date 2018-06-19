@@ -2,7 +2,7 @@
   "locale" : "US",
   "threshold" : 28.2759,
   "k" : 20000,
-  "version" : "0.0.16",
+  "version" : "0.0.17",
   "timestamp" : "2018-06-18T23:27:13.790311053Z",
   "heuristics" : [
     { "id" : "bd363620-d0b8-4b10-9033-56d38b8dc4d3",
@@ -136,6 +136,120 @@
       "match" : [ "date_of_birth.month", "date_of_birth.day" ],
       "insert" : [ "date_of_birth.birthday" ],
       "remove" : [ "date_of_birth.month", "date_of_birth.day"]
+    },
+    { "id" : "eb202cd8-7618-4be8-a946-df675e819cb7",
+      "notes" : "",
+      "match" : [ "postal_address.zip_code_5_digit", "postal_address.plus_4_digit_code", "postal_address.delivery_point" ],
+      "insert" : [ "postal_address.full" ],
+      "remove" : ["postal_address.zip_code_5_digit", "postal_address.plus_4_digit_code", "postal_address.delivery_point"]
+    },
+    { "id" : "ca50582b-45c0-4746-bae7-7c2845f19399",
+      "notes" : "",
+      "match" : [ "postal_address.street.name", "postal_address.full" ],
+      "insert" : [],
+      "remove" : ["postal_address.street.name"]
+    },
+    { "id" : "cdd56943-cc2b-4575-9328-5521e79e62d2",
+      "notes" : "",
+      "match" : [ "postal_address.street.number", "postal_address.full" ],
+      "insert" : [],
+      "remove" : ["postal_address.street.number"]
+    },
+    { "id" : "8c608690-a019-418e-88c4-9818d84bb48b",
+      "notes" : "",
+      "match" : [ "postal_address.street.postdirectional", "postal_address.full" ],
+      "insert" : [],
+      "remove" : ["postal_address.street.postdirectional"]
+    },
+    { "id" : "8b29c881-19fb-4342-9d59-4c635a731174",
+      "notes" : "",
+      "match" : [ "postal_address.street.predirectional", "postal_address.full" ],
+      "insert" : [],
+      "remove" : ["postal_address.street.predirectional"]
+    },
+    { "id" : "37c1494e-81f4-4b12-af7d-c8f08bdef417",
+      "notes" : "",
+      "match" : [ "postal_address.street.suffix", "postal_address.full" ],
+      "insert" : [],
+      "remove" : ["postal_address.street.suffix"]
+    },
+    { "id" : "70c0eadc-98b2-4e0b-b7fd-7a31db054f10",
+      "notes" : "",
+      "match" : [ "postal_address.street.unit_designator_number", "postal_address.full" ],
+      "insert" : [],
+      "remove" : ["postal_address.street.unit_designator_number"]
+    },
+    { "id" : "e841d3bb-de84-42bf-b92f-d5d58a3a9a8d",
+      "notes" : "",
+      "match" : [ "postal_address.street.unit_designator_type", "postal_address.full" ],
+      "insert" : [],
+      "remove" : ["postal_address.street.unit_designator_type"]
+    },
+    { "id" : "5b9696ac-2e15-4544-a8af-11fc1e1ea1f0",
+      "notes" : "",
+      "match" : [ "postal_address.street.number", "postal_address.street.predirectional", "postal_address.street.name", "postal_address.street.postdirectional", "postal_address.street.suffix" ],
+      "insert" : [ "postal_address.street.street.1st_line"],
+      "remove" : ["postal_address.street.number", "postal_address.street.predirectional", "postal_address.street.name", "postal_address.street.postdirectional", "postal_address.street.suffix"]
+    },
+    { "id" : "7cb90d1e-e438-4af9-b410-99d0ef5c9820",
+      "notes" : "",
+      "match" : [ "postal_address.street.1st_line", "postal_address.full" ],
+      "insert" : [],
+      "remove" : ["postal_address.street.1st_line"]
+    },
+    { "id" : "8f4c0aa9-b106-4820-b6c7-16165742bc7a",
+      "notes" : "",
+      "match" : [ "postal_address.street.unit_designator_number", "postal_address.street.unit_designator_type" ],
+      "insert" : [ "postal_address.street.street.2nd_line"],
+      "remove" : ["postal_address.street.unit_designator_number", "postal_address.street.unit_designator_type"]
+    },
+    { "id" : "500c4549-7561-4b98-8a30-145e36851474",
+      "notes" : "",
+      "match" : [ "postal_address.street.2nd_line", "postal_address.full" ],
+      "insert" : [],
+      "remove" : ["postal_address.street.2nd_line"]
+    },
+    { "id" : "a5683405-dd13-47e3-86e6-b998dee65610",
+      "notes" : "",
+      "match" : [ "postal_address.street.name", "postal_address.street.1st_line" ],
+      "insert" : [],
+      "remove" : ["postal_address.street.name"]
+    },
+    { "id" : "8919f7f8-231c-4b45-84ec-3f331b46238e",
+      "notes" : "",
+      "match" : [ "postal_address.street.number", "postal_address.street.1st_line" ],
+      "insert" : [],
+      "remove" : ["postal_address.street.number"]
+    },
+    { "id" : "428ac10a-219a-4e05-93af-d36c4da028f6",
+      "notes" : "",
+      "match" : [ "postal_address.street.postdirectional", "postal_address.street.1st_line" ],
+      "insert" : [],
+      "remove" : ["postal_address.street.postdirectional"]
+    },
+    { "id" : "44083285-8afe-4f63-a508-3597f7560327",
+      "notes" : "",
+      "match" : [ "postal_address.street.predirectional", "postal_address.street.1st_line" ],
+      "insert" : [],
+      "remove" : ["postal_address.street.predirectional"]
+    },
+    { "id" : "0370ac0b-d4a5-44e4-ac07-842af0c756cc",
+      "notes" : "",
+      "match" : [ "postal_address.street.suffix", "postal_address.street.1st_line" ],
+      "insert" : [],
+      "remove" : ["postal_address.street.suffix"]
+    },
+    { "id" : "fbf8bd2a-5b6c-4f47-a779-f8749a4e0fe8",
+      "notes" : "",
+      "match" : [ "postal_address.street.unit_designator_number", "postal_address.street.2nd_line" ],
+      "insert" : [],
+      "remove" : ["postal_address.street.unit_designator_number"]
+    },
+    { "id" : "baf98a02-34af-49ce-9e68-21fa8f62f340",
+      "notes" : "",
+      "match" : [ "postal_address.street.unit_designator_type", "postal_address.street.2nd_line" ],
+      "insert" : [],
+      "remove" : ["postal_address.street.unit_designator_type"]
     }
   ],
   "attributes" : [
@@ -639,6 +753,63 @@
         { "format" : "naive", "score" : 6.6439 },
         { "format" : "mean", "score" : 6.6439 },
         { "format" : "rare", "score" : 6.6439 }
+      ] },
+    { "id" : "b432039e-8f67-44f7-9cf7-d4a521dde526",
+      "name" : "USPS Postal Address",
+      "mnemonic" : "postal_address.full",
+      "notes" : "",
+      "sources" : [
+        { "title" : "USPS-B-3200 Intelligent Mail Barcode 4-State Specification Rev H",
+          "organization": "U.S. Postal Service",
+          "date" : "2015-04-20T00:00:00Z",
+          "url" : "https://ribbs.usps.gov/intelligentmail_mailpieces/documents/tech_guides/USPSB3200IntelligentMailBarcode4State.pdf"},
+        { "title" : "OpenAddresses Data (U.S. Northeast, Midwest, South and West collected datasets)",
+          "organization": "OpenAddresses.io",
+          "date" : "2018-05-22T00:00:00Z",
+          "url" : "https://openaddresses.io/"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 34.9256 },
+        { "format" : "mean", "score" : 33.7458 },
+        { "format" : "rare", "score" : 47.1944 }
+      ] },
+    { "id" : "8d6e276c-585f-4d18-b1f5-aeda1d83cc2b",
+      "name" : "USPS Postal Address Part: Street Number and Name",
+      "mnemonic" : "postal_address.street.1st_line",
+      "notes" : "",
+      "sources" : [
+        { "title" : "USPS-B-3200 Intelligent Mail Barcode 4-State Specification Rev H",
+          "organization": "U.S. Postal Service",
+          "date" : "2015-04-20T00:00:00Z",
+          "url" : "https://ribbs.usps.gov/intelligentmail_mailpieces/documents/tech_guides/USPSB3200IntelligentMailBarcode4State.pdf"},
+        { "title" : "OpenAddresses Data (U.S. Northeast, Midwest, South and West collected datasets)",
+          "organization": "OpenAddresses.io",
+          "date" : "2018-05-22T00:00:00Z",
+          "url" : "https://openaddresses.io/"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 18.302 },
+        { "format" : "mean", "score" : 18.302 },
+        { "format" : "rare", "score" : 27.2493 }
+      ] },
+    { "id" : "1e238c8f-cb64-466a-ab8f-3a1d00e3db3b",
+      "name" : "USPS Postal Address Part: Unit Designator Number and Type",
+      "mnemonic" : "postal_address.street.2nd_line",
+      "notes" : "",
+      "sources" : [
+        { "title" : "USPS-B-3200 Intelligent Mail Barcode 4-State Specification Rev H",
+          "organization": "U.S. Postal Service",
+          "date" : "2015-04-20T00:00:00Z",
+          "url" : "https://ribbs.usps.gov/intelligentmail_mailpieces/documents/tech_guides/USPSB3200IntelligentMailBarcode4State.pdf"},
+        { "title" : "OpenAddresses Data (U.S. Northeast, Midwest, South and West collected datasets)",
+          "organization": "OpenAddresses.io",
+          "date" : "2018-05-22T00:00:00Z",
+          "url" : "https://openaddresses.io/"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 1.6296 },
+        { "format" : "mean", "score" : 1.6296 },
+        { "format" : "rare", "score" : 27.2493 }
       ] }
   ]
 }
