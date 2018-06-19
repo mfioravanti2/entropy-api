@@ -2,8 +2,8 @@
   "locale" : "US",
   "threshold" : 28.2759,
   "k" : 20000,
-  "version" : "0.0.17",
-  "timestamp" : "2018-06-18T23:27:13.790311053Z",
+  "version" : "0.0.18",
+  "timestamp" : "2018-06-19T22:32:31.366105009Z",
   "heuristics" : [
     { "id" : "bd363620-d0b8-4b10-9033-56d38b8dc4d3",
       "notes" : "",
@@ -250,6 +250,30 @@
       "match" : [ "postal_address.street.unit_designator_type", "postal_address.street.2nd_line" ],
       "insert" : [],
       "remove" : ["postal_address.street.unit_designator_type"]
+    },
+    { "id" : "bb99443e-990c-4278-8291-cc991681e406",
+      "notes" : "",
+      "match" : [ "ssn.area_number", "ssn.group_number", "ssn.serial_number" ],
+      "insert" : [ "ssn" ],
+      "remove" : ["ssn.area_number", "ssn.group_number", "ssn.serial_number"]
+    },
+    { "id" : "69e17f75-fd8b-4a60-b3e9-d3f71cc5ea3c",
+      "notes" : "",
+      "match" : [ "ssn.area_number", "ssn" ],
+      "insert" : [],
+      "remove" : ["ssn.area_number"]
+    },
+    { "id" : "4ac848f9-5777-4238-809a-7528498e9753",
+      "notes" : "",
+      "match" : [ "ssn.group_number", "ssn" ],
+      "insert" : [],
+      "remove" : ["ssn.group_number"]
+    },
+    { "id" : "37cdbb69-2b3b-4aea-8638-b11318327aee",
+      "notes" : "",
+      "match" : [ "ssn.serial_number", "ssn" ],
+      "insert" : [],
+      "remove" : ["ssn.serial_number"]
     }
   ],
   "attributes" : [
@@ -810,6 +834,98 @@
         { "format" : "naive", "score" : 1.6296 },
         { "format" : "mean", "score" : 1.6296 },
         { "format" : "rare", "score" : 27.2493 }
+      ] },
+    { "id" : "a4050423-c9ce-43ec-855c-cae9c76251ba",
+      "name" : "SSN",
+      "mnemonic" : "ssn",
+      "notes" : "",
+      "sources" : [
+        { "title" : "Social Security Numbers: The SSN Numbering Scheme",
+          "organization": "U.S. Social Security Administration",
+          "date" : "2018-06-19T22:24:14Z",
+          "url" : "https://www.ssa.gov/history/ssn/geocard.html"},
+        { "title" : "Social Security Administration Fact Sheet: Issuing SSNs",
+          "organization": "U.S. Social Security Administration",
+          "date" : "2011-06-13T16:31:56Z",
+          "url" : "https://www.ssa.gov/kc/SSAFactSheet--IssuingSSNs.pdf"},
+        { "title" : "IRS Publication 1346 (Rev. 10-2012): Electronic Return File Specifications and Record Layouts for Individual Tax Returns (Tax Year 2012)",
+          "organization": "U.S. Internal Revenue Service",
+          "date" : "2012-10-16T15:15:22Z",
+          "url" : "https://www.irs.gov/pub/irs-pdf/p1346.pdf"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 29.7275 },
+        { "format" : "mean", "score" : 29.7275 },
+        { "format" : "rare", "score" : 29.7275 }
+      ] },
+    { "id" : "3559192d-2fc1-439c-b019-af25f7f0f885",
+      "name" : "SSN Part: Area Number",
+      "mnemonic" : "ssn.area_number",
+      "notes" : "SSN Area Number (i.e. AAA of AAA-GG-SSSS)",
+      "sources" : [
+        { "title" : "Social Security Numbers: The SSN Numbering Scheme",
+          "organization": "U.S. Social Security Administration",
+          "date" : "2018-06-19T22:24:14Z",
+          "url" : "https://www.ssa.gov/history/ssn/geocard.html"},
+        { "title" : "Social Security Administration Fact Sheet: Issuing SSNs",
+          "organization": "U.S. Social Security Administration",
+          "date" : "2011-06-13T16:31:56Z",
+          "url" : "https://www.ssa.gov/kc/SSAFactSheet--IssuingSSNs.pdf"},
+        { "title" : "IRS Publication 1346 (Rev. 10-2012): Electronic Return File Specifications and Record Layouts for Individual Tax Returns (Tax Year 2012)",
+          "organization": "U.S. Internal Revenue Service",
+          "date" : "2012-10-16T15:15:22Z",
+          "url" : "https://www.irs.gov/pub/irs-pdf/p1346.pdf"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 9.8106 },
+        { "format" : "mean", "score" : 9.8106 },
+        { "format" : "rare", "score" : 9.8106 }
+      ] },
+    { "id" : "315dff8c-602e-42f2-a639-a0d00309cdab",
+      "name" : "SSN Part: Group Number",
+      "mnemonic" : "ssn.group_number",
+      "notes" : "SSN Group Number (i.e. GG of AAA-GG-SSSS)",
+      "sources" : [
+        { "title" : "Social Security Numbers: The SSN Numbering Scheme",
+          "organization": "U.S. Social Security Administration",
+          "date" : "2018-06-19T22:24:14Z",
+          "url" : "https://www.ssa.gov/history/ssn/geocard.html"},
+        { "title" : "Social Security Administration Fact Sheet: Issuing SSNs",
+          "organization": "U.S. Social Security Administration",
+          "date" : "2011-06-13T16:31:56Z",
+          "url" : "https://www.ssa.gov/kc/SSAFactSheet--IssuingSSNs.pdf"},
+        { "title" : "IRS Publication 1346 (Rev. 10-2012): Electronic Return File Specifications and Record Layouts for Individual Tax Returns (Tax Year 2012)",
+          "organization": "U.S. Internal Revenue Service",
+          "date" : "2012-10-16T15:15:22Z",
+          "url" : "https://www.irs.gov/pub/irs-pdf/p1346.pdf"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 6.6294 },
+        { "format" : "mean", "score" : 6.6294 },
+        { "format" : "rare", "score" : 6.6294 }
+      ] },
+    { "id" : "eeb3bc32-d247-4d14-aced-370aa30f691b",
+      "name" : "SSN Part: Serial Number",
+      "mnemonic" : "ssn.serial_number",
+      "notes" : "SSN Serial Number (i.e. SSSS of AAA-GG-SSSS)",
+      "sources" : [
+        { "title" : "Social Security Numbers: The SSN Numbering Scheme",
+          "organization": "U.S. Social Security Administration",
+          "date" : "2018-06-19T22:24:14Z",
+          "url" : "https://www.ssa.gov/history/ssn/geocard.html"},
+        { "title" : "Social Security Administration Fact Sheet: Issuing SSNs",
+          "organization": "U.S. Social Security Administration",
+          "date" : "2011-06-13T16:31:56Z",
+          "url" : "https://www.ssa.gov/kc/SSAFactSheet--IssuingSSNs.pdf"},
+        { "title" : "IRS Publication 1346 (Rev. 10-2012): Electronic Return File Specifications and Record Layouts for Individual Tax Returns (Tax Year 2012)",
+          "organization": "U.S. Internal Revenue Service",
+          "date" : "2012-10-16T15:15:22Z",
+          "url" : "https://www.irs.gov/pub/irs-pdf/p1346.pdf"}
+      ],
+      "formats" : [
+        { "format" : "naive", "score" : 13.2876 },
+        { "format" : "mean", "score" : 13.2876 },
+        { "format" : "rare", "score" : 13.2876 }
       ] }
   ]
 }
