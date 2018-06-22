@@ -1,11 +1,13 @@
 package heuristic
 
 import (
+	"context"
 	"net/http"
 	"encoding/json"
 	"strings"
 
 	"github.com/gorilla/mux"
+	"go.uber.org/zap"
 
 	"github.com/mfioravanti2/entropy-api/data"
 	"github.com/mfioravanti2/entropy-api/model"
@@ -13,10 +15,14 @@ import (
 )
 
 func AddHandlers(r model.Routes) model.Routes {
-	logger := logging.Logger(nil)
-	logger.Info("AddHandlers(heuristic)")
+	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "heuristic" )
 
+	logger := logging.Logger( ctx )
+
+	logger.Info("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/heuristics" ) )
 	r = append( r, model.Route{"HeuristicList", "GET", "/v1/countries/{countryId}/heuristics", List})
+
+	logger.Info("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/heuristics/{heuristicId}" ) )
 	r = append( r, model.Route{"HeuristicDetails", "GET", "/v1/countries/{countryId}/heuristics/{heuristicId}", Detail})
 
 	return r

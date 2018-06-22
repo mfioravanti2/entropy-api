@@ -1,32 +1,26 @@
 package server
 
 import (
-	"context"
 	"net/http"
 
-	"go.uber.org/zap"
 	"github.com/google/uuid"
 
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 )
 
-var httpContext = context.Background()
-
 func Logger(inner http.Handler, name string) http.Handler {
-	return http.HandlerFunc( func( w http.ResponseWriter, r *http.Request){
+	return http.HandlerFunc( func( w http.ResponseWriter, r *http.Request ) {
 		rqId, err := uuid.NewRandom()
 		if err != nil {
 			panic(err)
 		}
 
-		rqCtx := logging.WithRqId(httpContext, rqId.String())
-		logger := logging.Logger(rqCtx)
+		httpContext := r.Context()
+		reqCtx := logging.WithRqId(httpContext, rqId.String(), name, r.Method, r.RequestURI)
 
-		logger.Info(name,
-			zap.String("method", r.Method),
-			zap.String("url", r.RequestURI),
-		)
+		logger := logging.Logger(reqCtx)
+		logger.Info( "request received (logger)", )
 
-		inner.ServeHTTP(w,r)
+		inner.ServeHTTP( w, r.WithContext( reqCtx ) )
 	})
 }

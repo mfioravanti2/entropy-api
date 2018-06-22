@@ -6,8 +6,10 @@ import (
 	"io"
 	"io/ioutil"
 	"strings"
+	"context"
 
 	"github.com/gorilla/mux"
+	"go.uber.org/zap"
 
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/model/request"
@@ -17,10 +19,14 @@ import (
 )
 
 func AddHandlers(r model.Routes) model.Routes {
-	logger := logging.Logger(nil)
-	logger.Info("AddHandlers(scores)")
+	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "scores" )
 
+	logger := logging.Logger( ctx )
+
+	logger.Info("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
 	r = append( r, model.Route{"ScoreCalc", "POST", "/v1/scores", Calc} )
+
+	logger.Info("registering handlers", zap.String( "endpoint", "/v1/scores/format/{formatId}" ) )
 	r = append( r, model.Route{"ScoreCalcFormat", "POST", "/v1/scores/format/{formatId}", CalcFormat} )
 
 	return r

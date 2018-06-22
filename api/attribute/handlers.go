@@ -1,11 +1,13 @@
 package attribute
 
 import (
+	"context"
 	"net/http"
 	"encoding/json"
 	"strings"
 
 	"github.com/gorilla/mux"
+	"go.uber.org/zap"
 
 	"github.com/mfioravanti2/entropy-api/data"
 	"github.com/mfioravanti2/entropy-api/model"
@@ -13,10 +15,14 @@ import (
 )
 
 func AddHandlers(r model.Routes) model.Routes {
-	logger := logging.Logger(nil)
-	logger.Info("AddHandlers(attribute)")
+	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "sys" )
 
+	logger := logging.Logger( ctx )
+
+	logger.Info("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/attributes" ) )
 	r = append( r, model.Route{"AttributeList", "GET", "/v1/countries/{countryId}/attributes", List})
+
+	logger.Info("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/attributes/{attributeId}" ) )
 	r = append( r, model.Route{"AttributeDetails", "GET", "/v1/countries/{countryId}/attributes/{attributeId}", Detail})
 
 	return r

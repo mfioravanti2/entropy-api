@@ -1,8 +1,11 @@
 package country
 
 import (
+	"context"
 	"net/http"
 	"encoding/json"
+
+	"go.uber.org/zap"
 
 	"github.com/mfioravanti2/entropy-api/data"
 	"github.com/mfioravanti2/entropy-api/model"
@@ -10,9 +13,11 @@ import (
 )
 
 func AddHandlers(r model.Routes) model.Routes {
-	logger := logging.Logger(nil)
-	logger.Info("AddHandlers(country)")
+	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "country" )
 
+	logger := logging.Logger( ctx )
+
+	logger.Info("registering handlers", zap.String( "endpoint", "/v1/countries" ) )
 	r = append( r, model.Route{"CountryList", "GET", "/v1/countries", List} )
 
 	return r
