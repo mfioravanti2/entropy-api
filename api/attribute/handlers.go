@@ -32,11 +32,22 @@ func List(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	countryId := strings.ToLower(vars["countryId"])
 
+	reqCtx := r.Context()
+	logger := logging.Logger(reqCtx)
+
+	logger.Info( "retrieving attributes from country model",
+		zap.String("countryId", strings.ToUpper(countryId) ),
+	)
+
 	var err error
 	var attributes []string
 	attributes, err = data.GetAttributes(countryId)
 	if err != nil {
-		panic(err)
+		logger.Error( "retrieving attributes from country model",
+			zap.String("countryId", strings.ToUpper(countryId) ),
+			zap.String( "status", "error" ),
+			zap.String("error ", err.Error() ),
+		)
 	}
 
 	w.Header().Set("Content-type", "application/json; charset=UTF-8")
@@ -44,10 +55,20 @@ func List(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader( http.StatusOK )
 
 		if err := json.NewEncoder(w).Encode(attributes); err != nil {
-			panic(err)
+			logger.Error( "encoding attributes",
+				zap.String("countryId", strings.ToUpper(countryId) ),
+				zap.String( "status", "error" ),
+				zap.String("error ", err.Error() ),
+			)
 		}
 	} else {
 		w.WriteHeader( http.StatusNotFound )
+
+		logger.Info( "retrieving attributes from country model",
+			zap.String("countryId", strings.ToUpper(countryId) ),
+			zap.String( "status", "ok" ),
+			zap.String("error ", "no attributes found" ),
+		)
 	}
 }
 
@@ -56,6 +77,14 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 	countryId := strings.ToLower(vars["countryId"])
 	attributeId := strings.ToLower(vars["attributeId"])
 
+	reqCtx := r.Context()
+	logger := logging.Logger(reqCtx)
+
+	logger.Info( "retrieving attribute from country model",
+		zap.String("countryId", strings.ToUpper(countryId) ),
+		zap.String( "attributeId", strings.ToLower(attributeId) ),
+	)
+
 	attribute, err := data.GetAttribute(countryId, attributeId)
 
 	w.Header().Set("Content-type", "application/json; charset=UTF-8")
@@ -63,9 +92,21 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader( http.StatusOK )
 
 		if err := json.NewEncoder(w).Encode(attribute); err != nil {
-			panic(err)
+			logger.Error( "encoding attribute",
+				zap.String("countryId", strings.ToUpper(countryId) ),
+				zap.String( "attributeId", strings.ToLower(attributeId) ),
+				zap.String( "status", "error" ),
+				zap.String("error ", err.Error() ),
+			)
 		}
 	} else {
 		w.WriteHeader( http.StatusNotFound )
+
+		logger.Error( "retrieving attribute from country model",
+			zap.String("countryId", strings.ToUpper(countryId) ),
+			zap.String( "attributeId", strings.ToLower(attributeId) ),
+			zap.String( "status", "error" ),
+			zap.String("error ", err.Error() ),
+		)
 	}
 }

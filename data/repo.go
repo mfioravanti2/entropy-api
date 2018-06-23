@@ -8,30 +8,68 @@ import (
 	"os"
 	"fmt"
 	"sort"
+	"context"
+
+	"go.uber.org/zap"
 
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/model/source"
+	"github.com/mfioravanti2/entropy-api/command/server/logging"
 )
 
 var modelCache map[string]*source.Model
 
 func init() {
-	if err := Reload(); err != nil {
-		panic(err)
+	ctx := logging.WithFuncId( context.Background(), "init", "data" )
+
+	logger := logging.Logger( ctx )
+
+	logger.Info("loading models" )
+
+	if err := Reload( ctx ); err != nil {
+		logger.Error( "loading models",
+			zap.String("error", err.Error() ),
+		)
 	}
 }
 
-func Reload() error {
+func Reload( ctx context.Context ) error {
+	if ctx == nil {
+		ctx = logging.WithFuncId( context.Background(), "Reload", "data" )
+	} else {
+		ctx = logging.WithFuncId( ctx, "Reload", "data" )
+	}
+
+	logger := logging.Logger( ctx )
+
+	logger.Info("preparing to reloading models",
+		zap.String("model_file", "data/sources/sources.json" ),
+	)
+
 	jsonData, err := ioutil.ReadFile("data/sources/sources.json")
 	if err != nil {
 		s := fmt.Sprintf("unable to load source file")
+		logger.Error( "loading model index",
+			zap.String("file", "data/sources/sources.json" ),
+			zap.String("error", s ),
+		)
+
 		return errors.New(s)
 	}
+
+	logger.Info("attempting to unmarshal model index",
+		zap.String("model_file", "data/sources/sources.json" ),
+	)
 
 	var countries model.Countries
 	err = json.Unmarshal(jsonData, &countries)
 	if err != nil {
 		s := fmt.Sprintf("unable to parse source file, expected json format")
+		logger.Error( "unable to parse model index",
+			zap.String("file", "data/sources/sources.json" ),
+			zap.String("error", s ),
+		)
+
 		return errors.New(s)
 	}
 
@@ -39,14 +77,32 @@ func Reload() error {
 	for _, country := range countries {
 		countryCode := strings.ToLower( country.Name )
 		localFile := "data/sources/" + country.File
+
+		logger.Info( "loading country model",
+			zap.String("file", localFile ),
+			zap.String("countryId", strings.ToUpper( countryCode ) ),
+		)
+
 		if _, err := os.Stat(localFile); os.IsNotExist(err) {
 			s := fmt.Sprintf("country model file (%s), does not exist", country.File)
+			logger.Error( "unable to locate country model",
+				zap.String("file", localFile ),
+				zap.String("countryId", strings.ToUpper( countryCode ) ),
+				zap.String("error", s ),
+			)
+
 			return errors.New(s)
 		}
 
 		jsonData, err := ioutil.ReadFile(localFile)
 		if err != nil {
 			s := fmt.Sprintf("unable to read country model file (%s)", country.File)
+			logger.Error( "unable to read country model file",
+				zap.String("file", localFile ),
+				zap.String("countryId", strings.ToUpper( countryCode ) ),
+				zap.String("error", s ),
+			)
+
 			return errors.New(s)
 		}
 
@@ -54,8 +110,19 @@ func Reload() error {
 		err = json.Unmarshal(jsonData, &countryModel)
 		if err != nil {
 			s := fmt.Sprintf("unable to parse country model file (%s), expected json format", country.File)
+			logger.Error( "unable to unmarshal country model file",
+				zap.String("file", localFile ),
+				zap.String("countryId", strings.ToUpper( countryCode ) ),
+				zap.String("error", s ),
+			)
+
 			return errors.New(s)
 		}
+
+		logger.Info( "registering country model",
+			zap.String("file", localFile ),
+			zap.String("countryId", strings.ToUpper( countryCode ) ),
+		)
 
 		modelCache[countryCode] = &countryModel
 	}

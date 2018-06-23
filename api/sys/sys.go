@@ -56,8 +56,7 @@ func Health(w http.ResponseWriter, r *http.Request) {
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
 
-	logger.Info( "SysHealth",
-		zap.String("method", r.Method),
+	logger.Info( "checking system health",
 		zap.String("version", SysInfo.ApiVersion ),
 	)
 
@@ -71,15 +70,26 @@ func Health(w http.ResponseWriter, r *http.Request) {
 			m := ModelVersion{ CountryCode: strings.ToUpper( country ), Timestamp: m.ModelDate.UTC(), Version: m.ModelVersion}
 			SysInfo.ModelVersions = append( SysInfo.ModelVersions, m)
 
-			logger.Info( "SysHealth",
+			logger.Info( "checking model health",
 				zap.String("model ", strings.ToUpper( country ) ),
+				zap.String( "status", "ok" ),
 				zap.Bool( "loaded", true ),
+			)
+		} else {
+			logger.Error( "checking model health",
+				zap.String("model ", strings.ToUpper( country ) ),
+				zap.Bool( "loaded", false ),
+				zap.String( "status", "error" ),
+				zap.String("error ", err.Error() ),
 			)
 		}
 	}
 
 	if err := json.NewEncoder(w).Encode(SysInfo); err != nil {
-		panic(err)
+		logger.Error( "encoding system health",
+			zap.String( "status", "error" ),
+			zap.String("error", err.Error() ),
+		)
 	}
 }
 
@@ -89,16 +99,16 @@ func Reload(w http.ResponseWriter, r *http.Request) {
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
 
-	if err := data.Reload(); err == nil {
+	if err := data.Reload( reqCtx ); err == nil {
 		w.WriteHeader( http.StatusOK )
 
-		logger.Info( "",
+		logger.Info( "reloading models",
 			zap.String( "status", "ok" ),
 		)
 	} else {
 		w.WriteHeader( http.StatusInternalServerError )
 
-		logger.Info( "",
+		logger.Error( "reloading models",
 			zap.String( "status", "error" ),
 			zap.String( "error", err.Error() ),
 		)

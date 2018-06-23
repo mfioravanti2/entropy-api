@@ -32,11 +32,22 @@ func List(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	countryId := strings.ToLower(vars["countryId"])
 
+	reqCtx := r.Context()
+	logger := logging.Logger(reqCtx)
+
+	logger.Info( "retrieving heuristics from country model",
+		zap.String("countryId", strings.ToUpper(countryId)),
+	)
+
 	var err error
 	var heuristics []string
 	heuristics, err = data.GetHeuristics(countryId)
 	if err != nil {
-		panic(err)
+		logger.Error( "retrieving heuristics from country model",
+			zap.String("countryId", strings.ToUpper(countryId) ),
+			zap.String( "status", "error" ),
+			zap.String("error ", err.Error() ),
+		)
 	}
 
 	w.Header().Set("Content-type", "application/json; charset=UTF-8")
@@ -44,10 +55,20 @@ func List(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader( http.StatusOK )
 
 		if err := json.NewEncoder(w).Encode(heuristics); err != nil {
-			panic(err)
+			logger.Error( "encoding heuristics",
+				zap.String("countryId", strings.ToUpper(countryId) ),
+				zap.String( "status", "error" ),
+				zap.String("error ", err.Error() ),
+			)
 		}
 	} else {
 		w.WriteHeader( http.StatusNotFound )
+
+		logger.Info( "retrieving heuristics from country model",
+			zap.String("countryId", strings.ToUpper(countryId) ),
+			zap.String( "status", "ok" ),
+			zap.String("error ", "no heuristics found" ),
+		)
 	}
 }
 
@@ -56,6 +77,14 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 	countryId := strings.ToLower(vars["countryId"])
 	heuristicId := strings.ToLower(vars["heuristicId"])
 
+	reqCtx := r.Context()
+	logger := logging.Logger(reqCtx)
+
+	logger.Info( "retrieving heuristic from country model",
+		zap.String("countryId", strings.ToUpper(countryId) ),
+		zap.String( "heuristicId", strings.ToLower(heuristicId) ),
+	)
+
 	heuristic, err := data.GetHeuristic(countryId, heuristicId)
 
 	w.Header().Set("Content-type", "application/json; charset=UTF-8")
@@ -63,9 +92,21 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader( http.StatusOK )
 
 		if err := json.NewEncoder(w).Encode(heuristic); err != nil {
-			panic(err)
+			logger.Error( "encoding heuristic",
+				zap.String("countryId", strings.ToUpper(countryId) ),
+				zap.String( "heuristicId", strings.ToLower(heuristicId) ),
+				zap.String( "status", "error" ),
+				zap.String("error ", err.Error() ),
+			)
 		}
 	} else {
 		w.WriteHeader( http.StatusNotFound )
+
+		logger.Error( "retrieving heuristic from country model",
+			zap.String("countryId", strings.ToUpper(countryId) ),
+			zap.String( "heuristicId", strings.ToLower(heuristicId) ),
+			zap.String( "status", "error" ),
+			zap.String("error ", err.Error() ),
+		)
 	}
 }

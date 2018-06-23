@@ -27,15 +27,32 @@ func List(w http.ResponseWriter, r *http.Request) {
 	var countries []string
 	countries = data.GetCountries()
 
+	reqCtx := r.Context()
+	logger := logging.Logger(reqCtx)
+
+	logger.Info( "retrieving country codes from models" )
+
 	if len(countries) > 0 {
 		w.Header().Set("Content-type", "application/json; charset=UTF-8")
 		w.WriteHeader( http.StatusOK )
 
 		if err := json.NewEncoder(w).Encode(countries); err != nil {
-			panic(err)
+			logger.Error( "encoding country codes",
+				zap.String( "status", "error" ),
+				zap.String("error", err.Error() ),
+			)
+		} else {
+			logger.Info( "retrieved country codes from models",
+				zap.String( "status", "ok" ),
+			)
 		}
 	} else {
 		w.WriteHeader( http.StatusNoContent )
+
+		logger.Info( "retrieved country codes from models",
+			zap.String( "status", "ok" ),
+			zap.String("error ", "no country codes found" ),
+		)
 	}
 }
 
