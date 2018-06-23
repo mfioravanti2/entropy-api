@@ -3,7 +3,9 @@ package calc
 import (
 	"time"
 	"strings"
+	"context"
 
+	"go.uber.org/zap"
 	"github.com/deckarep/golang-set"
 
 	"github.com/mfioravanti2/entropy-api/model/response"
@@ -11,6 +13,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/data"
 	"github.com/mfioravanti2/entropy-api/model/source"
 	"github.com/mfioravanti2/entropy-api/api/sys"
+	"github.com/mfioravanti2/entropy-api/command/server/logging"
 )
 
 type Attribute struct {
@@ -18,13 +21,33 @@ type Attribute struct {
 	Locale   string
 }
 
-func Calc( r *request.Request, formatId string ) (response.Response, error) {
+type Attributes []Attribute
+
+type Person struct {
+	H float64
+	Attributes mapset.Set
+	Heuristics []string
+	Errors []error
+}
+
+func Calc( ctx context.Context, r *request.Request, formatId string ) (response.Response, error) {
 	var err error
 	var errors []error
 	var score response.Response
-	var attributes, a_p mapset.Set
-	var h_t, h_p, h_total float64
+	var attributes mapset.Set
+	var h_t, h_total float64
 	var nationality string
+
+	if ctx == nil {
+		ctx = logging.WithFuncId( context.Background(), "Calc", "calc" )
+	} else {
+		ctx = logging.WithFuncId( ctx, "Calc", "calc" )
+	}
+
+	logger := logging.Logger( ctx )
+
+	logger.Info("preparing to score request",
+	)
 
 	nations := make( map[string]*source.Model )
 	h_total = 0.0
@@ -59,16 +82,16 @@ func Calc( r *request.Request, formatId string ) (response.Response, error) {
 			nations[nation] = n
 		}
 
-		a_p, h_p, errors = calcPerson( p, nations[nation], formatId )
-		attributes = attributes.Union( ConvertSet( a_p, nation) )
-		h_total += h_p
+		person := calcPerson( ctx, p, nations[nation], formatId )
+		attributes = attributes.Union( ConvertSet( person.Attributes, nation) )
+		h_total += person.H
 
 		if len(errors) > 0 {
 			if score.Errors == nil {
 				score.Errors = new(response.Errors)
 			}
 
-			for _, e := range errors {
+			for _, e := range person.Errors {
 				score.Errors.Messages = append( score.Errors.Messages, e.Error() )
 			}
 		}
@@ -140,50 +163,112 @@ func containsAll( m mapset.Set, s []string) bool {
 	return true
 }
 
-func calcPerson( p request.Person, s *source.Model, formatId string ) (mapset.Set, float64, []error) {
-	var h_p float64 = 0.0
+func calcPerson( ctx context.Context, p request.Person, s *source.Model, formatId string ) Person {
 	var changed bool = false
-	var errors []error
-	a_p := mapset.NewSet()
+	var loops, changes int = 0, 0
+	var person Person
+	person.Attributes = mapset.NewSet()
+	person.H = 0.0
+
+	if ctx == nil {
+		ctx = logging.WithFuncId( context.Background(), "calcPerson", "calc" )
+	} else {
+		ctx = logging.WithFuncId( ctx, "calcPerson", "calc" )
+	}
+
+	logger := logging.Logger( ctx )
+
+	logger.Info("preparing to score individual",
+		zap.String( "personId", p.PersonID ),
+	)
 
 	for _, a := range p.Attributes {
-		a_p.Add(a.Mnemonic)
+		person.Attributes.Add(a.Mnemonic)
 	}
 
 	for {
 		changed = false
 
 		for _, h := range s.Heuristics {
-			if containsAll(a_p, h.Match) {
+			logger.Debug("checking heuristic attribute set",
+				zap.String( "personId", p.PersonID ),
+				zap.String( "heuristicId", h.Id ),
+				zap.Int( "loopId", loops ),
+			)
+
+			if containsAll(person.Attributes, h.Match) {
+				logger.Info("heuristic attribute set matched",
+					zap.String( "personId", p.PersonID ),
+					zap.String( "heuristicId", h.Id ),
+					zap.Int( "loopId", loops ),
+				)
+
 				if len(h.Remove) > 0 {
+					logger.Info("removing attribute set based on heuristic match",
+						zap.String( "personId", p.PersonID ),
+						zap.String( "heuristicId", h.Id ),
+						zap.Int( "loopId", loops ),
+					)
+
 					r_s := ArrayToSet( h.Remove )
-					a_p = a_p.Difference( r_s )
+					person.Attributes = person.Attributes.Difference( r_s )
 					changed = true
 				}
 
 				if len(h.Insert) > 0 {
+					logger.Info("inserting attribute set based on heuristic match",
+						zap.String( "personId", p.PersonID ),
+						zap.String( "heuristicId", h.Id ),
+						zap.Int( "loopId", loops ),
+					)
+
 					r_i := ArrayToSet( h.Insert )
-					a_p = a_p.Union( r_i )
+					person.Attributes = person.Attributes.Union( r_i )
 					changed = true
 				}
+
+				changes += 1
 			}
 		}
 
 		if !changed {
+			logger.Info("heuristics comparisons completed, no more changes",
+				zap.String( "personId", p.PersonID ),
+				zap.Int( "loopId", loops ),
+				zap.Int( "changes", changes ),
+			)
+
 			break
 		}
+
+		loops += 1
 	}
 
-	for val := range a_p.Iterator().C {
-		if str, ok := val.(string); ok {
-			h_i, err := source.GetScore(s, str, formatId)
+	for val := range person.Attributes.Iterator().C {
+		if attributeId, ok := val.(string); ok {
+			h_i, err := source.GetScore( s, attributeId, formatId )
 			if err == nil {
-				h_p += h_i
+				logger.Info("scoring final attribute set",
+					zap.String( "personId", p.PersonID ),
+					zap.String( "formatId", formatId ),
+					zap.String( "attributeId", attributeId ),
+					zap.Float64( "score", h_i ),
+				)
+
+				person.H += h_i
 			} else {
-				errors = append( errors, err )
+				logger.Info("scoring final attribute set",
+					zap.String( "personId", p.PersonID ),
+					zap.String( "formatId", formatId ),
+					zap.String( "attributeId", attributeId ),
+					zap.String( "status", "error" ),
+					zap.String( "error", err.Error() ),
+				)
+
+				person.Errors = append( person.Errors, err )
 			}
 		}
 	}
 
-	return a_p, h_p, errors
+	return person
 }
