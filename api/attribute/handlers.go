@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"encoding/json"
 	"strings"
+	"regexp"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
@@ -12,6 +13,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/data"
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
+	"github.com/mfioravanti2/entropy-api/api/country"
 )
 
 func AddHandlers(r model.Routes) model.Routes {
@@ -28,12 +30,38 @@ func AddHandlers(r model.Routes) model.Routes {
 	return r
 }
 
+func Validate( attributeId string ) (bool, error) {
+	var err error
+
+	rx, err := regexp.Compile("([a-zA-Z0-9_]+.)+([a-zA-Z0-9_])" )
+	if err != nil {
+		return false, err
+	}
+
+	if rx.MatchString( attributeId ) {
+		return true, nil
+	}
+
+	return false, err
+}
+
 func List(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	countryId := strings.ToLower(vars["countryId"])
 
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
+
+	if ok, _ := country.Validate(countryId); !ok {
+		logger.Error( "validating country code",
+			zap.String("countryId", strings.ToUpper(countryId)),
+			zap.String( "status", "error" ),
+			zap.String("error ", "invalid country code" ),
+		)
+
+		w.WriteHeader( http.StatusUnprocessableEntity )
+		return
+	}
 
 	logger.Info( "retrieving attributes from country model",
 		zap.String("countryId", strings.ToUpper(countryId) ),
@@ -79,6 +107,29 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
+
+	if ok, _ := country.Validate(countryId); !ok {
+		logger.Error( "validating country code",
+			zap.String("countryId", strings.ToUpper(countryId)),
+			zap.String( "status", "error" ),
+			zap.String("error ", "invalid country code" ),
+		)
+
+		w.WriteHeader( http.StatusUnprocessableEntity )
+		return
+	}
+
+	if ok, _ := Validate(attributeId); !ok {
+		logger.Error( "validating attribute identifier",
+			zap.String("countryId", strings.ToUpper(countryId) ),
+			zap.String( "heuristicId", strings.ToLower(attributeId) ),
+			zap.String( "status", "error" ),
+			zap.String("error ", "invalid attribute identifier" ),
+		)
+
+		w.WriteHeader( http.StatusUnprocessableEntity )
+		return
+	}
 
 	logger.Info( "retrieving attribute from country model",
 		zap.String("countryId", strings.ToUpper(countryId) ),

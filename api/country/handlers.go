@@ -4,6 +4,8 @@ import (
 	"context"
 	"net/http"
 	"encoding/json"
+	"regexp"
+	"strings"
 
 	"go.uber.org/zap"
 
@@ -23,6 +25,22 @@ func AddHandlers(r model.Routes) model.Routes {
 	return r
 }
 
+func Validate( countryCode string ) (bool, error) {
+	var err error
+
+	// two-digit country codes: ISO 3166-1 alpha-2
+	rx, err := regexp.Compile("[a-zA-Z]{2}" )
+	if err != nil {
+		return false, err
+	}
+
+	if rx.MatchString( countryCode ) {
+		return true, nil
+	}
+
+	return false, nil
+}
+
 func List(w http.ResponseWriter, r *http.Request) {
 	var countries []string
 	countries = data.GetCountries()
@@ -35,6 +53,10 @@ func List(w http.ResponseWriter, r *http.Request) {
 	if len(countries) > 0 {
 		w.Header().Set("Content-type", "application/json; charset=UTF-8")
 		w.WriteHeader( http.StatusOK )
+
+		for i, countryCode := range countries {
+			countries[i] = strings.ToUpper( countryCode )
+		}
 
 		if err := json.NewEncoder(w).Encode(countries); err != nil {
 			logger.Error( "encoding country codes",
