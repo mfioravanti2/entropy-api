@@ -33,7 +33,7 @@ func AddHandlers(r model.Routes) model.Routes {
 func Validate( heuristicId string ) (bool, error) {
 	var err error
 
-	rx, err := regexp.Compile( "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$" )
+	rx, err := regexp.Compile( `^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$` )
 	if err != nil {
 		return false, err
 	}

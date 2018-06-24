@@ -33,7 +33,7 @@ func AddHandlers(r model.Routes) model.Routes {
 func Validate( attributeId string ) (bool, error) {
 	var err error
 
-	rx, err := regexp.Compile("([a-zA-Z0-9_]+.)+([a-zA-Z0-9_])" )
+	rx, err := regexp.Compile(`^([a-zA-Z0-9_]+.)+([a-zA-Z0-9_])$` )
 	if err != nil {
 		return false, err
 	}

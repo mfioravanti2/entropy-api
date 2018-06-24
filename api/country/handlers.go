@@ -29,7 +29,7 @@ func Validate( countryCode string ) (bool, error) {
 	var err error
 
 	// two-digit country codes: ISO 3166-1 alpha-2
-	rx, err := regexp.Compile("[a-zA-Z]{2}" )
+	rx, err := regexp.Compile(`^[a-zA-Z]{2}$` )
 	if err != nil {
 		return false, err
 	}
