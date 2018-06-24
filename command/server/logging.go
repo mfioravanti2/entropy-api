@@ -19,7 +19,9 @@ func Logger(inner http.Handler, name string) http.Handler {
 		reqCtx := logging.WithRqId(httpContext, rqId.String(), name, r.Method, r.RequestURI)
 
 		logger := logging.Logger(reqCtx)
-		logger.Info( "request received (logger)", )
+		logger.Debug( "request received (logger)", )
+
+		w.Header().Set("X-Entropy-Request", rqId.String() )
 
 		inner.ServeHTTP( w, r.WithContext( reqCtx ) )
 	})

@@ -24,7 +24,7 @@ func init() {
 
 	logger := logging.Logger( ctx )
 
-	logger.Info("loading models" )
+	logger.Debug("loading models" )
 
 	if err := Reload( ctx ); err != nil {
 		logger.Error( "loading models",
@@ -42,7 +42,7 @@ func Reload( ctx context.Context ) error {
 
 	logger := logging.Logger( ctx )
 
-	logger.Info("preparing to reloading models",
+	logger.Debug("preparing to reloading models",
 		zap.String("model_file", "data/sources/sources.json" ),
 	)
 
@@ -57,7 +57,7 @@ func Reload( ctx context.Context ) error {
 		return errors.New(s)
 	}
 
-	logger.Info("attempting to unmarshal model index",
+	logger.Debug("attempting to unmarshal model index",
 		zap.String("model_file", "data/sources/sources.json" ),
 	)
 
@@ -78,7 +78,7 @@ func Reload( ctx context.Context ) error {
 		countryCode := strings.ToLower( country.Name )
 		localFile := "data/sources/" + country.File
 
-		logger.Info( "loading country model",
+		logger.Debug( "loading country model",
 			zap.String("file", localFile ),
 			zap.String("countryId", strings.ToUpper( countryCode ) ),
 		)
@@ -119,13 +119,15 @@ func Reload( ctx context.Context ) error {
 			return errors.New(s)
 		}
 
-		logger.Info( "registering country model",
+		logger.Debug( "registering country model",
 			zap.String("file", localFile ),
 			zap.String("countryId", strings.ToUpper( countryCode ) ),
 		)
 
 		modelCache[countryCode] = &countryModel
 	}
+
+	logger.Info( "country models loaded" )
 
 	return nil
 }

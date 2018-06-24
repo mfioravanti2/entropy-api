@@ -21,10 +21,10 @@ func AddHandlers(r model.Routes) model.Routes {
 
 	logger := logging.Logger( ctx )
 
-	logger.Info("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/attributes" ) )
+	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/attributes" ) )
 	r = append( r, model.Route{"AttributeList", "GET", "/v1/countries/{countryId}/attributes", List})
 
-	logger.Info("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/attributes/{attributeId}" ) )
+	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/attributes/{attributeId}" ) )
 	r = append( r, model.Route{"AttributeDetails", "GET", "/v1/countries/{countryId}/attributes/{attributeId}", Detail})
 
 	return r
@@ -132,7 +132,7 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	logger.Info( "retrieving attribute from country model",
+	logger.Debug( "retrieving attribute from country model",
 		zap.String("countryId", strings.ToUpper(countryId) ),
 		zap.String( "attributeId", strings.ToLower(attributeId) ),
 	)

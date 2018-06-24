@@ -37,10 +37,10 @@ func AddHandlers(r model.Routes) model.Routes {
 
 	logger := logging.Logger( ctx )
 
-	logger.Info("registering handlers", zap.String( "endpoint", "/v1/sys/health" ) )
+	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/sys/health" ) )
 	r = append( r, model.Route{ Name: "SysHealth", Method: "GET", Pattern: "/v1/sys/health", HandlerFunc: Health} )
 
-	logger.Info("registering handlers", zap.String( "endpoint", "/v1/sys/reload" ) )
+	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/sys/reload" ) )
 	r = append( r, model.Route{ Name: "SysReload", Method: "GET", Pattern: "/v1/sys/reload", HandlerFunc: Reload} )
 
 	return r

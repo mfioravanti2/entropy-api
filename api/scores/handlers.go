@@ -27,10 +27,10 @@ func AddHandlers(r model.Routes) model.Routes {
 
 	logger := logging.Logger( ctx )
 
-	logger.Info("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
+	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
 	r = append( r, model.Route{"ScoreCalc", "POST", "/v1/scores", Calc} )
 
-	logger.Info("registering handlers", zap.String( "endpoint", "/v1/scores/format/{formatId}" ) )
+	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores/format/{formatId}" ) )
 	r = append( r, model.Route{"ScoreCalcFormat", "POST", "/v1/scores/format/{formatId}", CalcFormat} )
 
 	return r

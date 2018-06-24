@@ -19,7 +19,7 @@ func AddHandlers(r model.Routes) model.Routes {
 
 	logger := logging.Logger( ctx )
 
-	logger.Info("registering handlers", zap.String( "endpoint", "/v1/countries" ) )
+	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/countries" ) )
 	r = append( r, model.Route{"CountryList", "GET", "/v1/countries", List} )
 
 	return r
