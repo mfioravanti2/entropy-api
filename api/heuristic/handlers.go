@@ -111,6 +111,7 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 	if ok, _ := country.Validate(countryId); !ok {
 		logger.Error( "validating country code",
 			zap.String("countryId", strings.ToUpper(countryId)),
+			zap.String( "heuristicId", strings.ToLower(heuristicId) ),
 			zap.String( "status", "error" ),
 			zap.String("error ", "invalid country code" ),
 		)

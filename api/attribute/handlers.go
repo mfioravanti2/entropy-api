@@ -111,6 +111,7 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 	if ok, _ := country.Validate(countryId); !ok {
 		logger.Error( "validating country code",
 			zap.String("countryId", strings.ToUpper(countryId)),
+			zap.String( "attributeId", strings.ToLower(attributeId) ),
 			zap.String( "status", "error" ),
 			zap.String("error ", "invalid country code" ),
 		)
@@ -122,7 +123,7 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 	if ok, _ := Validate(attributeId); !ok {
 		logger.Error( "validating attribute identifier",
 			zap.String("countryId", strings.ToUpper(countryId) ),
-			zap.String( "heuristicId", strings.ToLower(attributeId) ),
+			zap.String( "attributeId", strings.ToLower(attributeId) ),
 			zap.String( "status", "error" ),
 			zap.String("error ", "invalid attribute identifier" ),
 		)
