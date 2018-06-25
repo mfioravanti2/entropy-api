@@ -14,3 +14,5 @@
 # OS and IDEs
 .DS_Store
 .idea
+
+scripts/
