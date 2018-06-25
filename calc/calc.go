@@ -32,9 +32,7 @@ type Person struct {
 
 func Calc( ctx context.Context, r *request.Request, formatId string ) (response.Response, error) {
 	var err error
-	var errors []error
 	var score response.Response
-	var attributes mapset.Set
 	var h_t, h_total float64
 	var nationality string
 
@@ -46,12 +44,11 @@ func Calc( ctx context.Context, r *request.Request, formatId string ) (response.
 
 	logger := logging.Logger( ctx )
 
-	logger.Info("preparing to score request",
-	)
+	logger.Info("scoring of individual attribute sets has started" )
 
+	score.Data = new(response.Data)
 	nations := make( map[string]*source.Model )
 	h_total = 0.0
-	attributes = mapset.NewSet()
 
 	nationality = strings.ToLower( r.Locale )
 	var m *source.Model
@@ -83,10 +80,26 @@ func Calc( ctx context.Context, r *request.Request, formatId string ) (response.
 		}
 
 		person := calcPerson( ctx, p, nations[nation], formatId )
-		attributes = attributes.Union( ConvertSet( person.Attributes, nation) )
-		h_total += person.H
 
-		if len(errors) > 0 {
+		var cPerson response.Person
+		cPerson.Id = p.PersonID
+		cPerson.Nationality = p.Nationality
+		cPerson.Score = person.H
+		cPerson.Heuristics = person.Heuristics
+
+		for val := range person.Attributes.Iterator().C {
+			if attributeId, ok := val.(string); ok {
+				s, err := source.GetScore( nations[nation], attributeId, formatId)
+				if err == nil {
+					r := response.Attribute{Mnemonic: attributeId, Locale: strings.ToUpper(nation), Format: formatId, Score: s}
+					cPerson.Attributes = append( cPerson.Attributes, r )
+				}
+			}
+		}
+
+		h_total += cPerson.Score
+
+		if len(person.Errors) > 0 {
 			if score.Errors == nil {
 				score.Errors = new(response.Errors)
 			}
@@ -95,26 +108,19 @@ func Calc( ctx context.Context, r *request.Request, formatId string ) (response.
 				score.Errors.Messages = append( score.Errors.Messages, e.Error() )
 			}
 		}
+
+		score.Data.People = append( score.Data.People, cPerson )
 	}
+
+	logger.Info("scoring of individual attribute sets are complete" )
 
 	h_t = t.Threshold
 
-	score.Data = new(response.Data)
 	score.Data.Pii = h_total >= h_t
 	score.Data.Locale = t.Locale
 	score.Data.Score = h_total
 	score.Data.RunDate = time.Now().UTC()
 	score.Data.ApiVersion = sys.VERSION
-
-	for val := range attributes.Iterator().C {
-		if a, ok := val.(Attribute); ok {
-			s, err := source.GetScore( nations[a.Locale], a.Mnemonic, formatId)
-			if err == nil {
-				r := response.Attribute{Mnemonic: a.Mnemonic, Locale: strings.ToUpper(a.Locale), Format: formatId, Score: s}
-				score.Data.Attributes = append(score.Data.Attributes, r)
-			}
-		}
-	}
 
 	return score, nil
 }
@@ -178,7 +184,7 @@ func calcPerson( ctx context.Context, p request.Person, s *source.Model, formatI
 
 	logger := logging.Logger( ctx )
 
-	logger.Info("preparing to score individual",
+	logger.Info("scoring of an individual's attribute set is starting",
 		zap.String( "personId", p.PersonID ),
 	)
 
@@ -197,14 +203,16 @@ func calcPerson( ctx context.Context, p request.Person, s *source.Model, formatI
 			)
 
 			if containsAll(person.Attributes, h.Match) {
-				logger.Info("heuristic attribute set matched",
+				logger.Debug("heuristic attribute set matched",
 					zap.String( "personId", p.PersonID ),
 					zap.String( "heuristicId", h.Id ),
 					zap.Int( "loopId", loops ),
 				)
 
+				person.Heuristics = append( person.Heuristics, h.Id)
+
 				if len(h.Remove) > 0 {
-					logger.Info("removing attribute set based on heuristic match",
+					logger.Debug("removing attribute set based on heuristic match",
 						zap.String( "personId", p.PersonID ),
 						zap.String( "heuristicId", h.Id ),
 						zap.Int( "loopId", loops ),
@@ -216,7 +224,7 @@ func calcPerson( ctx context.Context, p request.Person, s *source.Model, formatI
 				}
 
 				if len(h.Insert) > 0 {
-					logger.Info("inserting attribute set based on heuristic match",
+					logger.Debug("inserting attribute set based on heuristic match",
 						zap.String( "personId", p.PersonID ),
 						zap.String( "heuristicId", h.Id ),
 						zap.Int( "loopId", loops ),
@@ -232,7 +240,7 @@ func calcPerson( ctx context.Context, p request.Person, s *source.Model, formatI
 		}
 
 		if !changed {
-			logger.Info("heuristics comparisons completed, no more changes",
+			logger.Debug("heuristics comparisons completed, no more changes",
 				zap.String( "personId", p.PersonID ),
 				zap.Int( "loopId", loops ),
 				zap.Int( "changes", changes ),
@@ -257,7 +265,7 @@ func calcPerson( ctx context.Context, p request.Person, s *source.Model, formatI
 
 				person.H += h_i
 			} else {
-				logger.Info("scoring final attribute set",
+				logger.Error("scoring final attribute set",
 					zap.String( "personId", p.PersonID ),
 					zap.String( "formatId", formatId ),
 					zap.String( "attributeId", attributeId ),
@@ -269,6 +277,10 @@ func calcPerson( ctx context.Context, p request.Person, s *source.Model, formatI
 			}
 		}
 	}
+
+	logger.Info("scoring of an individual's attribute set is complete",
+		zap.String( "personId", p.PersonID ),
+	)
 
 	return person
 }

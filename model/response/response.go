@@ -11,13 +11,25 @@ type Attribute struct {
 
 type Attributes []Attribute
 
+type Heuristics []string
+
+type Person struct {
+	Id		    string      `json:"id"`
+	Nationality string		`json:"nationality"`
+	Score 		float64		`json:"score"`
+	Attributes  Attributes  `json:"attributes,omitempty"`
+	Heuristics	Heuristics  `json:"heuristics,omitempty"`
+}
+
+type People []Person
+
 type Data struct {
 	Pii          bool       `json:"pii"`
 	Locale       string     `json:"locale"`
 	Score        float64    `json:"score"`
 	ApiVersion   string     `json:"api_version"`
 	RunDate      time.Time  `json:"run_date"`
-	Attributes   Attributes `json:"attributes"`
+	People   	 People 	`json:"people,omitempty"`
 }
 
 type Errors struct {
