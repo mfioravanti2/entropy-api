@@ -4,6 +4,7 @@ import "time"
 
 type Attribute struct {
 	Mnemonic string  `json:"mnemonic"`
+	Tag 	 string	 `json:"tag"`
 	Locale   string  `json:"locale,omitempty"`
 	Format   string  `json:"format"`
 	Score    float64 `json:"score"`
@@ -18,7 +19,7 @@ type Person struct {
 	Nationality string		`json:"nationality"`
 	Score 		float64		`json:"score"`
 	Attributes  Attributes  `json:"attributes,omitempty"`
-	Heuristics	Heuristics  `json:"heuristics,omitempty"`
+	Heuristics	*Heuristics  `json:"heuristics,omitempty"`
 }
 
 type People []Person

@@ -3,6 +3,7 @@ package request
 type Attribute struct {
 	Mnemonic string `json:"mnemonic"`
 	Format   string `json:"format"`
+	Tag 	 string	`json:"tag"`
 }
 
 type Attributes []Attribute
