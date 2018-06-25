@@ -13,11 +13,13 @@ type Config struct {
 	Host string
 	Port int
 
+	CorsOrigin string
+
 	Error error
 }
 
 func DefaultConfig() *Config {
-	c := &Config{ Host: "localhost", Port: 8080 }
+	c := &Config{ Host: "localhost", Port: 8080, CorsOrigin: "*" }
 
 	if err := c.ReadEnvironment(); err != nil {
 		c.Error = err
@@ -30,6 +32,7 @@ func DefaultConfig() *Config {
 func (c *Config) ReadEnvironment() error {
 	hostPtr := flag.String("host", "127.0.0.1", "Hostname")
 	portPtr := flag.Int("port", 8080, "TCP port")
+	corsPtr := flag.String("cors", "127.0.0.1", "CORS Origin Host")
 	flag.Parse()
 
 	if v := os.Getenv("ENTROPY_HOST"); v != "" {
@@ -42,12 +45,16 @@ func (c *Config) ReadEnvironment() error {
 			panic(err)
 		}
 	}
+	if v := os.Getenv("ORIGIN_ALLOWED"); v != "" {
+		corsPtr = &v
+	}
 
 	c.modifyLock.Lock()
 	defer c.modifyLock.Unlock()
 
 	c.Host = *hostPtr
 	c.Port = *portPtr
+	c.CorsOrigin = *corsPtr
 
 	return nil
 }
