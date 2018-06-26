@@ -89,7 +89,7 @@ func score(w http.ResponseWriter, r *http.Request, formatId string) {
 			zap.String( "status", "error" ),
 			zap.String("error ", "invalid format identifier" ),
 		)
-		
+
 		w.WriteHeader( http.StatusUnprocessableEntity )
 		return
 	}
