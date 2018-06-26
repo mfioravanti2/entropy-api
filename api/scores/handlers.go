@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"strings"
 	"context"
+	"regexp"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
@@ -21,6 +22,21 @@ import (
 const (
 	DEFAULT_SCORING = "mean"
 )
+
+func Validate( formatId string ) (bool, error) {
+	var err error
+
+	rx, err := regexp.Compile( `^(mean|naive|rare)$` )
+	if err != nil {
+		return false, err
+	}
+
+	if rx.MatchString( strings.ToLower(formatId) ) {
+		return true, nil
+	}
+
+	return false, nil
+}
 
 func AddHandlers(r model.Routes) model.Routes {
 	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "scores" )
@@ -66,6 +82,17 @@ func score(w http.ResponseWriter, r *http.Request, formatId string) {
 
 	reqCtx := logging.WithFuncId( r.Context(), "score", "scores" )
 	logger := logging.Logger(reqCtx)
+
+	if ok, _ := Validate(formatId); !ok {
+		logger.Error( "validating format identifier",
+			zap.String("formatId", strings.ToLower(formatId) ),
+			zap.String( "status", "error" ),
+			zap.String("error ", "invalid format identifier" ),
+		)
+		
+		w.WriteHeader( http.StatusUnprocessableEntity )
+		return
+	}
 
 	logger.Info( "score request",
 		zap.String("formatId", strings.ToLower(formatId) ),
