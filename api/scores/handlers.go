@@ -15,12 +15,17 @@ import (
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/model/request"
 	"github.com/mfioravanti2/entropy-api/model/response"
-	"github.com/mfioravanti2/entropy-api/calc"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
+	"github.com/mfioravanti2/entropy-api/calc"
 )
 
 const (
+	// valid values are naive, mean, or rare
 	DEFAULT_SCORING = "mean"
+	// valid values are detailed or summary
+	DEFAULT_MODE = "detailed"
+	// valide values are exclude or include
+	DEFAULT_REDUCTIONS = "include"
 )
 
 func Validate( formatId string ) (bool, error) {
@@ -46,15 +51,40 @@ func AddHandlers(r model.Routes) model.Routes {
 	p := []string{"format", "{formatId}"}
 
 	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-	r = append( r, model.Route{"ScoreCalcFormat", "POST", "/v1/scores", CalcFormat, p} )
+	r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+
+	p = []string{"reductions", "{useReductions}"}
 
 	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-	r = append( r, model.Route{"ScoreCalc", "POST", "/v1/scores", Calc, nil} )
+	r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+
+	p = []string{"mode", "{modeId}"}
+
+	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
+	r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+
+	p = []string{"format", "{formatId}", "reductions", "{useReductions}"}
+
+	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
+	r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+
+	p = []string{"format", "{formatId}", "mode", "{modeId}"}
+
+	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
+	r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+
+	p = []string{"format", "{formatId}", "mode", "{modeId}", "reductions", "{useReductions}"}
+
+	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
+	r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+
+	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
+	r = append( r, model.Route{"DefaultScoring", "POST", "/v1/scores", CalcDefaults, nil} )
 
 	return r
 }
 
-func Calc(w http.ResponseWriter, r *http.Request) {
+func CalcDefaults(w http.ResponseWriter, r *http.Request) {
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
 
@@ -62,14 +92,24 @@ func Calc(w http.ResponseWriter, r *http.Request) {
 		zap.String("formatId", strings.ToLower(DEFAULT_SCORING) ),
 	)
 
-	score( w, r, DEFAULT_SCORING)
+	score( w, r, DEFAULT_MODE, DEFAULT_SCORING, true )
 }
 
-func CalcFormat(w http.ResponseWriter, r *http.Request) {
+func CalcOptions(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	formatId, ok := vars["formatId"]
 	if !ok || formatId == "" {
 		formatId = DEFAULT_SCORING
+	}
+
+	modeId, ok := vars["modeId"]
+	if !ok || modeId == "" {
+		modeId = DEFAULT_MODE
+	}
+
+	useReductions, ok := vars["useReductions"]
+	if !ok || useReductions == "" {
+		useReductions = DEFAULT_REDUCTIONS
 	}
 
 	reqCtx := r.Context()
@@ -77,12 +117,14 @@ func CalcFormat(w http.ResponseWriter, r *http.Request) {
 
 	logger.Info( "preparing to score request, with request specified formatId",
 		zap.String("formatId", strings.ToLower(formatId) ),
+		zap.String("modeId", strings.ToLower(modeId) ),
+		zap.Bool("useReductions", useReductions == "include" ),
 	)
 
-	score( w, r, formatId )
+	score( w, r, modeId, formatId, useReductions == "include" )
 }
 
-func score(w http.ResponseWriter, r *http.Request, formatId string) {
+func score(w http.ResponseWriter, r *http.Request, modeId string, formatId string, useReductions bool ) {
 	var entropy request.Request
 
 	reqCtx := logging.WithFuncId( r.Context(), "score", "scores" )
@@ -101,6 +143,8 @@ func score(w http.ResponseWriter, r *http.Request, formatId string) {
 
 	logger.Info( "score request",
 		zap.String("formatId", strings.ToLower(formatId) ),
+		zap.String("modeId", strings.ToLower(modeId) ),
+		zap.Bool("useReductions", useReductions ),
 	)
 
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 50 * 1024 ))
@@ -128,7 +172,8 @@ func score(w http.ResponseWriter, r *http.Request, formatId string) {
 	var score response.Response
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-	if score, err = calc.Calc( reqCtx, &entropy, formatId ); err != nil {
+	score, err = calc.Calc( reqCtx, &entropy, formatId, useReductions )
+	if err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)
 
 		logger.Error( "calculating request score",
@@ -139,6 +184,9 @@ func score(w http.ResponseWriter, r *http.Request, formatId string) {
 
 	} else {
 		w.WriteHeader(http.StatusOK)
+		if modeId == "summary" {
+			score.Data.People = nil
+		}
 	}
 
 	if err := json.NewEncoder(w).Encode(score); err != nil {

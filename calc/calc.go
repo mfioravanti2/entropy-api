@@ -23,7 +23,7 @@ type Person struct {
 	Errors []error
 }
 
-func Calc( ctx context.Context, r *request.Request, formatId string ) (response.Response, error) {
+func Calc( ctx context.Context, r *request.Request, formatId string, useReductions bool ) (response.Response, error) {
 	var err error
 	var score response.Response
 	var h_t, h_total float64
@@ -72,7 +72,12 @@ func Calc( ctx context.Context, r *request.Request, formatId string ) (response.
 			nations[nation] = n
 		}
 
-		person := calcPerson( ctx, p, nations[nation], formatId )
+		var person Person
+		if useReductions {
+			person = calcReducePerson( ctx, p, nations[nation], formatId )
+		} else {
+			person = calcPerson( ctx, p, nations[nation], formatId )
+		}
 
 		var cPerson response.Person
 		cPerson.Id = p.PersonID
@@ -144,7 +149,7 @@ func containsAll( m mapset.Set, s []string) bool {
 	return true
 }
 
-func calcPerson( ctx context.Context, p request.Person, s *source.Model, formatId string ) Person {
+func calcReducePerson( ctx context.Context, p request.Person, s *source.Model, formatId string ) Person {
 	var changed bool = false
 	var loops, changes int
 	var person Person
@@ -152,9 +157,9 @@ func calcPerson( ctx context.Context, p request.Person, s *source.Model, formatI
 	person.H = 0.0
 
 	if ctx == nil {
-		ctx = logging.WithFuncId( context.Background(), "calcPerson", "calc" )
+		ctx = logging.WithFuncId( context.Background(), "calcReducePerson", "calc" )
 	} else {
-		ctx = logging.WithFuncId( ctx, "calcPerson", "calc" )
+		ctx = logging.WithFuncId( ctx, "calcReducePerson", "calc" )
 	}
 
 	logger := logging.Logger( ctx )
@@ -251,6 +256,79 @@ func calcPerson( ctx context.Context, p request.Person, s *source.Model, formatI
 		}
 
 		person.Tags[tagId] = t
+
+		for val := range t.Iterator().C {
+			if attributeId, ok := val.(string); ok {
+				h_i, err := source.GetScore( s, attributeId, formatId )
+				if err == nil {
+					logger.Info("scoring final attribute set",
+						zap.String( "personId", p.PersonID ),
+						zap.String( "tagId", tagId ),
+						zap.String( "formatId", formatId ),
+						zap.String( "attributeId", attributeId ),
+						zap.Float64( "score", h_i ),
+					)
+
+					person.H += h_i
+				} else {
+					logger.Error("scoring final attribute set",
+						zap.String( "personId", p.PersonID ),
+						zap.String( "tagId", tagId ),
+						zap.String( "formatId", formatId ),
+						zap.String( "attributeId", attributeId ),
+						zap.String( "status", "error" ),
+						zap.String( "error", err.Error() ),
+					)
+
+					person.Errors = append( person.Errors, err )
+				}
+			}
+		}
+	}
+
+	logger.Info("scoring of an individual's attribute set is complete",
+		zap.String( "personId", p.PersonID ),
+	)
+
+	return person
+}
+
+func calcPerson( ctx context.Context, p request.Person, s *source.Model, formatId string ) Person {
+	var person Person
+	person.Tags = make( map[string]mapset.Set )
+	person.H = 0.0
+
+	if ctx == nil {
+		ctx = logging.WithFuncId( context.Background(), "calcPerson", "calc" )
+	} else {
+		ctx = logging.WithFuncId( ctx, "calcPerson", "calc" )
+	}
+
+	logger := logging.Logger( ctx )
+
+	logger.Info("scoring of an individual's attribute set is starting",
+		zap.String( "personId", p.PersonID ),
+	)
+
+	for _, a := range p.Attributes {
+		if _, ok := person.Tags[a.Tag]; !ok {
+			person.Tags[a.Tag] = mapset.NewSet()
+
+			logger.Debug("registering new tag in attribute set",
+				zap.String( "personId", p.PersonID ),
+				zap.String( "tagId", a.Tag ),
+			)
+		}
+
+		person.Tags[a.Tag].Add(a.Mnemonic)
+	}
+
+	for tagId, t := range person.Tags {
+
+		logger.Info("scoring attribute set with tag",
+			zap.String( "personId", p.PersonID ),
+			zap.String( "tagId", tagId ),
+		)
 
 		for val := range t.Iterator().C {
 			if attributeId, ok := val.(string); ok {
