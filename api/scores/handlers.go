@@ -10,13 +10,13 @@ import (
 	"regexp"
 
 	"go.uber.org/zap"
+	"github.com/gorilla/mux"
 
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/model/request"
 	"github.com/mfioravanti2/entropy-api/model/response"
 	"github.com/mfioravanti2/entropy-api/calc"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
-	"github.com/gorilla/mux"
 )
 
 const (
