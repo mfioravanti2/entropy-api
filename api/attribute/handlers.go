@@ -22,10 +22,10 @@ func AddHandlers(r model.Routes) model.Routes {
 	logger := logging.Logger( ctx )
 
 	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/attributes" ) )
-	r = append( r, model.Route{"AttributeList", "GET", "/v1/countries/{countryId}/attributes", List})
+	r = append( r, model.Route{"AttributeList", "GET", "/v1/countries/{countryId}/attributes", List, nil})
 
 	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/attributes/{attributeId}" ) )
-	r = append( r, model.Route{"AttributeDetails", "GET", "/v1/countries/{countryId}/attributes/{attributeId}", Detail})
+	r = append( r, model.Route{"AttributeDetails", "GET", "/v1/countries/{countryId}/attributes/{attributeId}", Detail, nil})
 
 	return r
 }

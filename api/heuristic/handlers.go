@@ -22,10 +22,10 @@ func AddHandlers(r model.Routes) model.Routes {
 	logger := logging.Logger( ctx )
 
 	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/heuristics" ) )
-	r = append( r, model.Route{"HeuristicList", "GET", "/v1/countries/{countryId}/heuristics", List})
+	r = append( r, model.Route{"HeuristicList", "GET", "/v1/countries/{countryId}/heuristics", List, nil})
 
 	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/heuristics/{heuristicId}" ) )
-	r = append( r, model.Route{"HeuristicDetails", "GET", "/v1/countries/{countryId}/heuristics/{heuristicId}", Detail})
+	r = append( r, model.Route{"HeuristicDetails", "GET", "/v1/countries/{countryId}/heuristics/{heuristicId}", Detail, nil})
 
 	return r
 }

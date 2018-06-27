@@ -7,6 +7,7 @@ type Route struct {
 	Method string
 	Pattern string
 	HandlerFunc http.HandlerFunc
+	Params []string
 }
 
 type Routes []Route

@@ -9,7 +9,6 @@ import (
 	"context"
 	"regexp"
 
-	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 
 	"github.com/mfioravanti2/entropy-api/model"
@@ -17,6 +16,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/model/response"
 	"github.com/mfioravanti2/entropy-api/calc"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
+	"github.com/gorilla/mux"
 )
 
 const (
@@ -43,11 +43,13 @@ func AddHandlers(r model.Routes) model.Routes {
 
 	logger := logging.Logger( ctx )
 
-	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-	r = append( r, model.Route{"ScoreCalc", "POST", "/v1/scores", Calc} )
+	p := []string{"format", "{formatId}"}
 
-	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores/format/{formatId}" ) )
-	r = append( r, model.Route{"ScoreCalcFormat", "POST", "/v1/scores/format/{formatId}", CalcFormat} )
+	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
+	r = append( r, model.Route{"ScoreCalcFormat", "POST", "/v1/scores", CalcFormat, p} )
+
+	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
+	r = append( r, model.Route{"ScoreCalc", "POST", "/v1/scores", Calc, nil} )
 
 	return r
 }
@@ -65,7 +67,10 @@ func Calc(w http.ResponseWriter, r *http.Request) {
 
 func CalcFormat(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	formatId := strings.ToLower(vars["formatId"])
+	formatId, ok := vars["formatId"]
+	if !ok || formatId == "" {
+		formatId = DEFAULT_SCORING
+	}
 
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
