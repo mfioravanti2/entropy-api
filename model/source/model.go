@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"time"
+	"sort"
 )
 
 type Heuristic struct {
@@ -15,6 +16,18 @@ type Heuristic struct {
 }
 
 type Heuristics []Heuristic
+
+func ( h Heuristics ) ToStrings() ([]string, error) {
+	var ids []string
+
+	for _, heuristic := range h {
+		ids = append(ids, heuristic.Id)
+	}
+
+	sort.Strings(ids)
+
+	return ids, nil
+}
 
 type Format struct {
 	Format string     `json:"format"`
@@ -42,6 +55,18 @@ type Attribute struct {
 }
 
 type Attributes []Attribute
+
+func ( a Attributes ) ToStrings() ([]string, error) {
+	var mnemonics []string
+
+	for _, attribute := range a {
+		mnemonics = append(mnemonics, attribute.Mnemonic)
+	}
+
+	sort.Strings(mnemonics)
+
+	return mnemonics, nil
+}
 
 type Model struct {
 	Locale       string     `json:"locale"`

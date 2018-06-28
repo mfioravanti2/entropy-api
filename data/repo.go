@@ -168,13 +168,8 @@ func GetAttributes( countryCode string ) ([]string, error) {
 		return names, err
 	}
 
-	for _, attribute := range countryModel.Attributes {
-		names = append(names, attribute.Mnemonic)
-	}
-
-	sort.Strings(names)
-
-	return names, nil
+	names, err = countryModel.Attributes.ToStrings()
+	return names, err
 }
 
 func GetAttribute( countryCode string, attributeMnemonic string ) (source.Attribute, error) {
@@ -205,12 +200,7 @@ func GetHeuristics( countryCode string ) ([]string, error) {
 		return names, err
 	}
 
-	for _, heuristic := range countryModel.Heuristics {
-		names = append(names, heuristic.Id)
-	}
-
-	sort.Strings(names)
-
+	names, err = countryModel.Heuristics.ToStrings()
 	return names, nil
 }
 
