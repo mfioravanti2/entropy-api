@@ -92,7 +92,7 @@ func Calc( ctx context.Context, r *request.Request, formatId string, useReductio
 		for tagId, t := range person.Tags {
 			for val := range t.Iterator().C {
 				if attributeId, ok := val.(string); ok {
-					s, err := source.GetScore( nations[nation], attributeId, formatId)
+					s, err := nations[nation].Score( attributeId, formatId )
 					if err == nil {
 						r := response.Attribute{Mnemonic: attributeId, Locale: strings.ToUpper(nation), Tag: tagId, Format: formatId, Score: s}
 						cPerson.Attributes = append( cPerson.Attributes, r )
@@ -259,7 +259,7 @@ func calcReducePerson( ctx context.Context, p request.Person, s *source.Model, f
 
 		for val := range t.Iterator().C {
 			if attributeId, ok := val.(string); ok {
-				h_i, err := source.GetScore( s, attributeId, formatId )
+				h_i, err := s.Score( attributeId, formatId )
 				if err == nil {
 					logger.Info("scoring final attribute set",
 						zap.String( "personId", p.PersonID ),
@@ -332,7 +332,7 @@ func calcPerson( ctx context.Context, p request.Person, s *source.Model, formatI
 
 		for val := range t.Iterator().C {
 			if attributeId, ok := val.(string); ok {
-				h_i, err := source.GetScore( s, attributeId, formatId )
+				h_i, err := s.Score( attributeId, formatId )
 				if err == nil {
 					logger.Info("scoring final attribute set",
 						zap.String( "personId", p.PersonID ),
