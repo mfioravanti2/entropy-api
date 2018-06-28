@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 	"encoding/json"
-	"regexp"
 	"strings"
 
 	"go.uber.org/zap"
@@ -23,22 +22,6 @@ func AddHandlers(r model.Routes) model.Routes {
 	r = append( r, model.Route{"CountryList", "GET", "/v1/countries", List, nil} )
 
 	return r
-}
-
-func Validate( countryCode string ) (bool, error) {
-	var err error
-
-	// two-digit country codes: ISO 3166-1 alpha-2
-	rx, err := regexp.Compile(`^[a-zA-Z]{2}$` )
-	if err != nil {
-		return false, err
-	}
-
-	if rx.MatchString( countryCode ) {
-		return true, nil
-	}
-
-	return false, nil
 }
 
 func List(w http.ResponseWriter, r *http.Request) {

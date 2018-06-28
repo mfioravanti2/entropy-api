@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"strings"
 	"context"
-	"regexp"
 
 	"go.uber.org/zap"
 	"github.com/gorilla/mux"
@@ -27,21 +26,6 @@ const (
 	// valide values are exclude or include
 	DEFAULT_REDUCTIONS = "include"
 )
-
-func Validate( formatId string ) (bool, error) {
-	var err error
-
-	rx, err := regexp.Compile( `^(mean|naive|rare)$` )
-	if err != nil {
-		return false, err
-	}
-
-	if rx.MatchString( strings.ToLower(formatId) ) {
-		return true, nil
-	}
-
-	return false, nil
-}
 
 func AddHandlers(r model.Routes) model.Routes {
 	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "scores" )
@@ -130,7 +114,7 @@ func score(w http.ResponseWriter, r *http.Request, modeId string, formatId strin
 	reqCtx := logging.WithFuncId( r.Context(), "score", "scores" )
 	logger := logging.Logger(reqCtx)
 
-	if ok, _ := Validate(formatId); !ok {
+	if ok, _ := model.ValidateFormat(formatId); !ok {
 		logger.Error( "validating format identifier",
 			zap.String("formatId", strings.ToLower(formatId) ),
 			zap.String( "status", "error" ),
@@ -166,6 +150,17 @@ func score(w http.ResponseWriter, r *http.Request, modeId string, formatId strin
 	if err := json.Unmarshal(body, &entropy); err != nil {
 		var s = "invalid request object, expected json format"
 		handleError( w, r, http.StatusUnprocessableEntity, s )
+		return
+	}
+
+	if ok, err := entropy.Validate(); !ok {
+		logger.Error( "validating request object",
+			zap.String("formatId", strings.ToLower(formatId) ),
+			zap.String( "status", "error" ),
+			zap.String("error ", err.Error() ),
+		)
+
+		w.WriteHeader( http.StatusUnprocessableEntity )
 		return
 	}
 
