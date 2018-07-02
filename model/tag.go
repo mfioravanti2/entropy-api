@@ -10,6 +10,10 @@ import (
 func ValidateTag( tag string ) (bool, error) {
 	var err error
 
+	if tag == "" {
+		return true, nil
+	}
+
 	rx, err := regexp.Compile( `^[A-Z0-9]+$` )
 	if err != nil {
 		return false, err
