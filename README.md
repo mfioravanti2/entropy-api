@@ -21,9 +21,3 @@ Entropy API requires a
 [working Go 1.10+ installation](http://golang.org/doc/install) and a
 properly set `GOPATH`.
 
-```
-$ go get -u github.com/mfioravanti2/entropy-api
-```
-
-will download and build the Entropy API tool, installing it in
-`$GOPATH/bin/entropy-api`.
