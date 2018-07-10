@@ -1,0 +1,241 @@
+{
+	"info": {
+		"_postman_id": "1253c859-4166-4184-816e-97244f393ea9",
+		"name": "Entropy API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET Countries",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{HOST}}:{{PORT}}/v1/countries",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"v1",
+						"countries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Country Attributes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{HOST}}:{{PORT}}/v1/countries/us/attributes",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"v1",
+						"countries",
+						"us",
+						"attributes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Country Attribute Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{HOST}}:{{PORT}}/v1/countries/us/attributes/postal_address.delivery_point",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"v1",
+						"countries",
+						"us",
+						"attributes",
+						"postal_address.delivery_point"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Country Heuristics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{HOST}}:{{PORT}}/v1/countries/us/heuristics",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"v1",
+						"countries",
+						"us",
+						"heuristics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Country Heuristic Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{HOST}}:{{PORT}}/v1/countries/us/heuristics/bb99443e-990c-4278-8291-cc991681e406",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"v1",
+						"countries",
+						"us",
+						"heuristics",
+						"bb99443e-990c-4278-8291-cc991681e406"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET System Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{HOST}}:{{PORT}}/v1/sys/health",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"v1",
+						"sys",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET System Reload",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{HOST}}:{{PORT}}/v1/sys/reload",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"v1",
+						"sys",
+						"reload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Score Attribute Set",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"locale\" : \"US\",\n  \"people\" : [\n    {\n      \"nationality\" : \"US\",\n      \"person_id\" : \"0\",\n      \"attributes\" : [\n        { \"mnemonic\" : \"phone.nanpa.full\", \"format\" : \"mean\", \"tag\" : \"work\" },\n        { \"mnemonic\" : \"phone.nanpa.full\", \"format\" : \"mean\", \"tag\" : \"personal\" }\n      ]\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "http://{{HOST}}:{{PORT}}/v1/scores?reductions=include",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"v1",
+						"scores"
+					],
+					"query": [
+						{
+							"key": "reductions",
+							"value": "include"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Score Attribute Set (Summary View)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"locale\" : \"US\",\n  \"people\" : [\n    {\n      \"nationality\" : \"US\",\n      \"person_id\" : \"0\",\n      \"attributes\" : [\n        { \"mnemonic\" : \"date_of_birth.day\", \"format\" : \"mean\" },\n        { \"mnemonic\" : \"date_of_birth.month\", \"format\" : \"mean\" },\n        { \"mnemonic\" : \"date_of_birth.year\", \"format\" : \"mean\" }\n      ]\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/v1/scores?mode=summary",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"scores"
+					],
+					"query": [
+						{
+							"key": "mode",
+							"value": "summary"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
