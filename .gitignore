@@ -17,3 +17,6 @@
 
 scripts/
 test/
+
+request.db
+scoring.db
