@@ -4,11 +4,11 @@ import (
 	"log"
 	"net/http"
 	"fmt"
-
 	"github.com/gorilla/handlers"
 
 	"github.com/mfioravanti2/entropy-api/command/server"
 	"github.com/mfioravanti2/entropy-api/cli"
+	"github.com/mfioravanti2/entropy-api/data/scoringdb"
 )
 
 func Run( c *cli.Config ) int {
@@ -23,7 +23,12 @@ func Run( c *cli.Config ) int {
 
 	corsRouter := handlers.CORS(originsOk, headersOk, methodsOk)(router)
 
-	log.Fatal( http.ListenAndServe( connection, corsRouter ) )
+	dataStore, err := scoringdb.GetDataStore( nil )
+	if err == nil {
+		defer dataStore.Close()
+
+		log.Fatal( http.ListenAndServe( connection, corsRouter ) )
+	}
 
 	return 0
 }

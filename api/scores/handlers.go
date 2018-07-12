@@ -16,6 +16,8 @@ import (
 	"github.com/mfioravanti2/entropy-api/model/response"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 	"github.com/mfioravanti2/entropy-api/calc"
+	"github.com/mfioravanti2/entropy-api/data/scoringdb"
+	"time"
 )
 
 const (
@@ -178,6 +180,14 @@ func score(w http.ResponseWriter, r *http.Request, modeId string, formatId strin
 		)
 
 	} else {
+		ds, err := scoringdb.GetDataStore( nil )
+		if err == nil {
+			reqId, _ := logging.GetReqId( reqCtx )
+			rec, _ := scoringdb.NewReqRecord( &entropy, reqId, time.Now() )
+
+			ds.SaveRequest( reqCtx, rec )
+		}
+
 		w.WriteHeader(http.StatusOK)
 		if modeId == "summary" {
 			score.Data.People = nil

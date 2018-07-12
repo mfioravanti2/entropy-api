@@ -2,11 +2,13 @@ package logging
 
 import (
 	"context"
+	"errors"
 
 	"os"
 	"path"
 
 	"go.uber.org/zap"
+	"github.com/google/uuid"
 )
 
 type correlationIdType int
@@ -91,4 +93,17 @@ func Logger(ctx context.Context) *zap.Logger {
 	}
 
 	return newLogger
+}
+
+func GetReqId( ctx context.Context ) ( string, error ) {
+	if ctxRqId, ok := ctx.Value(requestIdKey).(string); ok {
+		return ctxRqId, nil
+	}
+
+	rqId, err := uuid.NewRandom()
+	if err != nil {
+		return "", errors.New("requestId not found")
+	}
+
+	return rqId.String(), errors.New("requestId not found")
 }
