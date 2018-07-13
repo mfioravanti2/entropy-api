@@ -25,23 +25,18 @@ func Open( c *Config ) ( *DataStore, error ) {
 
 	switch c.Engine {
 	case sqlite3.ENGINE:
-		g, e = sqlite3.Open()
+		g, e = sqlite3.Open( c.Connection )
 	default:
 		s := fmt.Sprintf("unknown database engine (%s)", c.Engine )
-		e = errors.New(s)
-		return nil, e
+		return nil, errors.New(s)
 	}
 
 	if !g.HasTable(&ReqRecord{}) {
-		g.CreateTable(&ReqRecord{})
-		g.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&ReqRecord{})
+		g.AutoMigrate(&ReqRecord{})
 
 		if !g.HasTable(&ReqAttribute{}) {
-			g.CreateTable(&ReqAttribute{})
-			g.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&ReqAttribute{})
+			g.AutoMigrate(&ReqAttribute{})
 		}
-
-		g.Model(&ReqAttribute{}).AddForeignKey("req_record_id", "records(req_record_id)", "CASCADE", "CASCADE")
 	}
 
 	dataStore = &DataStore{ g: g}

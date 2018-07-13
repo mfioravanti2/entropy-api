@@ -10,7 +10,7 @@ import (
 
 type ReqAttribute struct {
 	ReqAttributeID uint	`gorm:"primary_key"`
-	RecordID	uint
+	ReqRecordId	uint
 
 	Mnemonic 	string
 	Format 		string
@@ -21,7 +21,7 @@ type ReqAttribute struct {
 type ReqAttributes []ReqAttribute
 
 type ReqRecord struct {
-	ReqRecordId  	uint		`gorm:"primary_key"`
+	ReqRecordId  uint		`gorm:"primary_key"`
 
 	RequestId 	string
 	Time 		time.Time
@@ -74,7 +74,6 @@ func (ds *DataStore) SaveRequest( ctx context.Context, r *ReqRecord ) error {
 		//zap.String( "personId", p.PersonID ),
 	)
 
-	ds.g.Create(r)
-
-	return nil
+	err := ds.g.Create(r).Error
+	return err
 }

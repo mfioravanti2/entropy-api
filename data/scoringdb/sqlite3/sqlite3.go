@@ -9,8 +9,8 @@ const (
 	ENGINE = "sqlite3"
 )
 
-func Open() ( *gorm.DB, error ) {
-	db, err := gorm.Open( ENGINE, "./requests.db")
+func Open( connectString string ) ( *gorm.DB, error ) {
+	db, err := gorm.Open( ENGINE, connectString )
 
 	return db, err
 }
