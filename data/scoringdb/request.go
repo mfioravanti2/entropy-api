@@ -6,6 +6,7 @@ import (
 
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 	"github.com/mfioravanti2/entropy-api/model/request"
+	"go.uber.org/zap"
 )
 
 type ReqAttribute struct {
@@ -76,4 +77,24 @@ func (ds *DataStore) SaveRequest( ctx context.Context, r *ReqRecord ) error {
 
 	err := ds.g.Create(r).Error
 	return err
+}
+
+func (ds *DataStore) readyRequest() bool {
+	if ds != nil && ds.g != nil {
+		if ds.g.HasTable(&ReqRecord{}) {
+			if ds.g.HasTable(&ReqAttribute{}) {
+				return true
+			}
+		}
+	}
+
+	ctx := logging.WithFuncId( context.Background(), "readyRequest", "scoringdb" )
+
+	logger := logging.Logger( ctx )
+	logger.Info("checking dataStore status",
+		zap.String( "recordType", "request" ),
+		zap.Bool( "ready", false ),
+	)
+
+	return false
 }

@@ -42,16 +42,15 @@ func (ds *DataStore) Migrate() {
 	if ds != nil && ds.g != nil {
 		ds.g.AutoMigrate(&ReqRecord{})
 		ds.g.AutoMigrate(&ReqAttribute{})
+
+		ds.g.AutoMigrate(&RespRecord{})
+		ds.g.AutoMigrate(&RespAttribute{})
 	}
 }
 
 func (ds *DataStore) Ready() bool {
 	if ds != nil && ds.g != nil {
-		if ds.g.HasTable(&ReqRecord{}) {
-			if ds.g.HasTable(&ReqAttribute{}) {
-				return true
-			}
-		}
+		return ds.readyRequest() && ds.readyResponse()
 	}
 
 	return false
@@ -60,6 +59,8 @@ func (ds *DataStore) Ready() bool {
 func (ds *DataStore) Close() {
 	if ds != nil && ds.g != nil {
 		ds.g.Close()
+
+		ds.g = nil
 	}
 }
 

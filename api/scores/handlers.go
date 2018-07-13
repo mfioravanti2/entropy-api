@@ -193,6 +193,17 @@ func score(w http.ResponseWriter, r *http.Request, modeId string, formatId strin
 					zap.String("error ", err.Error() ),
 				)
 			}
+
+			resp, _ := scoringdb.NewRespRecord( &score, reqId, time.Now() )
+
+			err = ds.SaveResponse( reqCtx, resp )
+			if err != nil {
+				logger.Error( "logging response score",
+					zap.String("formatId", strings.ToLower(formatId) ),
+					zap.String( "status", "error" ),
+					zap.String("error ", err.Error() ),
+				)
+			}
 		}
 
 		w.WriteHeader(http.StatusOK)
