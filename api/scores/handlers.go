@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"strings"
 	"context"
+	"time"
 
 	"go.uber.org/zap"
 	"github.com/gorilla/mux"
@@ -17,7 +18,6 @@ import (
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 	"github.com/mfioravanti2/entropy-api/calc"
 	"github.com/mfioravanti2/entropy-api/data/scoringdb"
-	"time"
 )
 
 const (

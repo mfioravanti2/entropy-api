@@ -23,10 +23,16 @@ func Run( c *cli.Config ) int {
 
 	corsRouter := handlers.CORS(originsOk, headersOk, methodsOk)(router)
 
+	var dataConfig *scoringdb.Config
 	var dataStore *scoringdb.DataStore
 	var err error
 
-	dataStore, err = scoringdb.GetDataStore( nil )
+	dataConfig, err = scoringdb.OpenConfig( c.Files.DataStore )
+	if err != nil {
+		dataConfig, err = scoringdb.NewConfig()
+	}
+
+	dataStore, err = scoringdb.GetDataStore( dataConfig )
 	if err == nil {
 		defer dataStore.Close()
 
