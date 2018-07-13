@@ -5,7 +5,13 @@ import (
 	"strconv"
 	"flag"
 	"sync"
+	"strings"
 )
+
+type Locations struct {
+	DataStore	string
+	Models		string
+}
 
 type Config struct {
 	modifyLock sync.RWMutex
@@ -14,6 +20,10 @@ type Config struct {
 	Port int
 
 	CorsOrigin string
+
+	Mode string
+
+	Files Locations
 
 	Error error
 }
@@ -33,6 +43,9 @@ func (c *Config) ReadEnvironment() error {
 	hostPtr := flag.String("host", "127.0.0.1", "Hostname")
 	portPtr := flag.Int("port", 8080, "TCP port")
 	corsPtr := flag.String("cors", "127.0.0.1", "CORS Origin Host")
+	modePtr := flag.String("mode", "server", "Application Mode")
+	dbCfPtr := flag.String("db_config", "test/sqlite_config.json", "DataStore Config")
+	modlPtr := flag.String("models", "data/sources/", "Country Model Directory")
 	flag.Parse()
 
 	if v := os.Getenv("ENTROPY_HOST"); v != "" {
@@ -48,6 +61,9 @@ func (c *Config) ReadEnvironment() error {
 	if v := os.Getenv("ORIGIN_ALLOWED"); v != "" {
 		corsPtr = &v
 	}
+	if v := os.Getenv("MODEL_PATH"); v != "" {
+		modlPtr = &v
+	}
 
 	c.modifyLock.Lock()
 	defer c.modifyLock.Unlock()
@@ -55,6 +71,14 @@ func (c *Config) ReadEnvironment() error {
 	c.Host = *hostPtr
 	c.Port = *portPtr
 	c.CorsOrigin = *corsPtr
+	c.Mode =  strings.ToLower( *modePtr )
+	c.Files.DataStore = *dbCfPtr
+
+	if strings.HasSuffix( *modlPtr, "/" ) {
+		c.Files.Models = *modlPtr
+	} else {
+		c.Files.Models = ( *modlPtr ) + "/"
+	}
 
 	return nil
 }

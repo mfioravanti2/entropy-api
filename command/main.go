@@ -23,11 +23,22 @@ func Run( c *cli.Config ) int {
 
 	corsRouter := handlers.CORS(originsOk, headersOk, methodsOk)(router)
 
-	dataStore, err := scoringdb.GetDataStore( nil )
+	var dataStore *scoringdb.DataStore
+	var err error
+
+	dataStore, err = scoringdb.GetDataStore( nil )
 	if err == nil {
 		defer dataStore.Close()
 
-		log.Fatal( http.ListenAndServe( connection, corsRouter ) )
+		switch c.Mode {
+		case "server":
+			if dataStore.Ready() {
+				log.Fatal( http.ListenAndServe( connection, corsRouter ) )
+			}
+		case "migrate":
+			dataStore.Migrate()
+		default:
+		}
 	}
 
 	return 0

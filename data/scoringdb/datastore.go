@@ -20,32 +20,47 @@ func Open( c *Config ) ( *DataStore, error ) {
 		return dataStore, nil
 	}
 
-	var g *gorm.DB
 	var e error
+	var g *gorm.DB
 
 	switch c.Engine {
 	case sqlite3.ENGINE:
 		g, e = sqlite3.Open( c.Connection )
+		if e != nil {
+			return nil, e
+		}
 	default:
 		s := fmt.Sprintf("unknown database engine (%s)", c.Engine )
 		return nil, errors.New(s)
 	}
 
-	if !g.HasTable(&ReqRecord{}) {
-		g.AutoMigrate(&ReqRecord{})
+	dataStore = &DataStore{ g: g }
+	return dataStore, nil
+}
 
-		if !g.HasTable(&ReqAttribute{}) {
-			g.AutoMigrate(&ReqAttribute{})
+func (ds *DataStore) Migrate() {
+	if ds != nil && ds.g != nil {
+		ds.g.AutoMigrate(&ReqRecord{})
+		ds.g.AutoMigrate(&ReqAttribute{})
+	}
+}
+
+func (ds *DataStore) Ready() bool {
+	if ds != nil && ds.g != nil {
+		if ds.g.HasTable(&ReqRecord{}) {
+			if ds.g.HasTable(&ReqAttribute{}) {
+				return true
+			}
 		}
 	}
 
-	dataStore = &DataStore{ g: g}
-
-	return dataStore, e
+	return false
 }
 
 func (ds *DataStore) Close() {
-	ds.g.Close()
+	if ds != nil && ds.g != nil {
+		ds.g.Close()
+	}
 }
 
 func GetDataStore( dbConfig *Config ) (*DataStore, error) {
@@ -63,7 +78,7 @@ func GetDataStore( dbConfig *Config ) (*DataStore, error) {
 		}
 
 		ds, err := Open( config )
-		if err != err {
+		if err == nil {
 			return ds, nil
 		} else {
 			return nil, err
