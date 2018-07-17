@@ -1,3 +1,6 @@
+/*
+	Generate an array which contains all of the REST API endpoint connections
+*/
 package api
 
 import (
@@ -9,6 +12,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/api/heuristic"
 )
 
+//	Generate a complete list of available routes
 func newRoutes() model.Routes {
 	var routes = model.Routes{}
 
@@ -21,6 +25,7 @@ func newRoutes() model.Routes {
 	return routes
 }
 
+//	Get a complete list of available routes
 func GetRoutes() model.Routes {
 	return newRoutes()
 }

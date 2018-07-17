@@ -13,6 +13,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 )
 
+// Add Handlers for the Country Endpoints
 func AddHandlers(r model.Routes) model.Routes {
 	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "country" )
 
@@ -24,6 +25,7 @@ func AddHandlers(r model.Routes) model.Routes {
 	return r
 }
 
+// List the country codes available
 func List(w http.ResponseWriter, r *http.Request) {
 	var countries []string
 	countries = data.GetCountries()
@@ -37,10 +39,12 @@ func List(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-type", "application/json; charset=UTF-8")
 		w.WriteHeader( http.StatusOK )
 
+		// obtain a list of country codes
 		for i, countryCode := range countries {
 			countries[i] = strings.ToUpper( countryCode )
 		}
 
+		// encode and return the array of country codes
 		if err := json.NewEncoder(w).Encode(countries); err != nil {
 			logger.Error( "encoding country codes",
 				zap.String( "status", "error" ),

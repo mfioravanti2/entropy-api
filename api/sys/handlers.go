@@ -24,14 +24,16 @@ type ModelVersion struct {
 type ModelVersions []ModelVersion
 
 type SysHealth struct {
-	ApiVersion    string        `json:"api_version"`
-	ModelVersions ModelVersions `json:"model_versions"`
+	Status			string		  `json:"status"`
+	ApiVersion		string        `json:"api_version"`
+	ModelVersions	ModelVersions `json:"model_versions"`
 }
 
 const (
 	VERSION = "0.0.1"
 )
 
+// Add Handlers for the System Conifugration/Health Endpoints
 func AddHandlers(r model.Routes) model.Routes {
 	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "sys" )
 
@@ -46,6 +48,7 @@ func AddHandlers(r model.Routes) model.Routes {
 	return r
 }
 
+// Return the system's health
 func Health(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "application/json; charset=UTF-8")
 	w.WriteHeader( http.StatusOK )
@@ -60,6 +63,7 @@ func Health(w http.ResponseWriter, r *http.Request) {
 		zap.String("version", SysInfo.ApiVersion ),
 	)
 
+	var errCount = 0
 	var m *source.Model
 	var err error
 	var countries []string
@@ -76,6 +80,8 @@ func Health(w http.ResponseWriter, r *http.Request) {
 				zap.Bool( "loaded", true ),
 			)
 		} else {
+			errCount += 1
+
 			logger.Error( "checking model health",
 				zap.String("model ", strings.ToUpper( country ) ),
 				zap.Bool( "loaded", false ),
@@ -83,6 +89,11 @@ func Health(w http.ResponseWriter, r *http.Request) {
 				zap.String("error ", err.Error() ),
 			)
 		}
+	}
+
+	SysInfo.Status = "degraded"
+	if errCount == 0 {
+		SysInfo.Status = "good"
 	}
 
 	if err := json.NewEncoder(w).Encode(SysInfo); err != nil {

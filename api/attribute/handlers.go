@@ -14,6 +14,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 )
 
+// Add Handlers for the Attribute Endpoints
 func AddHandlers(r model.Routes) model.Routes {
 	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "sys" )
 
@@ -28,6 +29,7 @@ func AddHandlers(r model.Routes) model.Routes {
 	return r
 }
 
+// List the Attributes associated with a specified country
 func List(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	countryId := strings.ToLower(vars["countryId"])
@@ -35,6 +37,7 @@ func List(w http.ResponseWriter, r *http.Request) {
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
 
+	// validate the country code
 	if ok, _ := model.ValidateCountryCode(countryId); !ok {
 		logger.Error( "validating country code",
 			zap.String("countryId", strings.ToUpper(countryId)),
@@ -52,6 +55,8 @@ func List(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 	var attributes []string
+
+	// retrieve a list of attributes from the specified country's model
 	attributes, err = data.GetAttributes(countryId)
 	if err != nil {
 		logger.Error( "retrieving attributes from country model",
@@ -65,6 +70,7 @@ func List(w http.ResponseWriter, r *http.Request) {
 	if len(attributes) > 0 {
 		w.WriteHeader( http.StatusOK )
 
+		// encode and return a list of attributes available within the country's model
 		if err := json.NewEncoder(w).Encode(attributes); err != nil {
 			logger.Error( "encoding attributes",
 				zap.String("countryId", strings.ToUpper(countryId) ),
@@ -83,6 +89,7 @@ func List(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Provide details about a specific attribute from a country's model
 func Detail(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	countryId := strings.ToLower(vars["countryId"])
@@ -91,6 +98,7 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
 
+	// Validate the country code
 	if ok, _ := model.ValidateCountryCode(countryId); !ok {
 		logger.Error( "validating country code",
 			zap.String("countryId", strings.ToUpper(countryId)),
@@ -103,6 +111,7 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Validate the attribute's mnemonic format
 	if ok, _ := model.ValidateAttributeMnemonic(attributeId); !ok {
 		logger.Error( "validating attribute identifier",
 			zap.String("countryId", strings.ToUpper(countryId) ),
@@ -120,12 +129,14 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 		zap.String( "attributeId", strings.ToLower(attributeId) ),
 	)
 
+	// Get information about the specified attribute from the country's model
 	attribute, err := data.GetAttribute(countryId, attributeId)
 
 	w.Header().Set("Content-type", "application/json; charset=UTF-8")
 	if err == nil {
 		w.WriteHeader( http.StatusOK )
 
+		// Encode and return the attribute
 		if err := json.NewEncoder(w).Encode(attribute); err != nil {
 			logger.Error( "encoding attribute",
 				zap.String("countryId", strings.ToUpper(countryId) ),
