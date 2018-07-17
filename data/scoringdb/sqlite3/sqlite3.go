@@ -9,8 +9,10 @@ const (
 	ENGINE = "sqlite3"
 )
 
-func Open( connectString string ) ( *gorm.DB, error ) {
+// Return an SQLite3 database object
+// Set the active status so the service attempts to connect and process objects
+func Open( connectString string ) ( *gorm.DB, bool, error ) {
 	db, err := gorm.Open( ENGINE, connectString )
 
-	return db, err
+	return db, true, err
 }

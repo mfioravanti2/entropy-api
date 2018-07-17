@@ -73,14 +73,21 @@ func (ds *DataStore) SaveRequest( ctx context.Context, r *ReqRecord ) error {
 	logger := logging.Logger( ctx )
 
 	logger.Info("logging scoring request",
-		//zap.String( "personId", p.PersonID ),
 	)
+
+	if !ds.Active {
+		return nil
+	}
 
 	err := ds.g.Create(r).Error
 	return err
 }
 
 func (ds *DataStore) readyRequest() bool {
+	if !ds.Active {
+		return true
+	}
+
 	if ds != nil && ds.g != nil {
 		if ds.g.HasTable(&ReqRecord{}) {
 			if ds.g.HasTable(&ReqAttribute{}) {

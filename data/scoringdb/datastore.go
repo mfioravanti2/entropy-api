@@ -10,10 +10,12 @@ import (
 
 	"github.com/mfioravanti2/entropy-api/data/scoringdb/sqlite3"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
+	"github.com/mfioravanti2/entropy-api/data/scoringdb/none"
 )
 
 type DataStore struct {
-	g *gorm.DB
+	Active	bool
+	g		*gorm.DB
 }
 
 var dataStore *DataStore = nil
@@ -33,10 +35,23 @@ func Open( c *Config ) ( *DataStore, error ) {
 
 	var e error
 	var g *gorm.DB
+	var active bool
 
 	switch c.Engine {
+	case none.ENGINE:
+		g, active, e = none.Open( c.Connection )
+		if e != nil {
+			logger.Error("error opening scoring data store object",
+				zap.String( "engineId", c.Engine),
+				zap.String( "connection", c.String() ),
+				zap.String( "status", "error" ),
+				zap.String("error ", e.Error() ),
+			)
+
+			return nil, e
+		}
 	case sqlite3.ENGINE:
-		g, e = sqlite3.Open( c.Connection )
+		g, active, e = sqlite3.Open( c.Connection )
 		if e != nil {
 			logger.Error("error opening scoring data store object",
 				zap.String( "engineId", c.Engine),
@@ -63,11 +78,15 @@ func Open( c *Config ) ( *DataStore, error ) {
 	logger.Info("assiging scoring data store configuration",
 	)
 
-	dataStore = &DataStore{ g: g }
+	dataStore = &DataStore{ g: g, Active: active }
 	return dataStore, nil
 }
 
 func (ds *DataStore) Migrate() {
+	if !ds.Active {
+		return
+	}
+
 	if ds != nil && ds.g != nil {
 		var err error
 
@@ -123,6 +142,10 @@ func (ds *DataStore) Migrate() {
 }
 
 func (ds *DataStore) Ready() bool {
+	if !ds.Active {
+		return true
+	}
+
 	if ds != nil && ds.g != nil {
 		return ds.readyRequest() && ds.readyResponse()
 	}
@@ -131,6 +154,10 @@ func (ds *DataStore) Ready() bool {
 }
 
 func (ds *DataStore) Close() {
+	if !ds.Active {
+		return
+	}
+
 	if ds != nil && ds.g != nil {
 		ds.g.Close()
 

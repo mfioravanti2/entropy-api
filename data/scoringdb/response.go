@@ -76,14 +76,21 @@ func (ds *DataStore) SaveResponse( ctx context.Context, r *RespRecord ) error {
 	logger := logging.Logger( ctx )
 
 	logger.Info("logging scoring response",
-		//zap.String( "personId", p.PersonID ),
 	)
+
+	if !ds.Active {
+		return nil
+	}
 
 	err := ds.g.Create(r).Error
 	return err
 }
 
 func (ds *DataStore) readyResponse() bool {
+	if !ds.Active {
+		return true
+	}
+
 	if ds != nil && ds.g != nil {
 		if ds.g.HasTable(&RespRecord{}) {
 			if ds.g.HasTable(&RespAttribute{}) {

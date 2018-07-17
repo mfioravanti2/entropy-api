@@ -28,6 +28,7 @@ type Config struct {
 	Error error
 }
 
+// Generate an Environment Configuration
 func DefaultConfig() *Config {
 	c := &Config{ Host: "localhost", Port: 8080, CorsOrigin: "*" }
 
@@ -39,7 +40,10 @@ func DefaultConfig() *Config {
 	return c
 }
 
+// Modify a Configuration by Over-riding Values with Command
+// Line Parameters and Environment Variables
 func (c *Config) ReadEnvironment() error {
+	// Read configuration options from the command line parameters
 	hostPtr := flag.String("host", "127.0.0.1", "Hostname")
 	portPtr := flag.Int("port", 8080, "TCP port")
 	corsPtr := flag.String("cors", "127.0.0.1", "CORS Origin Host")
@@ -48,6 +52,7 @@ func (c *Config) ReadEnvironment() error {
 	modlPtr := flag.String("models", "data/sources/", "Country Model Directory")
 	flag.Parse()
 
+	// Update the configuration options based on environment variable values
 	if v := os.Getenv("ENTROPY_HOST"); v != "" {
 		hostPtr = &v
 	}

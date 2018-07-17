@@ -91,11 +91,13 @@ func Health(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// if no errors occurred, the endpoint is good
 	SysInfo.Status = "degraded"
 	if errCount == 0 {
 		SysInfo.Status = "good"
 	}
 
+	// encode and return the response to the client
 	if err := json.NewEncoder(w).Encode(SysInfo); err != nil {
 		logger.Error( "encoding system health",
 			zap.String( "status", "error" ),
@@ -104,12 +106,14 @@ func Health(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Reload the country models
 func Reload(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "application/json; charset=UTF-8")
 
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
 
+	// Reload the country models
 	if err := data.Reload( reqCtx ); err == nil {
 		w.WriteHeader( http.StatusOK )
 
