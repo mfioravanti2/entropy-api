@@ -22,6 +22,7 @@ func Logger(inner http.Handler, name string) http.Handler {
 		logger.Debug( "request received (logger)", )
 
 		w.Header().Set("X-Entropy-Request", rqId.String() )
+		SecurityHeaders( w )
 
 		inner.ServeHTTP( w, r.WithContext( reqCtx ) )
 	})
