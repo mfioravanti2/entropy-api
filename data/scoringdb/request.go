@@ -32,6 +32,7 @@ type ReqRecord struct {
 	Attributes	[]ReqAttribute	`gorm:"ForeignKey:ReqRecordId"`
 }
 
+// Convert a request object into a request summary
 func NewReqRecord( req *request.Request, reqId string, t time.Time ) ( *ReqRecord, error ) {
 	var r ReqRecord
 
@@ -52,6 +53,7 @@ func NewReqRecord( req *request.Request, reqId string, t time.Time ) ( *ReqRecor
 	return &r, nil
 }
 
+// Convert a request attribute into a request attribute summary
 func NewReqAttribute( nationality string, r request.Attribute ) ( ReqAttribute, error ) {
 	var a ReqAttribute
 
@@ -63,6 +65,7 @@ func NewReqAttribute( nationality string, r request.Attribute ) ( ReqAttribute, 
 	return a, nil
 }
 
+// Save a request summary to the data store
 func (ds *DataStore) SaveRequest( ctx context.Context, r *ReqRecord ) error {
 	if ctx == nil {
 		ctx = logging.WithFuncId( context.Background(), "SaveRequest", "scoringdb" )
@@ -80,9 +83,12 @@ func (ds *DataStore) SaveRequest( ctx context.Context, r *ReqRecord ) error {
 	}
 
 	err := ds.g.Create(r).Error
+	ds.LastUse = time.Now().UTC()
+
 	return err
 }
 
+// Determine if the data store is configured to store request summaries
 func (ds *DataStore) readyRequest() bool {
 	if !ds.Active {
 		return true

@@ -46,7 +46,7 @@ func Run( c *cli.Config ) int {
 		case "server":
 			// start the service if running in server mode, but
 			// only if the request/response data store is configured and available
-			if dataStore.Ready() {
+			if dataStore.Ready( true ) {
 				log.Fatal( http.ListenAndServe( connection, corsRouter ) )
 			}
 		case "migrate":

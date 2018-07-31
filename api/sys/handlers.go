@@ -13,20 +13,28 @@ import (
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/model/source"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
+	"github.com/mfioravanti2/entropy-api/data/scoringdb"
 )
 
+type DataStore struct {
+	Status		string		`json:"status"`
+	Engine		string		`json:"engine"`
+	LastUse		time.Time	`json:"last_use"`
+}
+
 type ModelVersion struct {
-	CountryCode string    `json:"country"`
-	Timestamp   time.Time `json:"timestamp"`
-	Version     string    `json:"version"`
+	CountryCode string		`json:"country"`
+	Timestamp   time.Time	`json:"timestamp"`
+	Version     string		`json:"version"`
 }
 
 type ModelVersions []ModelVersion
 
 type SysHealth struct {
-	Status			string		  `json:"status"`
-	ApiVersion		string        `json:"api_version"`
-	ModelVersions	ModelVersions `json:"model_versions"`
+	Status			string			`json:"status"`
+	ApiVersion		string			`json:"api_version"`
+	ModelVersions	ModelVersions	`json:"model_versions"`
+	DataStore		DataStore		`json:"data_store"`
 }
 
 const (
@@ -91,10 +99,32 @@ func Health(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// if no errors occurred, the endpoint is good
+	ds, err := scoringdb.GetDataStore( nil )
+	if ds != nil {
+		// retrieve the data store engine
+		SysInfo.DataStore.Engine = strings.ToLower( ds.Config().Engine )
+		SysInfo.DataStore.LastUse = ds.LastUse
+
+		// ping the data store to see if it is available
+		if ds.Ready( false ) {
+			SysInfo.DataStore.Status = "good"
+		} else {
+			SysInfo.DataStore.Status = "degraded"
+		}
+	} else {
+		SysInfo.DataStore.Status = "offline"
+		SysInfo.DataStore.Engine = "unknown"
+		SysInfo.DataStore.LastUse = time.Now().UTC()
+	}
+
+	// if no errors occurred and the data store is operational, the endpoint is good
 	SysInfo.Status = "degraded"
 	if errCount == 0 {
-		SysInfo.Status = "good"
+		if SysInfo.DataStore.Status == "good" {
+			SysInfo.Status = "good"
+		} else {
+			SysInfo.Status = "degraded"
+		}
 	}
 
 	// encode and return the response to the client
