@@ -1,0 +1,696 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Entropy API",
+    "description": "Entropy API uses an information theoretic approach to classify personal data based on an attribute set",
+    "version": "0.0.16",
+    "contact": {
+      "name": "Mark Fioravanti",
+      "url": "https://github.com/mfioravanti2/entropy-api",
+      "email": "mark.fioravanti.ii@gmail.com"
+    }
+  },
+  "servers": [
+    { "url": "http://127.0.0.1:8080/v1" }
+  ],
+  "tags" : [
+    { "name": "model",
+      "description" : "Information about the Models" },
+    { "name": "scoring",
+      "description" : "Score an Attribute Set" },
+    { "name": "sys",
+      "description": "System Configuration and Health" }
+  ],
+  "paths": {
+    "/countries": {
+      "get": {
+        "tags" : [ "model" ],
+        "summary": "GET Countries",
+        "description": "Returns an array of country codes for which models have been defined",
+        "operationId": "GetCountries",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/countryCodes"
+                }
+              }
+            },
+            "headers": {
+              "X-Entropy-Request": {
+                "$ref": "#/components/headers/xEntropyRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/countries/{countryCode}/attributes": {
+      "get": {
+        "tags" : [ "model" ],
+        "summary": "GET Country Attributes",
+        "description": "Returns an array of attributes (mnemonics) available for the specified country model",
+        "operationId": "GetCountryAttributes",
+        "parameters": [
+          { "$ref": "#/components/parameters/countryCodeParam" }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/attributeMnemonics"
+                }
+              }
+            },
+            "headers": {
+              "X-Entropy-Request": {
+                "$ref": "#/components/headers/xEntropyRequest"
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {},
+            "headers": {
+              "X-Entropy-Request": {
+                "$ref": "#/components/headers/xEntropyRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/countries/{countryCode}/attributes/{attributeMnemonic}": {
+      "get": {
+        "tags" : [ "model" ],
+        "summary": "GET Country Attribute Details",
+        "description": "Provide detailed information about the specified attribute in a country model",
+        "operationId": "GetCountryAttributeDetails",
+        "parameters": [
+          { "$ref": "#/components/parameters/countryCodeParam" },
+          { "$ref": "#/components/parameters/attributeMnemonicParam" }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/attributeDetails"
+                }
+              }
+            },
+            "headers": {
+              "X-Entropy-Request": {
+                "$ref": "#/components/headers/xEntropyRequest"
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {},
+            "headers": {
+              "X-Entropy-Request": {
+                "$ref": "#/components/headers/xEntropyRequest"
+              }
+            }
+          },
+          "422": {
+            "description": "Input Validation Rule Failure",
+            "content": {},
+            "headers": {
+              "X-Entropy-Request": {
+                "$ref": "#/components/headers/xEntropyRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/countries/{countryCode}/heuristics": {
+      "get": {
+        "tags" : [ "model" ],
+        "summary": "GET Country Heuristics",
+        "description": "Return a list of Heuristics IDs available for the specified country model",
+        "operationId": "GetCountryHeuristics",
+        "parameters": [
+          { "$ref": "#/components/parameters/countryCodeParam" }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/heuristicIds"
+                }
+              }
+            },
+            "headers": {
+              "X-Entropy-Request": {
+                "$ref": "#/components/headers/xEntropyRequest"
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {},
+            "headers": {
+              "X-Entropy-Request": {
+                "$ref": "#/components/headers/xEntropyRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/countries/{countryCode}/heuristics/{heuristicId}": {
+      "get": {
+        "tags" : [ "model" ],
+        "summary": "GET Country Heuristic Details",
+        "description": "TODO: Add Description",
+        "operationId": "GetCountryHeuristicDetails",
+        "parameters": [
+          { "$ref": "#/components/parameters/countryCodeParam" },
+          { "$ref": "#/components/parameters/heuristicIdParam" }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/heuristicDetails"
+                }
+              }
+            },
+            "headers": {
+              "X-Entropy-Request": {
+                "$ref": "#/components/headers/xEntropyRequest"
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {},
+            "headers": {
+              "X-Entropy-Request": {
+                "$ref": "#/components/headers/xEntropyRequest"
+              }
+            }
+          },
+          "422": {
+            "description": "Input Validation Rule Failure",
+            "content": {},
+            "headers": {
+              "X-Entropy-Request": {
+                "$ref": "#/components/headers/xEntropyRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sys/health": {
+      "get": {
+        "tags" : [ "sys" ],
+        "summary": "GET System Health",
+        "description": "Obtain information about the status of the API, version information about the models, and backend health",
+        "operationId": "GetSystemHealth",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/sys/reload": {
+      "get": {
+        "tags" : [ "sys" ],
+        "summary": "GET System Reload",
+        "description": "TODO: Add Description",
+        "operationId": "SystemReload",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/scores": {
+      "post": {
+        "tags" : [ "scoring" ],
+        "summary": "POST Score Attribute Set (Summary View)",
+        "description": "TODO: Add Description",
+        "operationId": "ScoreAttributes",
+        "parameters": [
+          { "$ref": "#/components/parameters/formatParam" },
+          { "$ref": "#/components/parameters/modeParam" },
+          { "$ref": "#/components/parameters/reductionParam" },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "example": "application/json"
+            },
+            "example": "application/json"
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema" : {
+                "$ref": "#/components/schemas/reqScore"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "countryCodes": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/countryCode"
+        }
+      },
+      "countryCode": {
+        "title": "2-digit Country Code",
+        "description": "A 2-digit Country Code as defined in ISO 3166-1 alpha-2",
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 2,
+        "pattern": "^[A-Z]{2}$",
+        "example": "US"
+      },
+      "formatId": {
+        "title": "Scoring Format Method",
+        "description": "",
+        "type": "string",
+        "enum": ["naive", "mean", "rare"],
+        "default": "mean"
+      },
+      "heuristicIds": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/heuristicId"
+        }
+      },
+      "heuristicId": {
+        "title": "Heuristic Identifier",
+        "description": "A globally unique Identifier used to identify a specific Heuristic within a Model",
+        "type": "string",
+        "format": "uuid"
+      },
+      "heuristicDetails": {
+        "title" : "Heuristic",
+        "description": "",
+        "required": [ "id", "match", "insert", "remove" ],
+        "properties": {
+          "id" : {
+            "$ref": "#/components/schemas/heuristicId"
+          },
+          "notes" : {
+            "type": "string"
+          },
+          "match" : {
+            "$ref": "#/components/schemas/attributeMnemonics"
+          },
+          "insert" : {
+            "$ref": "#/components/schemas/attributeMnemonics"
+          },
+          "remove" : {
+            "$ref": "#/components/schemas/attributeMnemonics"
+          }
+        }
+      },
+      "attributeId" : {
+        "title": "Attribute Identifier",
+        "description": "A globally unique Identifier used to identify a specific Attribute within a Model",
+        "type": "string",
+        "format": "uuid"
+      },
+      "attributeMnemonics": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/attributeMnemonic"
+        }
+      },
+      "attributeMnemonic": {
+        "title": "Mnemonic Name for a scorable Attribute",
+        "description": "Mnemonic Identifier for an Attribute within a Model",
+        "type": "string"
+      },
+      "attributeDetails": {
+        "title" : "Attribute",
+        "description": "",
+        "required": [ "id", "name", "mnemonic", "formats" ],
+        "properties": {
+          "id" : {
+            "$ref": "#/components/schemas/attributeId"
+          },
+          "name" : {
+            "type": "string"
+          },
+          "mnemonic" : {
+            "$ref": "#/components/schemas/attributeMnemonic"
+          },
+          "notes" : {
+            "type": "string"
+          },
+          "sources" : {
+            "$ref": "#/components/schemas/attributeSources"
+          },
+          "formats" : {
+            "$ref": "#/components/schemas/attributeFormats"
+          }
+        }
+      },
+      "attributeFormats": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/attributeFormat"
+        }
+      },
+      "attributeFormat": {
+        "title" : "Attribute Scores and Formatting",
+        "description": "",
+        "required": [ "format", "score" ],
+        "properties": {
+          "format" : {
+            "type": "string"
+          },
+          "score" : {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      },
+      "attributeSources": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/attributeSource"
+        }
+      },
+      "attributeSource": {
+        "title" : "Attribute's Data Sources",
+        "description": "",
+        "required": [ "id", "name", "mnemonic" ],
+        "properties": {
+          "title" : {
+            "type": "string"
+          },
+          "organization" : {
+            "type": "string"
+          },
+          "date" : {
+            "type": "string",
+            "format": "date-time"
+          },
+          "url" : {
+            "type": "string"
+          }
+        }
+      },
+      "reqScore": {
+        "title" : "Attribute's Data Sources",
+        "description": "",
+        "required": [ "locale", "people" ],
+        "properties": {
+          "locale" : {
+            "$ref" : "#/components/schemas/countryCode"
+          },
+          "people" : {
+            "$ref" : "#/components/schemas/reqPeople"
+          }
+        }
+      },
+      "reqPeople" : {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/reqPerson"
+        }
+      },
+      "reqPerson" : {
+        "title" : "Attribute's Data Sources",
+        "description": "",
+        "required": [ "nationality", "person_id", "attributes" ],
+        "properties": {
+          "nationality" : {
+            "$ref" : "#/components/schemas/countryCode"
+          },
+          "person_id" : {
+            "type": "string"
+          },
+          "attributes" : {
+            "$ref" : "#/components/schemas/reqAttributes"
+          }
+        }
+      },
+      "reqAttributes" : {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/reqAttribute"
+        }
+      },
+      "reqAttribute" : {
+        "title" : "Attribute's Data Sources",
+        "description": "",
+        "required": [ "mnemonic", "format" ],
+        "properties": {
+          "mnemonic" : {
+            "$ref": "#/components/schemas/attributeMnemonic"
+          },
+          "format" : {
+            "$ref": "#/components/schemas/formatId"
+          }
+        }
+      },
+      "respScore": {
+        "title" : "",
+        "description": "",
+        "required": [ "data" ],
+        "properties": {
+          "data" : {
+            "$ref" : "#/components/schemas/respData"
+          },
+          "errors" : {
+            "$ref" : "#/components/schemas/respErrors"
+          }
+        }
+      },
+      "respData": {
+        "title" : "",
+        "description": "",
+        "required": [ "pii", "locale", "score", "api_version", "run_date" ],
+        "properties": {
+          "pii" : {
+            "type": "boolean"
+          },
+          "locale" : {
+            "$ref": "#/components/schemas/countryCode"
+          },
+          "score" : {
+            "type" : "number",
+            "format" : "float"
+          },
+          "api_version" : {
+            "type" : "string"
+          },
+          "run_date" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "people" : {
+            "$ref": "#/components/schemas/respPeople"
+          }
+        }
+      },
+      "respPeople" : {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/respPerson"
+        }
+      },
+      "respPerson" : {
+        "title" : "Individual Person's Scored Attributes",
+        "description": "",
+        "required": [ "id", "nationality", "score", "attributes" ],
+        "properties": {
+          "id" : {
+            "type": "string"
+          },
+          "nationality" : {
+            "$ref" : "#/components/schemas/countryCode"
+          },
+          "score" : {
+            "type": "number",
+            "format": "float"
+          },
+          "attributes" : {
+            "$ref" : "#/components/schemas/reqAttributes"
+          },
+          "heuristics" : {
+            "$ref" : "#/components/schemas/heuristicIds"
+          }
+        }
+      },
+      "respAttributes" : {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/respAttribute"
+        }
+      },
+      "respAttribute" : {
+        "title" : "Scored Attribute",
+        "description": "",
+        "required": [ "mnemonic", "tag", "locale", "format", "score" ],
+        "properties": {
+          "mnemonic" : {
+            "$ref": "#/components/schemas/attributeMnemonic"
+          },
+          "tag" : {
+            "type": "string"
+          },
+          "locale" : {
+            "$ref" : "#/components/schemas/countryCode"
+          },
+          "format" : {
+            "$ref": "#/components/schemas/formatId"
+          },
+          "score" : {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      },
+      "respErrors": {
+        "title" : "Scored Attribute",
+        "description": "",
+        "required": [ "messages" ],
+        "properties": {
+          "messages" : {
+            "$ref": "#/components/schemas/respErrorMessages"
+          }
+        }
+      },
+      "respErrorMessages": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/respErrorMessage"
+        }
+      },
+      "respErrorMessage": {
+        "title": "Scoring Process Error",
+        "description": "",
+        "type": "string"
+      }
+    },
+    "parameters": {
+      "countryCodeParam": {
+        "name": "countryCode",
+        "in": "path",
+        "description": "A 2-digit Country Code as defined in ISO 3166-1 alpha-2",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "pattern": "^[A-Z]{2}$"
+        },
+        "example": "US"
+      },
+      "attributeMnemonicParam": {
+        "name": "attributeMnemonic",
+        "in": "path",
+        "description": "Mnemonic Identifier for an Attribute within a Model",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "pattern": "^([a-zA-Z0-9_]+.)+([a-zA-Z0-9_])$"
+        },
+        "example": "date_of_birth.year"
+      },
+      "heuristicIdParam" : {
+        "name": "heuristicId",
+        "in": "path",
+        "description": "A globally unique Identifier (i.e. RFC4122, UUID v4) used to identify a specific Heuristic within a Model",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 36,
+          "maxLength": 36,
+          "pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+        },
+        "example": "bb99443e-990c-4278-8291-cc991681e406"
+      },
+      "formatParam" : {
+        "name": "format",
+        "in": "query",
+        "description": "Specify the type of scoring to be used in the scoring operation (i.e. naive, mean, rare)",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["naive", "mean", "rare"],
+          "default": "mean"
+        },
+        "example": "mean"
+      },
+      "modeParam" : {
+        "name": "mode",
+        "in": "query",
+        "description": "Specify the amount of detail to be returned as a result of a scoring operation",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["detailed", "summary"],
+          "default": "detailed"
+        },
+        "example": "detailed"
+      },
+      "reductionParam" : {
+        "name": "mode",
+        "in": "query",
+        "description": "Specify if the reduction heuristics should be included or excluded from the scoring operations",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": ["include", "exclude"],
+          "default": "include"
+        },
+        "example": "include"
+      }
+    },
+    "headers": {
+      "xEntropyRequest": {
+        "description": "Request Identifier",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    }
+  }
+}

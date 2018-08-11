@@ -13,6 +13,8 @@ var hXSSProtect = Header{Name: "X-XSS-Protection", Value: "1; mode=block"}
 var hXContent   = Header{Name: "X-Content-Type-Options", Value: "nosniff"}
 var hXFramOpts  = Header{Name: "X-Frame-Options", Value: "SAMEORIGIN"}
 
+var hCORSOrgin  = Header{Name: "Access-Control-Allow-Origin", Value: "*"}
+
 func SecurityHeaders( w http.ResponseWriter ) {
 
 	// Setup HTTP Response Cache Control options
@@ -27,4 +29,7 @@ func SecurityHeaders( w http.ResponseWriter ) {
 
 	// Setup X-Frame options
 	w.Header().Set( hXFramOpts.Name, hXFramOpts.Value )
+
+	// CORS options
+	w.Header().Set( hCORSOrgin.Name, hCORSOrgin.Value )
 }
