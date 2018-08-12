@@ -41,7 +41,7 @@ const (
 	VERSION = "0.0.1"
 )
 
-// Add Handlers for the System Conifugration/Health Endpoints
+// Add Handlers for the System Configuration/Health Endpoints
 func AddHandlers(r model.Routes) model.Routes {
 	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "sys" )
 

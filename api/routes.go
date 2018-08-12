@@ -10,6 +10,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/api/sys"
 	"github.com/mfioravanti2/entropy-api/api/scores"
 	"github.com/mfioravanti2/entropy-api/api/heuristic"
+	"github.com/mfioravanti2/entropy-api/api/openapi-spec"
 )
 
 //	Generate a complete list of available routes
@@ -21,6 +22,7 @@ func newRoutes() model.Routes {
 	routes = heuristic.AddHandlers( routes )
 	routes = scores.AddHandlers( routes )
 	routes = sys.AddHandlers( routes )
+	routes = openapi_spec.AddHandlers( routes )
 
 	return routes
 }
