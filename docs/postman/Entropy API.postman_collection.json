@@ -143,6 +143,28 @@
 			"response": []
 		},
 		{
+			"name": "GET System Metrics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{HOST}}:{{PORT}}/v1/sys/metrics",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"v1",
+						"sys",
+						"metrics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GET System Schema (OpenAPI v3.0)",
 			"request": {
 				"method": "GET",
