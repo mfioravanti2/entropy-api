@@ -12,6 +12,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/data"
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
+	"github.com/mfioravanti2/entropy-api/model/metrics"
 )
 
 // Add Handlers for the Heuristic Endpoints
@@ -37,6 +38,9 @@ func List(w http.ResponseWriter, r *http.Request) {
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
 
+	ctrReg, _ := metrix.GetCounter( "entropy.heuristics_list.get" )
+	ctrReg.Inc(1)
+
 	// Validate the country code
 	if ok, _ := model.ValidateCountryCode(countryId); !ok {
 		logger.Error( "validating country code",
@@ -46,6 +50,9 @@ func List(w http.ResponseWriter, r *http.Request) {
 		)
 
 		w.WriteHeader( http.StatusUnprocessableEntity )
+
+		ctrReg, _ := metrix.GetCounter( "entropy.heuristics_list.get.status.422" )
+		ctrReg.Inc(1)
 		return
 	}
 
@@ -78,6 +85,9 @@ func List(w http.ResponseWriter, r *http.Request) {
 				zap.String("error ", err.Error() ),
 			)
 		}
+
+		ctrReg, _ := metrix.GetCounter( "entropy.heuristics_list.get.status.200" )
+		ctrReg.Inc(1)
 	} else {
 		w.WriteHeader( http.StatusNotFound )
 
@@ -86,6 +96,9 @@ func List(w http.ResponseWriter, r *http.Request) {
 			zap.String( "status", "ok" ),
 			zap.String("error ", "no heuristics found" ),
 		)
+
+		ctrReg, _ := metrix.GetCounter( "entropy.heuristics_list.get.status.404" )
+		ctrReg.Inc(1)
 	}
 }
 
@@ -98,6 +111,9 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
 
+	ctrReg, _ := metrix.GetCounter( "entropy.heuristics_details.get" )
+	ctrReg.Inc(1)
+
 	// Validate the country code
 	if ok, _ := model.ValidateCountryCode(countryId); !ok {
 		logger.Error( "validating country code",
@@ -108,6 +124,9 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 		)
 
 		w.WriteHeader( http.StatusUnprocessableEntity )
+
+		ctrReg, _ := metrix.GetCounter( "entropy.heuristics_details.get.status.422" )
+		ctrReg.Inc(1)
 		return
 	}
 
@@ -121,6 +140,9 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 		)
 
 		w.WriteHeader( http.StatusUnprocessableEntity )
+
+		ctrReg, _ := metrix.GetCounter( "entropy.heuristics_details.get.status.422" )
+		ctrReg.Inc(1)
 		return
 	}
 
@@ -145,6 +167,9 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 				zap.String("error ", err.Error() ),
 			)
 		}
+
+		ctrReg, _ := metrix.GetCounter( "entropy.heuristics_details.get.status.200" )
+		ctrReg.Inc(1)
 	} else {
 		w.WriteHeader( http.StatusNotFound )
 
@@ -154,5 +179,8 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 			zap.String( "status", "error" ),
 			zap.String("error ", err.Error() ),
 		)
+
+		ctrReg, _ := metrix.GetCounter( "entropy.heuristics_details.get.status.404" )
+		ctrReg.Inc(1)
 	}
 }

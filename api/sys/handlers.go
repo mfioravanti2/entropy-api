@@ -14,6 +14,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/model/source"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 	"github.com/mfioravanti2/entropy-api/data/scoringdb"
+	"github.com/mfioravanti2/entropy-api/model/metrics"
 )
 
 type DataStore struct {
@@ -66,6 +67,9 @@ func Health(w http.ResponseWriter, r *http.Request) {
 
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
+
+	ctrReg, _ := metrix.GetCounter( "entropy.sys.health.get" )
+	ctrReg.Inc(1)
 
 	logger.Info( "checking system health",
 		zap.String("version", SysInfo.ApiVersion ),
@@ -134,6 +138,9 @@ func Health(w http.ResponseWriter, r *http.Request) {
 			zap.String("error", err.Error() ),
 		)
 	}
+
+	ctrReg, _ = metrix.GetCounter( "entropy.sys.health.get.status.200" )
+	ctrReg.Inc(1)
 }
 
 // Reload the country models
@@ -143,6 +150,9 @@ func Reload(w http.ResponseWriter, r *http.Request) {
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
 
+	ctrReg, _ := metrix.GetCounter( "entropy.sys.reload.get" )
+	ctrReg.Inc(1)
+
 	// Reload the country models
 	if err := data.Reload( reqCtx ); err == nil {
 		w.WriteHeader( http.StatusOK )
@@ -150,6 +160,9 @@ func Reload(w http.ResponseWriter, r *http.Request) {
 		logger.Info( "reloading models",
 			zap.String( "status", "ok" ),
 		)
+
+		ctrReg, _ := metrix.GetCounter( "entropy.sys.reload.get.status.200" )
+		ctrReg.Inc(1)
 	} else {
 		w.WriteHeader( http.StatusInternalServerError )
 
@@ -157,5 +170,8 @@ func Reload(w http.ResponseWriter, r *http.Request) {
 			zap.String( "status", "error" ),
 			zap.String( "error", err.Error() ),
 		)
+
+		ctrReg, _ := metrix.GetCounter( "entropy.sys.reload.get.status.500" )
+		ctrReg.Inc(1)
 	}
 }

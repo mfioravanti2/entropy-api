@@ -10,11 +10,12 @@ import (
 
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
+	"github.com/mfioravanti2/entropy-api/model/metrics"
 )
 
 // Add Handlers for the Specification-based Endpoints
 func AddHandlers(r model.Routes) model.Routes {
-	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "sys" )
+	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "openapi_spec" )
 
 	logger := logging.Logger( ctx )
 
@@ -30,6 +31,9 @@ func Spec(w http.ResponseWriter, r *http.Request) {
 
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
+
+	ctrReg, _ := metrix.GetCounter( "entropy.sys.openapi_spec.get" )
+	ctrReg.Inc(1)
 
 	logger.Debug("preparing to reloading models",
 		zap.String("model_file", "data/sources/sources.json" ),
@@ -51,6 +55,9 @@ func Spec(w http.ResponseWriter, r *http.Request) {
 		logger.Info( "returning openapi spec",
 			zap.String( "status", "ok" ),
 		)
+
+		ctrReg, _ := metrix.GetCounter( "entropy.sys.openapi_spec.get.status.200" )
+		ctrReg.Inc(1)
 	} else {
 		w.WriteHeader( http.StatusInternalServerError )
 
@@ -58,5 +65,8 @@ func Spec(w http.ResponseWriter, r *http.Request) {
 			zap.String( "status", "error" ),
 			zap.String( "error", err.Error() ),
 		)
+
+		ctrReg, _ := metrix.GetCounter( "entropy.sys.openapi_spec.get.status.404" )
+		ctrReg.Inc(1)
 	}
 }

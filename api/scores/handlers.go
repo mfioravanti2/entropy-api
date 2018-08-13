@@ -18,6 +18,8 @@ import (
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 	"github.com/mfioravanti2/entropy-api/calc"
 	"github.com/mfioravanti2/entropy-api/data/scoringdb"
+	"github.com/mfioravanti2/entropy-api/model/metrics"
+	"fmt"
 )
 
 const (
@@ -79,6 +81,12 @@ func CalcDefaults(w http.ResponseWriter, r *http.Request) {
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
 
+	ctrReg, _ := metrix.GetCounter( "entropy.scoring.post" )
+	ctrReg.Inc(1)
+
+	ctrReg, _ = metrix.GetCounter( "entropy.scoring.default" )
+	ctrReg.Inc(1)
+
 	logger.Info( "preparing to score request, with default formatId",
 		zap.String("formatId", strings.ToLower(DEFAULT_SCORING) ),
 	)
@@ -108,6 +116,12 @@ func CalcOptions(w http.ResponseWriter, r *http.Request) {
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
 
+	ctrReg, _ := metrix.GetCounter( "entropy.scoring.post" )
+	ctrReg.Inc(1)
+
+	ctrReg, _ = metrix.GetCounter( "entropy.scoring.options" )
+	ctrReg.Inc(1)
+
 	logger.Info( "preparing to score request, with request specified formatId",
 		zap.String("formatId", strings.ToLower(formatId) ),
 		zap.String("modeId", strings.ToLower(modeId) ),
@@ -125,6 +139,9 @@ func score(w http.ResponseWriter, r *http.Request, modeId string, formatId strin
 	reqCtx := logging.WithFuncId( r.Context(), "score", "scores" )
 	logger := logging.Logger(reqCtx)
 
+	ctrReg, _ := metrix.GetCounter( "entropy.scoring.mode." + modeId )
+	ctrReg.Inc(1)
+
 	// Validate the formatId
 	if ok, _ := model.ValidateFormat(formatId); !ok {
 		logger.Error( "validating format identifier",
@@ -134,6 +151,9 @@ func score(w http.ResponseWriter, r *http.Request, modeId string, formatId strin
 		)
 
 		w.WriteHeader( http.StatusUnprocessableEntity )
+
+		ctrReg, _ := metrix.GetCounter( "entropy.scoring.post.status.422" )
+		ctrReg.Inc(1)
 		return
 	}
 
@@ -177,6 +197,9 @@ func score(w http.ResponseWriter, r *http.Request, modeId string, formatId strin
 		)
 
 		w.WriteHeader( http.StatusUnprocessableEntity )
+
+		ctrReg, _ := metrix.GetCounter( "entropy.scoring.post.status.422" )
+		ctrReg.Inc(1)
 		return
 	}
 
@@ -194,6 +217,8 @@ func score(w http.ResponseWriter, r *http.Request, modeId string, formatId strin
 			zap.String("error ", err.Error() ),
 		)
 
+		ctrReg, _ := metrix.GetCounter( "entropy.scoring.post.status.422" )
+		ctrReg.Inc(1)
 	} else {
 		// Retrieve the Request/Response Data Store
 		ds, err := scoringdb.GetDataStore( nil )
@@ -231,6 +256,9 @@ func score(w http.ResponseWriter, r *http.Request, modeId string, formatId strin
 			// If the client is expecting only the scoring summary, remove the details from the response
 			score.Data.People = nil
 		}
+
+		ctrReg, _ := metrix.GetCounter( "entropy.scoring.post.status.200" )
+		ctrReg.Inc(1)
 	}
 
 	// Encode and return the scoring response
@@ -252,6 +280,10 @@ func handleError(w http.ResponseWriter, r *http.Request, statusCode int, msg str
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader( statusCode )
+
+	cLabel := fmt.Sprintf( "entropy.scoring.post.status.%d", statusCode )
+	ctrReg, _ := metrix.GetCounter( cLabel )
+	ctrReg.Inc(1)
 
 	score.Errors = new(response.Errors)
 	score.Errors.Messages = append( score.Errors.Messages, msg )

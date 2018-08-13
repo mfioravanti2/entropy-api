@@ -11,6 +11,8 @@ import (
 	"github.com/mfioravanti2/entropy-api/data"
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
+
+	"github.com/mfioravanti2/entropy-api/model/metrics"
 )
 
 // Add Handlers for the Country Endpoints
@@ -32,6 +34,9 @@ func List(w http.ResponseWriter, r *http.Request) {
 
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
+
+	ctrReg, _ := metrix.GetCounter( "entropy.country.get" )
+	ctrReg.Inc(1)
 
 	logger.Info( "retrieving country codes from models" )
 
@@ -55,6 +60,9 @@ func List(w http.ResponseWriter, r *http.Request) {
 				zap.String( "status", "ok" ),
 			)
 		}
+
+		ctrReg, _ := metrix.GetCounter( "entropy.country.get.status.200" )
+		ctrReg.Inc(1)
 	} else {
 		w.WriteHeader( http.StatusNoContent )
 
@@ -62,6 +70,9 @@ func List(w http.ResponseWriter, r *http.Request) {
 			zap.String( "status", "ok" ),
 			zap.String("error ", "no country codes found" ),
 		)
+
+		ctrReg, _ := metrix.GetCounter( "entropy.country.get.status.204" )
+		ctrReg.Inc(1)
 	}
 }
 
