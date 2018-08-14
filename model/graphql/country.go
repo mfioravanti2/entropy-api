@@ -1,13 +1,22 @@
 package entropyql
 
 import (
+	"context"
+
+	"go.uber.org/zap"
 	"github.com/graphql-go/graphql"
 
 	"github.com/mfioravanti2/entropy-api/model/source"
 	"github.com/mfioravanti2/entropy-api/model/metrics"
+	"github.com/mfioravanti2/entropy-api/command/server/logging"
 )
 
 func getCountryType() *graphql.Object {
+	ctx := logging.WithFuncId( context.Background(), "getCountryType", "entropyql" )
+
+	logger := logging.Logger( ctx )
+	logger.Debug("building GraphQL schema", zap.String( "type", "countryType" ) )
+
 	var countryType *graphql.Object
 
 	countryType = graphql.NewObject(graphql.ObjectConfig{

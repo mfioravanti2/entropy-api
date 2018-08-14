@@ -1,13 +1,22 @@
 package entropyql
 
 import (
+	"context"
+
+	"go.uber.org/zap"
 	"github.com/graphql-go/graphql"
 
 	"github.com/mfioravanti2/entropy-api/model/source"
 	"github.com/mfioravanti2/entropy-api/model/metrics"
+	"github.com/mfioravanti2/entropy-api/command/server/logging"
 )
 
 func getHeuristicType() *graphql.Object {
+	ctx := logging.WithFuncId( context.Background(), "getHeuristicType", "entropyql" )
+
+	logger := logging.Logger( ctx )
+	logger.Debug("building GraphQL schema", zap.String( "type", "heuristicType" ) )
+
 	var heuristicType *graphql.Object
 
 	heuristicType = graphql.NewObject(graphql.ObjectConfig{

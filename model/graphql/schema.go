@@ -1,13 +1,16 @@
 package entropyql
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
+	"go.uber.org/zap"
 	"github.com/graphql-go/graphql"
 
 	"github.com/mfioravanti2/entropy-api/data"
 	"github.com/mfioravanti2/entropy-api/model/metrics"
+	"github.com/mfioravanti2/entropy-api/command/server/logging"
 )
 
 var entropySchema *graphql.Schema
@@ -17,6 +20,11 @@ func init() {
 }
 
 func BuildSchema() {
+	ctx := logging.WithFuncId( context.Background(), "BuildSchema", "entropyql" )
+
+	logger := logging.Logger( ctx )
+	logger.Debug("building GraphQL schema", zap.String( "type", "schema" ) )
+
 	var countryType *graphql.Object
 	countryType = getCountryType()
 

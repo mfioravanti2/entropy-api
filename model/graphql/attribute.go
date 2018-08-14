@@ -1,13 +1,22 @@
 package entropyql
 
 import (
+	"context"
+
+	"go.uber.org/zap"
 	"github.com/graphql-go/graphql"
 
 	"github.com/mfioravanti2/entropy-api/model/source"
 	"github.com/mfioravanti2/entropy-api/model/metrics"
+	"github.com/mfioravanti2/entropy-api/command/server/logging"
 )
 
 func getAttributeFormatType() *graphql.Object {
+	ctx := logging.WithFuncId( context.Background(), "getAttributeFormatType", "entropyql" )
+
+	logger := logging.Logger( ctx )
+	logger.Debug("building GraphQL schema", zap.String( "type", "attributeFormatType" ) )
+
 	var formatType *graphql.Object
 
 	formatType = graphql.NewObject(graphql.ObjectConfig{
@@ -49,6 +58,11 @@ func getAttributeFormatType() *graphql.Object {
 }
 
 func getAttributeSourceType() *graphql.Object {
+	ctx := logging.WithFuncId( context.Background(), "getAttributeSourceType", "entropyql" )
+
+	logger := logging.Logger( ctx )
+	logger.Debug("building GraphQL schema", zap.String( "type", "attributeSourceType" ) )
+
 	var sourceType *graphql.Object
 
 	sourceType = graphql.NewObject(graphql.ObjectConfig{
@@ -106,6 +120,11 @@ func getAttributeSourceType() *graphql.Object {
 }
 
 func getAttributeType() *graphql.Object {
+	ctx := logging.WithFuncId( context.Background(), "getAttributeType", "entropyql" )
+
+	logger := logging.Logger( ctx )
+	logger.Debug("building GraphQL schema", zap.String( "type", "attributeType" ) )
+
 	var attributeType *graphql.Object
 
 	attributeType = graphql.NewObject(graphql.ObjectConfig{
