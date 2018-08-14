@@ -144,6 +144,19 @@ func GetCountries() []string {
 	return names
 }
 
+func GetAllCountries() []source.Model {
+	var countries []source.Model
+
+	for countryCode, _ := range modelCache {
+		var country *source.Model
+		country = modelCache[countryCode]
+
+		countries = append(countries, *country)
+	}
+
+	return countries
+}
+
 func GetModel(countryCode string) (*source.Model, error) {
 	var countryModel *source.Model
 	if len(countryCode) != 2 {
