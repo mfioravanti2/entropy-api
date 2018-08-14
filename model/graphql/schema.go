@@ -5,7 +5,9 @@ import (
 	"fmt"
 
 	"github.com/graphql-go/graphql"
+
 	"github.com/mfioravanti2/entropy-api/data"
+	"github.com/mfioravanti2/entropy-api/model/metrics"
 )
 
 var entropySchema *graphql.Schema
@@ -24,6 +26,9 @@ func BuildSchema() {
 			"countries": &graphql.Field{
 				Type: graphql.NewList(countryType),
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.countries" )
+					ctrReg.Inc(1)
+
 					return data.GetAllCountries(), nil
 				},
 			},

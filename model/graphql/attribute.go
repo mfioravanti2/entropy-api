@@ -4,6 +4,7 @@ import (
 	"github.com/graphql-go/graphql"
 
 	"github.com/mfioravanti2/entropy-api/model/source"
+	"github.com/mfioravanti2/entropy-api/model/metrics"
 )
 
 func getAttributeFormatType() *graphql.Object {
@@ -17,9 +18,13 @@ func getAttributeFormatType() *graphql.Object {
 				Type: graphql.NewNonNull(graphql.String),
 				Description: "Method of Calculation for the Scored Value",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.attribute.format.method" )
+					ctrReg.Inc(1)
+
 					if f, ok := p.Source.(source.Format); ok {
 						return f.Format, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -27,9 +32,13 @@ func getAttributeFormatType() *graphql.Object {
 				Type: graphql.NewNonNull(graphql.Float),
 				Description: "Scored Value of an Attribute",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.attribute.format.score" )
+					ctrReg.Inc(1)
+
 					if f, ok := p.Source.(source.Format); ok {
 						return f.Score, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -53,6 +62,7 @@ func getAttributeSourceType() *graphql.Object {
 					if s, ok := p.Source.(source.Source); ok {
 						return s.Title, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -63,6 +73,7 @@ func getAttributeSourceType() *graphql.Object {
 					if s, ok := p.Source.(source.Source); ok {
 						return s.Date, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -73,6 +84,7 @@ func getAttributeSourceType() *graphql.Object {
 					if s, ok := p.Source.(source.Source); ok {
 						return s.Org, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -83,6 +95,7 @@ func getAttributeSourceType() *graphql.Object {
 					if s, ok := p.Source.(source.Source); ok {
 						return s.URI, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -103,9 +116,13 @@ func getAttributeType() *graphql.Object {
 				Type: graphql.NewNonNull(graphql.String),
 				Description: "Globally unique identifier for the Attribute (UUID v4 format)",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.attribute.id" )
+					ctrReg.Inc(1)
+
 					if a, ok := p.Source.(source.Attribute); ok {
 						return a.Id, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -113,9 +130,13 @@ func getAttributeType() *graphql.Object {
 				Type: graphql.NewNonNull(graphql.String),
 				Description: "Country Model unique identifier for the Attribute",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.attribute.mnemonic" )
+					ctrReg.Inc(1)
+
 					if a, ok := p.Source.(source.Attribute); ok {
 						return a.Mnemonic, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -126,6 +147,7 @@ func getAttributeType() *graphql.Object {
 					if a, ok := p.Source.(source.Attribute); ok {
 						return a.Name, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -136,6 +158,7 @@ func getAttributeType() *graphql.Object {
 					if a, ok := p.Source.(source.Attribute); ok {
 						return a.Notes, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -143,9 +166,13 @@ func getAttributeType() *graphql.Object {
 				Type: graphql.NewList( getAttributeSourceType() ),
 				Description: "Source Documents for the Scoring Calculations",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.attribute.sources" )
+					ctrReg.Inc(1)
+
 					if a, ok := p.Source.(source.Attribute); ok {
 						return a.Sources, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -153,9 +180,13 @@ func getAttributeType() *graphql.Object {
 				Type:  graphql.NewNonNull( graphql.NewList( getAttributeFormatType() ) ),
 				Description: "Scored Attributes Associated with the Country Model",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.attribute.format" )
+					ctrReg.Inc(1)
+
 					if a, ok := p.Source.(source.Attribute); ok {
 						return a.Formats, nil
 					}
+
 					return nil, nil
 				},
 			},

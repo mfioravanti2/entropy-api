@@ -4,6 +4,7 @@ import (
 	"github.com/graphql-go/graphql"
 
 	"github.com/mfioravanti2/entropy-api/model/source"
+	"github.com/mfioravanti2/entropy-api/model/metrics"
 )
 
 func getCountryType() *graphql.Object {
@@ -20,6 +21,7 @@ func getCountryType() *graphql.Object {
 					if model, ok := p.Source.(source.Model); ok {
 						return model.Locale, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -27,9 +29,13 @@ func getCountryType() *graphql.Object {
 				Type: graphql.NewNonNull(graphql.Float),
 				Description: "Entropy Threshold for the Model",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.country.threshold" )
+					ctrReg.Inc(1)
+
 					if model, ok := p.Source.(source.Model); ok {
 						return model.Threshold, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -37,9 +43,13 @@ func getCountryType() *graphql.Object {
 				Type: graphql.NewNonNull(graphql.Int),
 				Description: "k-anonymity value for the Model",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.country.k" )
+					ctrReg.Inc(1)
+
 					if model, ok := p.Source.(source.Model); ok {
 						return model.K, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -50,6 +60,7 @@ func getCountryType() *graphql.Object {
 					if model, ok := p.Source.(source.Model); ok {
 						return model.ModelVersion, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -60,6 +71,7 @@ func getCountryType() *graphql.Object {
 					if model, ok := p.Source.(source.Model); ok {
 						return model.ModelDate, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -67,9 +79,13 @@ func getCountryType() *graphql.Object {
 				Type: graphql.NewList( getHeuristicType() ),
 				Description: "List of Heuristics which operate on the Country Model's Attributes",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.heuristics" )
+					ctrReg.Inc(1)
+
 					if model, ok := p.Source.(source.Model); ok {
 						return model.Heuristics, nil
 					}
+
 					return nil, nil
 				},
 			},
@@ -77,9 +93,13 @@ func getCountryType() *graphql.Object {
 				Type: graphql.NewNonNull( graphql.NewList(getAttributeType() )),
 				Description: "List of Scored Attributes associated with the Model",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.attributes" )
+					ctrReg.Inc(1)
+
 					if model, ok := p.Source.(source.Model); ok {
 						return model.Attributes, nil
 					}
+
 					return nil, nil
 				},
 			},
