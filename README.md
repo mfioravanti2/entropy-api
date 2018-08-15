@@ -12,14 +12,12 @@ The key features of the Entropy API are:
 
 * **REST API**: JSON payloads describing the attribute sets are accepted and classified based on the amount of information present in the attributes. Besides scoring an attribute set, the API offers endpoints which can be queried for additional information about the various attributes of the model.
 
-* **Logging**: Detailed logging is available which illustrates the scoring and classification of the attribute sets.
+* **Metadata Operations**: Data is classified based on its metadata.  For example, the scoring systems operates on the types of data in a record, not the actual data in the record.
 
 
 ### Installation
 
-Entropy API requires a
-[working Go 1.10+ installation](http://golang.org/doc/install) and a
-properly set `GOPATH`.
+Entropy API requires a [working Go 1.10+ installation](http://golang.org/doc/install) and a properly set `GOPATH`.
 
 ```
 $ go get -u github.com/mfioravanti2/entropy-api
@@ -27,3 +25,7 @@ $ go get -u github.com/mfioravanti2/entropy-api
 
 will download and build the Entropy API tool, installing it in
 `$GOPATH/bin/entropy-api`.
+
+## Documentation
+
+Documentation about the APIs can be found in the [Entropy API Documentation](docs/api/README.md).
