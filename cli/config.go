@@ -1,89 +1,113 @@
 package cli
 
 import (
-	"os"
-	"strconv"
 	"flag"
 	"sync"
 	"strings"
+	"errors"
+	"fmt"
 )
 
-type Locations struct {
-	DataStore	string
-	Models		string
-}
+const (
+	MODE_SERVER string = "server"
+	MODE_MIGRATE string = "migrate"
+	MODE_EXAMPLE string = "save-config"
+	MODE_UNKNOWN string = "unknown"
+)
 
 type Config struct {
-	modifyLock sync.RWMutex
+	modifyLock sync.RWMutex	`json:"-"`
 
-	Host string
-	Port int
+	Config string			`json:"-"`
 
-	CorsOrigin string
+	// This should always be loaded from the command line
+	// possible values include: server, migrate, save
+	Mode string				`json:"-"`
 
-	Mode string
+	Listener *Listener		`json:"listener,omitempty"`
+	Security *Security		`json:"security,omitempty"`
+	Logging *Logging		`json:"logging,omitempty"`
+	Endpoints Endpoints		`json:"endpoints,omitempty"`
+	Paths Paths				`json:"paths,omitempty"`
+}
 
-	Files Locations
+var config *Config
 
-	Error error
+func init() {
+	config, _ = DefaultConfig( true )
+}
+
+func GetConfig() (*Config, error) {
+	if config != nil {
+		return config, nil
+	}
+
+	s := fmt.Sprintf("get config failed (no config)" )
+	return nil, errors.New(s)
 }
 
 // Generate an Environment Configuration
-func DefaultConfig() *Config {
-	c := &Config{ Host: "localhost", Port: 8080, CorsOrigin: "*" }
+func DefaultConfig( useEnv bool ) (*Config, error) {
+	c := &Config{}
 
-	if err := c.ReadEnvironment(); err != nil {
-		c.Error = err
-		return c
+	c.Listener = &Listener{}
+	c.Listener.Host = "127.0.0.1"
+	c.Listener.Port = 8080
+	c.Listener.UseTLS = false
+
+	c.Mode = MODE_UNKNOWN
+	c.Config = "config.json"
+
+	c.Logging, _ = NewLogging()
+	c.Endpoints, _ = NewEndpoints()
+	c.Security, _ = NewSecurity()
+	c.Paths, _ = NewPaths()
+
+	if useEnv {
+		if err := c.ReadEnvironment(); err != nil {
+			return c, err
+		}
 	}
 
-	return c
+	return c, nil
 }
 
 // Modify a Configuration by Over-riding Values with Command
 // Line Parameters and Environment Variables
 func (c *Config) ReadEnvironment() error {
 	// Read configuration options from the command line parameters
-	hostPtr := flag.String("host", "127.0.0.1", "Hostname")
-	portPtr := flag.Int("port", 8080, "TCP port")
-	corsPtr := flag.String("cors", "127.0.0.1", "CORS Origin Host")
-	modePtr := flag.String("mode", "server", "Application Mode")
-	dbCfPtr := flag.String("db_config", "test/sqlite_config.json", "DataStore Config")
-	modlPtr := flag.String("models", "data/sources/", "Country Model Directory")
+	hostPtr := flag.String("host", "", "Hostname")
+	portPtr := flag.Int("port", -1, "TCP port")
+	cfgPtr := flag.String("config", "config.json", "Configuration File")
+	modePtr := flag.String("mode", MODE_UNKNOWN, "Application Mode")
 	flag.Parse()
-
-	// Update the configuration options based on environment variable values
-	if v := os.Getenv("ENTROPY_HOST"); v != "" {
-		hostPtr = &v
-	}
-	if v := os.Getenv("ENTROPY_PORT"); v != "" {
-		if i, err := strconv.Atoi(v); err == nil {
-			portPtr = &i
-		} else {
-			panic(err)
-		}
-	}
-	if v := os.Getenv("ORIGIN_ALLOWED"); v != "" {
-		corsPtr = &v
-	}
-	if v := os.Getenv("MODEL_PATH"); v != "" {
-		modlPtr = &v
-	}
 
 	c.modifyLock.Lock()
 	defer c.modifyLock.Unlock()
 
-	c.Host = *hostPtr
-	c.Port = *portPtr
-	c.CorsOrigin = *corsPtr
-	c.Mode =  strings.ToLower( *modePtr )
-	c.Files.DataStore = *dbCfPtr
+	c.Listener.EnvUpdate()
 
-	if strings.HasSuffix( *modlPtr, "/" ) {
-		c.Files.Models = *modlPtr
-	} else {
-		c.Files.Models = ( *modlPtr ) + "/"
-	}
+	c.Listener.Host = checkString( c.Listener.Host, *hostPtr, "" )
+	c.Listener.Port = checkInt( c.Listener.Port, *portPtr, -1 )
+	c.Mode =  checkString( c.Mode, strings.ToLower( *modePtr ), MODE_UNKNOWN )
+
+	c.Config = *cfgPtr
 
 	return nil
+}
+
+func checkString( currentValue string, flagValue string, defaultValue string ) string {
+	if flagValue != defaultValue {
+		return flagValue
+	}
+
+	return currentValue
+}
+
+func checkInt( currentValue, flagValue int, defaultValue int ) int {
+	if flagValue != defaultValue {
+		return flagValue
+	}
+
+	return currentValue
 }

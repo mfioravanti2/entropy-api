@@ -15,19 +15,20 @@ import (
 	"github.com/mfioravanti2/entropy-api/data/scoringdb/sqlite3"
 	"github.com/mfioravanti2/entropy-api/data/scoringdb/mysql"
 	"github.com/mfioravanti2/entropy-api/data/scoringdb/postgres"
+	"github.com/mfioravanti2/entropy-api/cli"
 )
 
 type DataStore struct {
 	Active	bool
 	g		*gorm.DB
-	c 		*Config
+	c 		*cli.Backend
 	LastUse time.Time
 }
 
 var dataStore *DataStore = nil
 
 // Attempt to open a connection to the data store with the supplied configuration
-func Open( c *Config ) ( *DataStore, error ) {
+func Open( c *cli.Backend ) ( *DataStore, error ) {
 	// If the data store is already open, return the existing connection
 	if dataStore != nil && dataStore.g != nil {
 		return dataStore, nil
@@ -194,21 +195,21 @@ func (ds *DataStore) Close() {
 }
 
 // Return the configuration that was used to create the data store
-func (ds *DataStore) Config() *Config  {
+func (ds *DataStore) Config() *cli.Backend  {
 	return ds.c
 }
 
 // Get the active data store or generate a new data store based on
 // the specified configuration
-func GetDataStore( dbConfig *Config ) (*DataStore, error) {
+func GetDataStore( dbConfig *cli.Backend ) (*DataStore, error) {
 	// if not data store is open, attempt to open one with the supplied configuration
 	if dataStore == nil {
 		var err error
-		var config *Config
+		var config *cli.Backend
 
 		// if no configuration was supplied generate the default configuration
 		if dbConfig == nil {
-			config, err = NewConfig()
+			config, err = cli.NewBackend()
 			if err != nil {
 				return nil, err
 			}

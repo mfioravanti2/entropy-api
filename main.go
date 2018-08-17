@@ -26,7 +26,7 @@ import (
 )
 
 func main() {
-	config := cli.DefaultConfig()
+	config, _ := cli.GetConfig()
 	command.Run( config )
 }
 
