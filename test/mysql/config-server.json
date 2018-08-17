@@ -1,0 +1,134 @@
+{
+  "listener": {
+    "host": "127.0.0.1",
+    "port": 8080,
+    "use_TLS": false
+  },
+  "security": {
+    "headers": [
+      {
+        "name": "entropy.security.headers.cache_control",
+        "enabled": true,
+        "field": "Cache-Control",
+        "value": "nocache, nostore, mustrevalidate"
+      },
+      {
+        "name": "entropy.security.headers.expires",
+        "enabled": true,
+        "field": "Expires",
+        "value": "0"
+      },
+      {
+        "name": "entropy.security.headers.xss_protect",
+        "enabled": true,
+        "field": "X-XSS-Protection",
+        "value": "1; mode=block"
+      },
+      {
+        "name": "entropy.security.headers.x_content_type",
+        "enabled": true,
+        "field": "X-Content-Type-Options",
+        "value": "nosniff"
+      },
+      {
+        "name": "entropy.security.headers.x_frame_opts",
+        "enabled": true,
+        "field": "X-Frame-Options",
+        "value": "SAMEORIGIN"
+      },
+      {
+        "name": "entropy.security.headers.cors.origin",
+        "enabled": true,
+        "field": "Access-Control-Allow-Origin",
+        "value": "*"
+      },
+      {
+        "name": "entropy.security.headers.policy.content",
+        "enabled": true,
+        "field": "Content-Security-Policy",
+        "value": "default-src 'none'; script-src 'self'; img-src 'self'; style-src 'self'"
+      },
+      {
+        "name": "entropy.security.headers.policy.referrer",
+        "enabled": false,
+        "field": "Referrer-Policy",
+        "value": "strict-origin"
+      },
+      {
+        "name": "entropy.security.headers.policy.feature",
+        "enabled": false,
+        "field": "Feature-Policy",
+        "value": "sync-xhr 'self'"
+      }
+    ],
+    "encryption": {
+      "cert": "server.pem",
+      "key": "server-key.pem"
+    }
+  },
+  "logging": {
+    "mode": "production",
+    "requests": true,
+    "responses": true,
+    "backend": {
+      "engine" : "mysql",
+      "connection" : "entropy-api:3ae651ac-490f-4e7f-a693-f558648e1135@/entropy?charset=utf8&parseTime=True&loc=UTC",
+      "hide" : true,
+      "redacted" : "entropy-api:PASSWORD@/entropy?charset=utf8&parseTime=True&loc=UTC"
+    }
+  },
+  "endpoints": [
+    {
+      "name": "entropy.api.rest",
+      "enabled": true,
+      "restricted": false,
+      "entitlement": "fe0558c5-4433-40b1-b5ce-8701f1460827"
+    },
+    {
+      "name": "entropy.api.graphql",
+      "enabled": true,
+      "restricted": false,
+      "entitlement": "c958a56d-4ab6-4270-84a2-d53c7c238f25"
+    },
+    {
+      "name": "entropy.api.score",
+      "enabled": true,
+      "restricted": false,
+      "entitlement": "4a05dc55-ae5a-4f08-9678-c0658e0f09fe"
+    },
+    {
+      "name": "entropy.api.metrics",
+      "enabled": true,
+      "restricted": false,
+      "entitlement": "dcdf0502-4e4a-4eb1-af86-19cdabac9446"
+    },
+    {
+      "name": "entropy.api.health",
+      "enabled": true,
+      "restricted": false,
+      "entitlement": "f3f9a69a-1a8e-4472-bb3e-1f71e0efd18e"
+    },
+    {
+      "name": "entropy.api.system",
+      "enabled": true,
+      "restricted": false,
+      "entitlement": "628176b0-9e67-49c3-84a5-aa4e9fb88605"
+    },
+    {
+      "name": "entropy.api.default",
+      "enabled": false,
+      "restricted": true,
+      "entitlement": "44a982c1-9eb3-4093-afeb-d97dae88fc7f"
+    }
+  ],
+  "paths": [
+    {
+      "name": "entropy.path.models",
+      "path": ""
+    },
+    {
+      "name": "entropy.path.openapi",
+      "path": ""
+    }
+  ]
+}

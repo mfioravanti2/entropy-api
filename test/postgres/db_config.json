@@ -1,0 +1,6 @@
+{
+  "engine" : "postgres",
+  "connection" : "host=myhost port=myport user=gorm dbname=gorm password=mypassword",
+  "hide" : true,
+  "redacted" : "host=myhost port=myport user=gorm dbname=gorm password=PASSWORD"
+}

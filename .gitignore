@@ -14,9 +14,10 @@
 # OS and IDEs
 .DS_Store
 .idea
+.vscode
 
 scripts/
-test/
+test/*/data/
 
 request.db
 scoring.db
