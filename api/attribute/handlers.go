@@ -13,19 +13,44 @@ import (
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 	"github.com/mfioravanti2/entropy-api/model/metrics"
+	"github.com/mfioravanti2/entropy-api/cli"
 )
 
 // Add Handlers for the Attribute Endpoints
-func AddHandlers(r model.Routes) model.Routes {
-	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "sys" )
+func AddHandlers(r model.Routes, endpoints *cli.Endpoints) model.Routes {
+	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "attribute" )
 
 	logger := logging.Logger( ctx )
 
-	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/attributes" ) )
-	r = append( r, model.Route{"AttributeList", "GET", "/v1/countries/{countryId}/attributes", List, nil})
+	endpoint, err := endpoints.GetEndpoint( cli.ENDPOINT_REST )
+	if err == nil {
+		logger.Info("checking handler endpoint policy",
+			zap.String( "policy", cli.ENDPOINT_REST ),
+			zap.Bool( "enabled", endpoint.Enabled ),
+		)
 
-	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/attributes/{attributeId}" ) )
-	r = append( r, model.Route{"AttributeDetails", "GET", "/v1/countries/{countryId}/attributes/{attributeId}", Detail, nil})
+		if endpoint.Enabled {
+			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/attributes" ) )
+			r = append( r, model.Route{"AttributeList", "GET", "/v1/countries/{countryId}/attributes", List, nil})
+
+			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/attributes/{attributeId}" ) )
+			r = append( r, model.Route{"AttributeDetails", "GET", "/v1/countries/{countryId}/attributes/{attributeId}", Detail, nil})
+		} else {
+			logger.Warn("handler disabled by configuration",
+				zap.String( "endpoint", "/v1/countries/{countryId}/attributes" ),
+				zap.String( "policy", cli.ENDPOINT_REST ),
+				)
+
+			logger.Warn("handler disabled by configuration",
+				zap.String( "endpoint", "/v1/countries/{countryId}/attributes/{attributeId}" ),
+				zap.String( "policy", cli.ENDPOINT_REST ),
+				)
+		}
+	} else {
+		logger.Error("unable to locate endpoint policy",
+			zap.String( "policy", cli.ENDPOINT_REST ),
+		)
+	}
 
 	return r
 }

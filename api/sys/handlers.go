@@ -15,6 +15,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 	"github.com/mfioravanti2/entropy-api/data/scoringdb"
 	"github.com/mfioravanti2/entropy-api/model/metrics"
+	"github.com/mfioravanti2/entropy-api/cli"
 )
 
 type DataStore struct {
@@ -43,16 +44,54 @@ const (
 )
 
 // Add Handlers for the System Configuration/Health Endpoints
-func AddHandlers(r model.Routes) model.Routes {
+func AddHandlers(r model.Routes, endpoints *cli.Endpoints) model.Routes {
 	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "sys" )
 
 	logger := logging.Logger( ctx )
 
-	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/sys/health" ) )
-	r = append( r, model.Route{ Name: "SysHealth", Method: "GET", Pattern: "/v1/sys/health", HandlerFunc: Health} )
+	endpoint, err := endpoints.GetEndpoint( cli.ENDPOINT_HEALTH )
+	if err == nil {
+		logger.Info("checking handler endpoint policy",
+			zap.String( "policy", cli.ENDPOINT_HEALTH ),
+			zap.Bool( "enabled", endpoint.Enabled ),
+		)
 
-	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/sys/reload" ) )
-	r = append( r, model.Route{ Name: "SysReload", Method: "GET", Pattern: "/v1/sys/reload", HandlerFunc: Reload} )
+		if endpoint.Enabled {
+			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/sys/health" ) )
+			r = append( r, model.Route{ Name: "SysHealth", Method: "GET", Pattern: "/v1/sys/health", HandlerFunc: Health} )
+		} else {
+			logger.Warn("handler disabled by configuration",
+				zap.String( "endpoint", "/v1/sys/health" ),
+				zap.String( "policy", cli.ENDPOINT_HEALTH ),
+			)
+		}
+	} else {
+		logger.Error("unable to locate endpoint policy",
+			zap.String( "policy", cli.ENDPOINT_HEALTH ),
+		)
+	}
+
+	endpoint, err = endpoints.GetEndpoint( cli.ENDPOINT_SYSTEM )
+	if err == nil {
+		logger.Info("checking handler endpoint policy",
+			zap.String( "policy", cli.ENDPOINT_SYSTEM ),
+			zap.Bool( "enabled", endpoint.Enabled ),
+		)
+
+		if endpoint.Enabled {
+			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/sys/reload" ) )
+			r = append( r, model.Route{ Name: "SysReload", Method: "GET", Pattern: "/v1/sys/reload", HandlerFunc: Reload} )
+		} else {
+			logger.Warn("handler disabled by configuration",
+				zap.String( "endpoint", "/v1/sys/reload" ),
+				zap.String( "policy", cli.ENDPOINT_SYSTEM ),
+			)
+		}
+	} else {
+		logger.Error("unable to locate endpoint policy",
+			zap.String( "policy", cli.ENDPOINT_SYSTEM ),
+		)
+	}
 
 	return r
 }

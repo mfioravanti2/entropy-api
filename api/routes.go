@@ -5,6 +5,8 @@ package api
 
 import (
 	"github.com/mfioravanti2/entropy-api/model"
+	"github.com/mfioravanti2/entropy-api/cli"
+
 	"github.com/mfioravanti2/entropy-api/api/attribute"
 	"github.com/mfioravanti2/entropy-api/api/country"
 	"github.com/mfioravanti2/entropy-api/api/sys"
@@ -18,15 +20,19 @@ import (
 //	Generate a complete list of available routes
 func newRoutes() model.Routes {
 	var routes = model.Routes{}
+	var config *cli.Config
 
-	routes = country.AddHandlers( routes )
-	routes = attribute.AddHandlers( routes )
-	routes = heuristic.AddHandlers( routes )
-	routes = scores.AddHandlers( routes )
-	routes = sys.AddHandlers( routes )
-	routes = openapi_spec.AddHandlers( routes )
-	routes = metrics.AddHandlers( routes )
-	routes = graphql.AddHandlers( routes )
+	config, err := cli.GetConfig()
+	if err == nil {
+		routes = country.AddHandlers( routes, &config.Endpoints )
+		routes = attribute.AddHandlers( routes, &config.Endpoints )
+		routes = heuristic.AddHandlers( routes, &config.Endpoints )
+		routes = scores.AddHandlers( routes, &config.Endpoints )
+		routes = sys.AddHandlers( routes, &config.Endpoints )
+		routes = openapi_spec.AddHandlers( routes, &config.Endpoints )
+		routes = metrics.AddHandlers( routes, &config.Endpoints )
+		routes = graphql.AddHandlers( routes, &config.Endpoints )
+	}
 
 	return routes
 }

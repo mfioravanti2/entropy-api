@@ -115,10 +115,16 @@
       "entitlement": "628176b0-9e67-49c3-84a5-aa4e9fb88605"
     },
     {
+      "name": "entropy.api.openapi",
+      "enabled": true,
+      "restricted": false,
+      "entitlement": "628176b0-9e67-49c3-84a5-aa4e9fb88605"
+    },
+    {
       "name": "entropy.api.default",
       "enabled": false,
       "restricted": true,
-      "entitlement": "44a982c1-9eb3-4093-afeb-d97dae88fc7f"
+      "entitlement": "f6df09f8-47b0-4fb8-80b3-c32ee8ddffea"
     }
   ],
   "paths": [

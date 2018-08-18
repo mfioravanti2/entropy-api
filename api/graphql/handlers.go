@@ -15,16 +15,36 @@ import (
 
 	"github.com/mfioravanti2/entropy-api/model/metrics"
 	"github.com/mfioravanti2/entropy-api/model/graphql"
+	"github.com/mfioravanti2/entropy-api/cli"
 )
 
 // Add Handlers for the GraphQL Endpoints
-func AddHandlers(r model.Routes) model.Routes {
+func AddHandlers(r model.Routes, endpoints *cli.Endpoints) model.Routes {
 	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "graphql" )
 
 	logger := logging.Logger( ctx )
 
-	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/graphql" ) )
-	r = append( r, model.Route{ Name: "GraphQL", Method: "POST", Pattern: "/v1/graphql", HandlerFunc: GraphQL } )
+	endpoint, err := endpoints.GetEndpoint( cli.ENDPOINT_GRAPHQL )
+	if err == nil {
+		logger.Info("checking handler endpoint policy",
+			zap.String( "policy", cli.ENDPOINT_GRAPHQL ),
+			zap.Bool( "enabled", endpoint.Enabled ),
+		)
+
+		if endpoint.Enabled {
+			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/graphql" ) )
+			r = append( r, model.Route{ Name: "GraphQL", Method: "POST", Pattern: "/v1/graphql", HandlerFunc: GraphQL } )
+		} else {
+			logger.Warn("handler disabled by configuration",
+				zap.String( "endpoint", "/v1/graphql" ),
+				zap.String( "policy", cli.ENDPOINT_GRAPHQL ),
+			)
+		}
+	} else {
+		logger.Error("unable to locate endpoint policy",
+			zap.String( "policy", cli.ENDPOINT_GRAPHQL ),
+		)
+	}
 
 	return r
 }

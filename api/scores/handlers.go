@@ -20,6 +20,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/data/scoringdb"
 	"github.com/mfioravanti2/entropy-api/model/metrics"
 	"fmt"
+	"github.com/mfioravanti2/entropy-api/cli"
 )
 
 const (
@@ -32,43 +33,62 @@ const (
 )
 
 //	Generate a complete list of available routes
-func AddHandlers(r model.Routes) model.Routes {
+func AddHandlers(r model.Routes, endpoints *cli.Endpoints) model.Routes {
 	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "scores" )
 
 	logger := logging.Logger( ctx )
 
-	p := []string{"format", "{formatId}"}
+	endpoint, err := endpoints.GetEndpoint( cli.ENDPOINT_SCORING )
+	if err == nil {
+		logger.Info("checking handler endpoint policy",
+			zap.String( "policy", cli.ENDPOINT_SCORING ),
+			zap.Bool( "enabled", endpoint.Enabled ),
+		)
 
-	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-	r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+		if endpoint.Enabled {
+			p := []string{"format", "{formatId}"}
 
-	p = []string{"reductions", "{useReductions}"}
+			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
+			r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
 
-	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-	r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+			p = []string{"reductions", "{useReductions}"}
 
-	p = []string{"mode", "{modeId}"}
+			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
+			r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
 
-	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-	r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+			p = []string{"mode", "{modeId}"}
 
-	p = []string{"format", "{formatId}", "reductions", "{useReductions}"}
+			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
+			r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
 
-	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-	r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+			p = []string{"format", "{formatId}", "reductions", "{useReductions}"}
 
-	p = []string{"format", "{formatId}", "mode", "{modeId}"}
+			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
+			r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
 
-	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-	r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+			p = []string{"format", "{formatId}", "mode", "{modeId}"}
 
-	p = []string{"format", "{formatId}", "mode", "{modeId}", "reductions", "{useReductions}"}
+			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
+			r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
 
-	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-	r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+			p = []string{"format", "{formatId}", "mode", "{modeId}", "reductions", "{useReductions}"}
 
-	logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-	r = append( r, model.Route{"DefaultScoring", "POST", "/v1/scores", CalcDefaults, nil} )
+			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
+			r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+
+			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
+			r = append( r, model.Route{"DefaultScoring", "POST", "/v1/scores", CalcDefaults, nil} )
+		} else {
+			logger.Warn("handler disabled by configuration",
+				zap.String( "endpoint", "/v1/scores" ),
+				zap.String( "policy", cli.ENDPOINT_SCORING ),
+			)
+		}
+	} else {
+		logger.Error("unable to locate endpoint policy",
+			zap.String( "policy", cli.ENDPOINT_SCORING ),
+		)
+	}
 
 	return r
 }

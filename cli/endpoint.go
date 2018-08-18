@@ -17,6 +17,7 @@ const (
 	ENDPOINT_SYSTEM  string = "entropy.api.system"
 	ENDPOINT_METRICS string = "entropy.api.metrics"
 	ENDPOINT_HEALTH  string = "entropy.api.health"
+	ENDPOINT_OPENAPI string = "entropy.api.openapi"
 	ENDPOINT_DEFAULT string = "entropy.api.default"
 )
 
@@ -81,6 +82,10 @@ func NewEndpoints() (Endpoints, error) {
 
 	ep, _ = NewEndpoint()
 	ep.Name = ENDPOINT_SYSTEM
+	eps = append( eps, *ep )
+
+	ep, _ = NewEndpoint()
+	ep.Name = ENDPOINT_OPENAPI
 	eps = append( eps, *ep )
 
 	ep, _ = NewEndpoint()
