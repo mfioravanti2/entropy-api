@@ -1,4 +1,4 @@
-package cli
+package config
 
 import (
 	"context"
@@ -35,7 +35,7 @@ func NewBackend() (*Backend, error) {
 	var b = &Backend{}
 	b.DefaultConfig()
 
-	ctx := logging.WithFuncId( context.Background(), "NewBackend", "cli" )
+	ctx := logging.WithFuncId( context.Background(), "NewBackend", "config" )
 
 	logger := logging.Logger( ctx )
 	logger.Debug("generating default backend configuration",

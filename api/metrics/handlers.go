@@ -9,19 +9,19 @@ import (
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 
 	"github.com/mfioravanti2/entropy-api/model/metrics"
-	"github.com/mfioravanti2/entropy-api/cli"
+	"github.com/mfioravanti2/entropy-api/config"
 )
 
 // Add Handlers for the Metrics-based Endpoints
-func AddHandlers(r model.Routes, endpoints *cli.Endpoints) model.Routes {
+func AddHandlers(r model.Routes, endpoints *config.Endpoints) model.Routes {
 	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "metrics" )
 
 	logger := logging.Logger( ctx )
 
-	endpoint, err := endpoints.GetEndpoint( cli.ENDPOINT_METRICS )
+	endpoint, err := endpoints.GetEndpoint( config.ENDPOINT_METRICS )
 	if err == nil {
 		logger.Info("checking handler endpoint policy",
-			zap.String( "policy", cli.ENDPOINT_METRICS ),
+			zap.String( "policy", config.ENDPOINT_METRICS ),
 			zap.Bool( "enabled", endpoint.Enabled ),
 		)
 
@@ -31,12 +31,12 @@ func AddHandlers(r model.Routes, endpoints *cli.Endpoints) model.Routes {
 		} else {
 			logger.Warn("handler disabled by configuration",
 				zap.String( "endpoint", "/v1/sys/metrics" ),
-				zap.String( "policy", cli.ENDPOINT_METRICS ),
+				zap.String( "policy", config.ENDPOINT_METRICS ),
 			)
 		}
 	} else {
 		logger.Error("unable to locate endpoint policy",
-			zap.String( "policy", cli.ENDPOINT_METRICS ),
+			zap.String( "policy", config.ENDPOINT_METRICS ),
 		)
 	}
 

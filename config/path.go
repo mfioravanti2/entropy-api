@@ -1,4 +1,4 @@
-package cli
+package config
 
 import (
 	"context"
@@ -30,7 +30,7 @@ func NewPath() (*Path, error) {
 	var p = &Path{}
 	p.DefaultConfig()
 
-	ctx := logging.WithFuncId( context.Background(), "NewPath", "cli" )
+	ctx := logging.WithFuncId( context.Background(), "NewPath", "config" )
 
 	logger := logging.Logger( ctx )
 	logger.Debug("generating default path configuration",

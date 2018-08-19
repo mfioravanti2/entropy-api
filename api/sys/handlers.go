@@ -15,7 +15,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 	"github.com/mfioravanti2/entropy-api/data/scoringdb"
 	"github.com/mfioravanti2/entropy-api/model/metrics"
-	"github.com/mfioravanti2/entropy-api/cli"
+	"github.com/mfioravanti2/entropy-api/config"
 )
 
 type DataStore struct {
@@ -44,15 +44,15 @@ const (
 )
 
 // Add Handlers for the System Configuration/Health Endpoints
-func AddHandlers(r model.Routes, endpoints *cli.Endpoints) model.Routes {
+func AddHandlers(r model.Routes, endpoints *config.Endpoints) model.Routes {
 	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "sys" )
 
 	logger := logging.Logger( ctx )
 
-	endpoint, err := endpoints.GetEndpoint( cli.ENDPOINT_HEALTH )
+	endpoint, err := endpoints.GetEndpoint( config.ENDPOINT_HEALTH )
 	if err == nil {
 		logger.Info("checking handler endpoint policy",
-			zap.String( "policy", cli.ENDPOINT_HEALTH ),
+			zap.String( "policy", config.ENDPOINT_HEALTH ),
 			zap.Bool( "enabled", endpoint.Enabled ),
 		)
 
@@ -62,19 +62,19 @@ func AddHandlers(r model.Routes, endpoints *cli.Endpoints) model.Routes {
 		} else {
 			logger.Warn("handler disabled by configuration",
 				zap.String( "endpoint", "/v1/sys/health" ),
-				zap.String( "policy", cli.ENDPOINT_HEALTH ),
+				zap.String( "policy", config.ENDPOINT_HEALTH ),
 			)
 		}
 	} else {
 		logger.Error("unable to locate endpoint policy",
-			zap.String( "policy", cli.ENDPOINT_HEALTH ),
+			zap.String( "policy", config.ENDPOINT_HEALTH ),
 		)
 	}
 
-	endpoint, err = endpoints.GetEndpoint( cli.ENDPOINT_SYSTEM )
+	endpoint, err = endpoints.GetEndpoint( config.ENDPOINT_SYSTEM )
 	if err == nil {
 		logger.Info("checking handler endpoint policy",
-			zap.String( "policy", cli.ENDPOINT_SYSTEM ),
+			zap.String( "policy", config.ENDPOINT_SYSTEM ),
 			zap.Bool( "enabled", endpoint.Enabled ),
 		)
 
@@ -84,12 +84,12 @@ func AddHandlers(r model.Routes, endpoints *cli.Endpoints) model.Routes {
 		} else {
 			logger.Warn("handler disabled by configuration",
 				zap.String( "endpoint", "/v1/sys/reload" ),
-				zap.String( "policy", cli.ENDPOINT_SYSTEM ),
+				zap.String( "policy", config.ENDPOINT_SYSTEM ),
 			)
 		}
 	} else {
 		logger.Error("unable to locate endpoint policy",
-			zap.String( "policy", cli.ENDPOINT_SYSTEM ),
+			zap.String( "policy", config.ENDPOINT_SYSTEM ),
 		)
 	}
 

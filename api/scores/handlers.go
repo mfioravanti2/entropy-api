@@ -20,7 +20,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/data/scoringdb"
 	"github.com/mfioravanti2/entropy-api/model/metrics"
 	"fmt"
-	"github.com/mfioravanti2/entropy-api/cli"
+	"github.com/mfioravanti2/entropy-api/config"
 )
 
 const (
@@ -33,15 +33,15 @@ const (
 )
 
 //	Generate a complete list of available routes
-func AddHandlers(r model.Routes, endpoints *cli.Endpoints) model.Routes {
+func AddHandlers(r model.Routes, endpoints *config.Endpoints) model.Routes {
 	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "scores" )
 
 	logger := logging.Logger( ctx )
 
-	endpoint, err := endpoints.GetEndpoint( cli.ENDPOINT_SCORING )
+	endpoint, err := endpoints.GetEndpoint( config.ENDPOINT_SCORING )
 	if err == nil {
 		logger.Info("checking handler endpoint policy",
-			zap.String( "policy", cli.ENDPOINT_SCORING ),
+			zap.String( "policy", config.ENDPOINT_SCORING ),
 			zap.Bool( "enabled", endpoint.Enabled ),
 		)
 
@@ -81,12 +81,12 @@ func AddHandlers(r model.Routes, endpoints *cli.Endpoints) model.Routes {
 		} else {
 			logger.Warn("handler disabled by configuration",
 				zap.String( "endpoint", "/v1/scores" ),
-				zap.String( "policy", cli.ENDPOINT_SCORING ),
+				zap.String( "policy", config.ENDPOINT_SCORING ),
 			)
 		}
 	} else {
 		logger.Error("unable to locate endpoint policy",
-			zap.String( "policy", cli.ENDPOINT_SCORING ),
+			zap.String( "policy", config.ENDPOINT_SCORING ),
 		)
 	}
 

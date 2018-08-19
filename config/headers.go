@@ -1,4 +1,4 @@
-package cli
+package config
 
 import (
 	"context"
@@ -41,7 +41,7 @@ func NewHeader() (*Header, error) {
 	var h = &Header{}
 	h.DefaultConfig()
 
-	ctx := logging.WithFuncId( context.Background(), "NewHeader", "cli" )
+	ctx := logging.WithFuncId( context.Background(), "NewHeader", "config" )
 
 	logger := logging.Logger( ctx )
 	logger.Debug("generating default header configuration",

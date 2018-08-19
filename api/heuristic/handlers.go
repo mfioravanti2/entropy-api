@@ -13,19 +13,19 @@ import (
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 	"github.com/mfioravanti2/entropy-api/model/metrics"
-	"github.com/mfioravanti2/entropy-api/cli"
+	"github.com/mfioravanti2/entropy-api/config"
 )
 
 // Add Handlers for the Heuristic Endpoints
-func AddHandlers(r model.Routes, endpoints *cli.Endpoints) model.Routes {
+func AddHandlers(r model.Routes, endpoints *config.Endpoints) model.Routes {
 	ctx := logging.WithFuncId( context.Background(), "AddHandlers", "heuristic" )
 
 	logger := logging.Logger( ctx )
 
-	endpoint, err := endpoints.GetEndpoint( cli.ENDPOINT_REST )
+	endpoint, err := endpoints.GetEndpoint( config.ENDPOINT_REST )
 	if err == nil {
 		logger.Info("checking handler endpoint policy",
-			zap.String( "policy", cli.ENDPOINT_REST ),
+			zap.String( "policy", config.ENDPOINT_REST ),
 			zap.Bool( "enabled", endpoint.Enabled ),
 		)
 
@@ -38,17 +38,17 @@ func AddHandlers(r model.Routes, endpoints *cli.Endpoints) model.Routes {
 		} else {
 			logger.Warn("handler disabled by configuration",
 				zap.String( "endpoint", "/v1/countries/{countryId}/heuristics" ),
-				zap.String( "policy", cli.ENDPOINT_REST ),
+				zap.String( "policy", config.ENDPOINT_REST ),
 			)
 
 			logger.Warn("handler disabled by configuration",
 				zap.String( "endpoint", "/v1/countries/{countryId}/heuristics/{heuristicId}" ),
-				zap.String( "policy", cli.ENDPOINT_REST ),
+				zap.String( "policy", config.ENDPOINT_REST ),
 			)
 		}
 	} else {
 		logger.Error("unable to locate endpoint policy",
-			zap.String( "policy", cli.ENDPOINT_REST ),
+			zap.String( "policy", config.ENDPOINT_REST ),
 		)
 	}
 

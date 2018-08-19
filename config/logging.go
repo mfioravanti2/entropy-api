@@ -1,4 +1,4 @@
-package cli
+package config
 
 import (
 	"context"
@@ -32,7 +32,7 @@ func NewLogging() (*Logging, error) {
 	var l = &Logging{}
 	l.DefaultConfig()
 
-	ctx := logging.WithFuncId( context.Background(), "NewLogging", "cli" )
+	ctx := logging.WithFuncId( context.Background(), "NewLogging", "config" )
 
 	logger := logging.Logger( ctx )
 	logger.Debug("generating default logging configuration",

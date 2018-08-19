@@ -1,4 +1,4 @@
-package cli
+package config
 
 import (
 	"context"
@@ -47,7 +47,7 @@ func NewEndpoint() (*Endpoint, error) {
 	var e = &Endpoint{}
 	e.DefaultConfig()
 
-	ctx := logging.WithFuncId( context.Background(), "NewEndpoint", "cli" )
+	ctx := logging.WithFuncId( context.Background(), "NewEndpoint", "config" )
 
 	logger := logging.Logger( ctx )
 	logger.Debug("generating default endpoint configuration",

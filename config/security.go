@@ -1,4 +1,4 @@
-package cli
+package config
 
 import (
 	"context"
@@ -26,7 +26,7 @@ func NewSecurity() (*Security, error) {
 	var s = &Security{}
 	s.DefaultConfig()
 
-	ctx := logging.WithFuncId( context.Background(), "NewSecurity", "cli" )
+	ctx := logging.WithFuncId( context.Background(), "NewSecurity", "config" )
 
 	logger := logging.Logger( ctx )
 	logger.Debug("generating default logging configuration",
@@ -45,7 +45,7 @@ func NewEncryption() (*Encryption, error) {
 	var e = &Encryption{}
 	e.DefaultConfig()
 
-	ctx := logging.WithFuncId( context.Background(), "NewEncryption", "cli" )
+	ctx := logging.WithFuncId( context.Background(), "NewEncryption", "config" )
 
 	logger := logging.Logger( ctx )
 	logger.Debug("generating default encryption configuration",
