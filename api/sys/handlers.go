@@ -16,6 +16,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/data/scoringdb"
 	"github.com/mfioravanti2/entropy-api/model/metrics"
 	"github.com/mfioravanti2/entropy-api/config"
+	"github.com/mfioravanti2/entropy-api/command/server/enforce"
 )
 
 type DataStore struct {
@@ -98,7 +99,7 @@ func AddHandlers(r model.Routes, endpoints *config.Endpoints) model.Routes {
 
 // Return the system's health
 func Health(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-type", "application/json; charset=UTF-8")
+	w.Header().Set("Content-Type", enforce.HEADER_JSON_CONTENT_TYPE)
 	w.WriteHeader( http.StatusOK )
 
 	var SysInfo SysHealth
@@ -184,8 +185,6 @@ func Health(w http.ResponseWriter, r *http.Request) {
 
 // Reload the country models
 func Reload(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-type", "application/json; charset=UTF-8")
-
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
 
@@ -194,6 +193,7 @@ func Reload(w http.ResponseWriter, r *http.Request) {
 
 	// Reload the country models
 	if err := data.Reload( reqCtx ); err == nil {
+		w.Header().Set("Content-Type", enforce.HEADER_JSON_CONTENT_TYPE)
 		w.WriteHeader( http.StatusOK )
 
 		logger.Info( "reloading models",

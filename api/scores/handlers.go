@@ -21,6 +21,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/model/metrics"
 	"fmt"
 	"github.com/mfioravanti2/entropy-api/config"
+	"github.com/mfioravanti2/entropy-api/command/server/enforce"
 )
 
 const (
@@ -224,7 +225,7 @@ func score(w http.ResponseWriter, r *http.Request, modeId string, formatId strin
 	}
 
 	var score response.Response
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.Header().Set("Content-Type", enforce.HEADER_JSON_CONTENT_TYPE)
 
 	// Score the request
 	score, err = calc.Calc( reqCtx, &entropy, formatId, useReductions )
@@ -298,7 +299,7 @@ func handleError(w http.ResponseWriter, r *http.Request, statusCode int, msg str
 	reqCtx := logging.WithFuncId( r.Context(), "handleError", "scores" )
 	logger := logging.Logger(reqCtx)
 
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.Header().Set("Content-Type", enforce.HEADER_JSON_CONTENT_TYPE)
 	w.WriteHeader( statusCode )
 
 	cLabel := fmt.Sprintf( "entropy.scoring.post.status.%d", statusCode )

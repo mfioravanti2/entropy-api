@@ -10,6 +10,7 @@ import (
 
 	"github.com/mfioravanti2/entropy-api/model/metrics"
 	"github.com/mfioravanti2/entropy-api/config"
+	"github.com/mfioravanti2/entropy-api/command/server/enforce"
 )
 
 // Add Handlers for the Metrics-based Endpoints
@@ -46,7 +47,7 @@ func AddHandlers(r model.Routes, endpoints *config.Endpoints) model.Routes {
 
 // Return the Metrics as a json object
 func Metrics(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-type", "application/json; charset=UTF-8")
+	w.Header().Set("Content-Type", enforce.HEADER_JSON_CONTENT_TYPE)
 
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)

@@ -14,6 +14,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 	"github.com/mfioravanti2/entropy-api/model/metrics"
 	"github.com/mfioravanti2/entropy-api/config"
+	"github.com/mfioravanti2/entropy-api/command/server/enforce"
 )
 
 // Add Handlers for the Attribute Endpoints
@@ -98,7 +99,7 @@ func List(w http.ResponseWriter, r *http.Request) {
 		)
 	}
 
-	w.Header().Set("Content-type", "application/json; charset=UTF-8")
+	w.Header().Set("Content-Type", enforce.HEADER_JSON_CONTENT_TYPE)
 	if len(attributes) > 0 {
 		w.WriteHeader( http.StatusOK )
 
@@ -179,7 +180,7 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 	// Get information about the specified attribute from the country's model
 	attribute, err := data.GetAttribute(countryId, attributeId)
 
-	w.Header().Set("Content-type", "application/json; charset=UTF-8")
+	w.Header().Set("Content-Type", enforce.HEADER_JSON_CONTENT_TYPE)
 	if err == nil {
 		w.WriteHeader( http.StatusOK )
 

@@ -16,6 +16,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/model/metrics"
 	"github.com/mfioravanti2/entropy-api/model/graphql"
 	"github.com/mfioravanti2/entropy-api/config"
+	"github.com/mfioravanti2/entropy-api/command/server/enforce"
 )
 
 // Add Handlers for the GraphQL Endpoints
@@ -51,7 +52,7 @@ func AddHandlers(r model.Routes, endpoints *config.Endpoints) model.Routes {
 
 // Return the GraphQL object
 func GraphQL(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-type", "application/json; charset=UTF-8")
+	w.Header().Set("Content-Type", enforce.HEADER_JSON_CONTENT_TYPE)
 
 	reqCtx := r.Context()
 	logger := logging.Logger(reqCtx)
@@ -94,7 +95,7 @@ func GraphQL(w http.ResponseWriter, r *http.Request) {
 
 	var gqlQuery map[string]interface{}
 	if err := json.Unmarshal(body, &gqlQuery); err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.Header().Set("Content-Type", enforce.HEADER_JSON_CONTENT_TYPE)
 		w.WriteHeader( http.StatusUnprocessableEntity )
 
 		ctrReg, _ := metrix.GetCounter( "entropy.graphql.post.status.422" )
@@ -108,7 +109,7 @@ func GraphQL(w http.ResponseWriter, r *http.Request) {
 	var entropySchema *graphql.Schema
 
 	if entropySchema, err = entropyql.GetSchema(); err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.Header().Set("Content-Type", enforce.HEADER_JSON_CONTENT_TYPE)
 		w.WriteHeader( http.StatusUnprocessableEntity )
 
 		ctrReg, _ := metrix.GetCounter( "entropy.graphql.post.status.422" )

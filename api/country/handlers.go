@@ -14,6 +14,7 @@ import (
 
 	"github.com/mfioravanti2/entropy-api/model/metrics"
 	"github.com/mfioravanti2/entropy-api/config"
+	"github.com/mfioravanti2/entropy-api/command/server/enforce"
 )
 
 // Add Handlers for the Country Endpoints
@@ -61,7 +62,7 @@ func List(w http.ResponseWriter, r *http.Request) {
 	logger.Info( "retrieving country codes from models" )
 
 	if len(countries) > 0 {
-		w.Header().Set("Content-type", "application/json; charset=UTF-8")
+		w.Header().Set("Content-Type", enforce.HEADER_JSON_CONTENT_TYPE)
 		w.WriteHeader( http.StatusOK )
 
 		// obtain a list of country codes
