@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/mfioravanti2/entropy-api/api"
+	"github.com/mfioravanti2/entropy-api/command/server/headers"
 )
 
 func NewRouter() *mux.Router {
@@ -14,7 +15,7 @@ func NewRouter() *mux.Router {
 		var handler http.Handler
 
 		handler = route.HandlerFunc
-		handler = Logger(handler, route.Name)
+		handler = Logger( headers.SecurityHeadersHandler( handler ), route.Name )
 
 		if route.Params == nil {
 			router.

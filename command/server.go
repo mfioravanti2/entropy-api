@@ -13,6 +13,7 @@ import (
 	"github.com/mfioravanti2/entropy-api/config"
 	"github.com/mfioravanti2/entropy-api/command/server"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
+	"github.com/mfioravanti2/entropy-api/command/server/headers"
 )
 
 func runServer( c *config.Config ) {
@@ -27,6 +28,7 @@ func runServer( c *config.Config ) {
 	)
 
 	router := server.NewRouter()
+	headers.BuildHeaders( &c.Security.Headers )
 
 	var connection string
 	connection = fmt.Sprintf( "%s:%d", c.Listener.Host, c.Listener.Port )
@@ -58,6 +60,7 @@ func runServer( c *config.Config ) {
 			logger.Debug("starting server",
 				zap.String("host", c.Listener.Host),
 				zap.Int("port", c.Listener.Port),
+				zap.String("mode", c.Mode),
 			)
 
 			log.Fatal(http.ListenAndServe(connection, corsRouter))
