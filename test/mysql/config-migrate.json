@@ -121,7 +121,7 @@
       "entitlement": "f6df09f8-47b0-4fb8-80b3-c32ee8ddffea"
     },
     {
-      "name": "entropy.api.default",
+      "name": "entropy.api.policy.default",
       "enabled": false,
       "restricted": true,
       "entitlement": "44a982c1-9eb3-4093-afeb-d97dae88fc7f"
