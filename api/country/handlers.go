@@ -31,8 +31,17 @@ func AddHandlers(r model.Routes, endpoints *config.Endpoints) model.Routes {
 		)
 
 		if endpoint.Enabled {
-			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/countries" ) )
-			r = append( r, model.Route{"CountryList", "GET", "/v1/countries", List, nil} )
+			logger.Debug("registering handlers",
+				zap.String( "endpoint", "/v1/countries" ),
+				)
+			r = append( r, model.Route{ Name: "CountryList",
+										Method: "GET",
+										Pattern: "/v1/countries",
+										HandlerFunc: List,
+										Params: nil,
+										Enforce: model.ENFORCE_CONTENT_NONE,
+										Policy: endpoint,
+										AuthN: model.AUTH_METHOD_NONE } )
 		} else {
 			logger.Warn("handler disabled by configuration",
 				zap.String( "endpoint", "/v1/countries" ),

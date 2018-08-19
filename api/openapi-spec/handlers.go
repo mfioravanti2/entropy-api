@@ -29,8 +29,17 @@ func AddHandlers(r model.Routes, endpoints *config.Endpoints) model.Routes {
 		)
 
 		if endpoint.Enabled {
-			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/sys/spec" ) )
-			r = append( r, model.Route{ Name: "SysSchema", Method: "GET", Pattern: "/v1/sys/spec", HandlerFunc: Spec} )
+			logger.Debug("registering handlers",
+				zap.String( "endpoint", "/v1/sys/spec" ),
+				)
+			r = append( r, model.Route{ Name: "SysSchema",
+										Method: "GET",
+										Pattern: "/v1/sys/spec",
+										HandlerFunc: Spec,
+										Params: nil,
+										Enforce: model.ENFORCE_CONTENT_NONE,
+										Policy: endpoint,
+										AuthN: model.AUTH_METHOD_NONE } )
 		} else {
 			logger.Warn("handler disabled by configuration",
 				zap.String( "endpoint", "/v1/sys/spec" ),

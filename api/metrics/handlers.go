@@ -27,8 +27,17 @@ func AddHandlers(r model.Routes, endpoints *config.Endpoints) model.Routes {
 		)
 
 		if endpoint.Enabled {
-			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/sys/metrics" ) )
-			r = append( r, model.Route{ Name: "SysMetrics", Method: "GET", Pattern: "/v1/sys/metrics", HandlerFunc: Metrics } )
+			logger.Debug("registering handlers",
+				zap.String( "endpoint", "/v1/sys/metrics" ),
+				)
+			r = append( r, model.Route{ Name: "SysMetrics",
+										Method: "GET",
+										Pattern: "/v1/sys/metrics",
+										HandlerFunc: Metrics,
+										Params: nil,
+										Enforce: model.ENFORCE_CONTENT_NONE,
+										Policy: endpoint,
+										AuthN: model.AUTH_METHOD_NONE } )
 		} else {
 			logger.Warn("handler disabled by configuration",
 				zap.String( "endpoint", "/v1/sys/metrics" ),

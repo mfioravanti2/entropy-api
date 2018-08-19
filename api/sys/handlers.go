@@ -58,8 +58,17 @@ func AddHandlers(r model.Routes, endpoints *config.Endpoints) model.Routes {
 		)
 
 		if endpoint.Enabled {
-			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/sys/health" ) )
-			r = append( r, model.Route{ Name: "SysHealth", Method: "GET", Pattern: "/v1/sys/health", HandlerFunc: Health} )
+			logger.Debug("registering handlers",
+				zap.String( "endpoint", "/v1/sys/health" ),
+				)
+			r = append( r, model.Route{ Name: "SysHealth",
+										Method: "GET",
+										Pattern: "/v1/sys/health",
+										HandlerFunc: Health,
+										Params: nil,
+										Enforce: model.ENFORCE_CONTENT_NONE,
+										Policy: endpoint,
+										AuthN: model.AUTH_METHOD_NONE } )
 		} else {
 			logger.Warn("handler disabled by configuration",
 				zap.String( "endpoint", "/v1/sys/health" ),
@@ -80,8 +89,17 @@ func AddHandlers(r model.Routes, endpoints *config.Endpoints) model.Routes {
 		)
 
 		if endpoint.Enabled {
-			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/sys/reload" ) )
-			r = append( r, model.Route{ Name: "SysReload", Method: "GET", Pattern: "/v1/sys/reload", HandlerFunc: Reload} )
+			logger.Debug("registering handlers",
+				zap.String( "endpoint", "/v1/sys/reload" ),
+				)
+			r = append( r, model.Route{ Name: "SysReload",
+										Method: "GET",
+										Pattern: "/v1/sys/reload",
+										HandlerFunc: Reload,
+										Params: nil,
+										Enforce: model.ENFORCE_CONTENT_NONE,
+										Policy: endpoint,
+										AuthN: model.AUTH_METHOD_NONE } )
 		} else {
 			logger.Warn("handler disabled by configuration",
 				zap.String( "endpoint", "/v1/sys/reload" ),

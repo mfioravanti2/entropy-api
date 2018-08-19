@@ -8,6 +8,7 @@ import (
 	"strings"
 	"context"
 	"time"
+	"fmt"
 
 	"go.uber.org/zap"
 	"github.com/gorilla/mux"
@@ -15,13 +16,12 @@ import (
 	"github.com/mfioravanti2/entropy-api/model"
 	"github.com/mfioravanti2/entropy-api/model/request"
 	"github.com/mfioravanti2/entropy-api/model/response"
+	"github.com/mfioravanti2/entropy-api/model/metrics"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
+	"github.com/mfioravanti2/entropy-api/command/server/enforce"
 	"github.com/mfioravanti2/entropy-api/calc"
 	"github.com/mfioravanti2/entropy-api/data/scoringdb"
-	"github.com/mfioravanti2/entropy-api/model/metrics"
-	"fmt"
 	"github.com/mfioravanti2/entropy-api/config"
-	"github.com/mfioravanti2/entropy-api/command/server/enforce"
 )
 
 const (
@@ -49,36 +49,97 @@ func AddHandlers(r model.Routes, endpoints *config.Endpoints) model.Routes {
 		if endpoint.Enabled {
 			p := []string{"format", "{formatId}"}
 
-			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-			r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+			logger.Debug("registering handlers",
+				zap.String( "endpoint", "/v1/scores" ),
+				)
+			r = append( r, model.Route{ Name: "DetailedScoring",
+										Method: "POST",
+										Pattern: "/v1/scores",
+										HandlerFunc: CalcOptions,
+										Params: p,
+										Enforce: model.ENFORCE_CONTENT_JSON,
+										Policy: endpoint,
+										AuthN: model.AUTH_METHOD_NONE } )
 
 			p = []string{"reductions", "{useReductions}"}
 
-			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-			r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+			logger.Debug("registering handlers",
+				zap.String( "endpoint", "/v1/scores" ),
+				)
+			r = append( r, model.Route{ Name: "DetailedScoring",
+										Method: "POST",
+										Pattern: "/v1/scores",
+										HandlerFunc: CalcOptions,
+										Params: p,
+										Enforce: model.ENFORCE_CONTENT_JSON,
+										Policy: endpoint,
+										AuthN: model.AUTH_METHOD_NONE } )
 
 			p = []string{"mode", "{modeId}"}
 
-			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-			r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+			logger.Debug("registering handlers",
+				zap.String( "endpoint", "/v1/scores" ),
+				)
+			r = append( r, model.Route{ Name: "DetailedScoring",
+										Method: "POST",
+										Pattern: "/v1/scores",
+										HandlerFunc: CalcOptions,
+										Params: p,
+										Enforce: model.ENFORCE_CONTENT_JSON,
+										Policy: endpoint,
+										AuthN: model.AUTH_METHOD_NONE } )
 
 			p = []string{"format", "{formatId}", "reductions", "{useReductions}"}
 
 			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-			r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+			r = append( r, model.Route{ Name: "DetailedScoring",
+										Method: "POST",
+										Pattern: "/v1/scores",
+										HandlerFunc: CalcOptions,
+										Params: p,
+										Enforce: model.ENFORCE_CONTENT_JSON,
+										Policy: endpoint,
+										AuthN: model.AUTH_METHOD_NONE } )
 
 			p = []string{"format", "{formatId}", "mode", "{modeId}"}
 
-			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-			r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+			logger.Debug("registering handlers",
+				zap.String( "endpoint", "/v1/scores" ),
+				)
+			r = append( r, model.Route{ Name: "DetailedScoring",
+										Method: "POST",
+										Pattern: "/v1/scores",
+										HandlerFunc: CalcOptions,
+										Params: p,
+										Enforce: model.ENFORCE_CONTENT_JSON,
+										Policy: endpoint,
+										AuthN: model.AUTH_METHOD_NONE } )
 
 			p = []string{"format", "{formatId}", "mode", "{modeId}", "reductions", "{useReductions}"}
 
-			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-			r = append( r, model.Route{"DetailedScoring", "POST", "/v1/scores", CalcOptions, p} )
+			logger.Debug("registering handlers",
+				zap.String( "endpoint", "/v1/scores" ),
+				)
+			r = append( r, model.Route{ Name: "DetailedScoring",
+										Method: "POST",
+										Pattern: "/v1/scores",
+										HandlerFunc: CalcOptions,
+										Params: p,
+										Enforce: model.ENFORCE_CONTENT_JSON,
+										Policy: endpoint,
+										AuthN: model.AUTH_METHOD_NONE } )
 
-			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/scores" ) )
-			r = append( r, model.Route{"DefaultScoring", "POST", "/v1/scores", CalcDefaults, nil} )
+			logger.Debug("registering handlers",
+				zap.String( "endpoint", "/v1/scores" ),
+				)
+			r = append( r, model.Route{ Name: "DefaultScoring",
+										Method: "POST",
+										Pattern: "/v1/scores",
+										HandlerFunc: CalcDefaults,
+										Params: nil,
+										Enforce: model.ENFORCE_CONTENT_JSON,
+										Policy: endpoint,
+										AuthN: model.AUTH_METHOD_NONE } )
 		} else {
 			logger.Warn("handler disabled by configuration",
 				zap.String( "endpoint", "/v1/scores" ),

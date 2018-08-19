@@ -33,8 +33,17 @@ func AddHandlers(r model.Routes, endpoints *config.Endpoints) model.Routes {
 		)
 
 		if endpoint.Enabled {
-			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/graphql" ) )
-			r = append( r, model.Route{ Name: "GraphQL", Method: "POST", Pattern: "/v1/graphql", HandlerFunc: GraphQL } )
+			logger.Debug("registering handlers",
+				zap.String( "endpoint", "/v1/graphql" ),
+				)
+			r = append( r, model.Route{ Name: "GraphQL",
+										Method: "POST",
+										Pattern: "/v1/graphql",
+										HandlerFunc: GraphQL,
+										Params: nil,
+										Enforce: model.ENFORCE_CONTENT_GRAPHQL,
+										Policy: endpoint,
+										AuthN: model.AUTH_METHOD_NONE  } )
 		} else {
 			logger.Warn("handler disabled by configuration",
 				zap.String( "endpoint", "/v1/graphql" ),

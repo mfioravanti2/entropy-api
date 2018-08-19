@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
+	"bytes"
 )
 
 // according to https://www.iana.org/assignments/media-types/application/json
@@ -17,6 +18,7 @@ import (
 //	application/json; charset=UTF-8 should not be used or accepted
 const (
 	HEADER_JSON_CONTENT_TYPE = "application/json"
+	HEADER_TEXT_CONTENT_TYPE = "text/plain; charset=utf-8"
 )
 
 func EnforceJSONHandler(next http.Handler) http.Handler {
@@ -61,7 +63,7 @@ func EnforceJSONHandler(next http.Handler) http.Handler {
 		}
 
 		// only the first 512 bytes are used to detect the content type
-		body, err := ioutil.ReadAll( io.LimitReader(r.Body, 512 ))
+		body, err := ioutil.ReadAll( io.LimitReader(r.Body, 50 * 1024 ))
 		if err != nil {
 			logger.Error( "unable to process message body",
 				zap.String( "status", "error" ),
@@ -69,17 +71,23 @@ func EnforceJSONHandler(next http.Handler) http.Handler {
 			)
 		}
 
+		// There is not a specific json mime type that DetectContentType will return,
+		// it will be returned as text/plain; charset=utf-8
 		bodyType := http.DetectContentType(body)
-		if bodyType != HEADER_JSON_CONTENT_TYPE {
+		if bodyType != HEADER_TEXT_CONTENT_TYPE {
 			logger.Error( "unsupported media type",
 				zap.String("detected_type", bodyType ),
-				zap.String("expected_type", HEADER_JSON_CONTENT_TYPE ),
+				zap.String("expected_type", HEADER_TEXT_CONTENT_TYPE ),
 				zap.String( "status", "error" ),
 			)
 
 			w.WriteHeader( http.StatusUnsupportedMediaType )
 			return
 		}
+
+		// reset the request body for subsequent handlers
+		r.Body.Close()
+		r.Body = ioutil.NopCloser( bytes.NewBuffer( body ) )
 
 		next.ServeHTTP(w, r)
 	})

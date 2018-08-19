@@ -31,11 +31,29 @@ func AddHandlers(r model.Routes, endpoints *config.Endpoints) model.Routes {
 		)
 
 		if endpoint.Enabled {
-			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/heuristics" ) )
-			r = append( r, model.Route{"HeuristicList", "GET", "/v1/countries/{countryId}/heuristics", List, nil})
+			logger.Debug("registering handlers",
+				zap.String( "endpoint", "/v1/countries/{countryId}/heuristics" ),
+				)
+			r = append( r, model.Route{ Name: "HeuristicList",
+										Method: "GET",
+										Pattern: "/v1/countries/{countryId}/heuristics",
+										HandlerFunc: List,
+										Params: nil,
+										Enforce: model.ENFORCE_CONTENT_NONE,
+										Policy: endpoint,
+										AuthN: model.AUTH_METHOD_NONE })
 
-			logger.Debug("registering handlers", zap.String( "endpoint", "/v1/countries/{countryId}/heuristics/{heuristicId}" ) )
-			r = append( r, model.Route{"HeuristicDetails", "GET", "/v1/countries/{countryId}/heuristics/{heuristicId}", Detail, nil})
+			logger.Debug("registering handlers",
+				zap.String( "endpoint", "/v1/countries/{countryId}/heuristics/{heuristicId}" ),
+				)
+			r = append( r, model.Route{ Name: "HeuristicDetails",
+										Method: "GET",
+										Pattern: "/v1/countries/{countryId}/heuristics/{heuristicId}",
+										HandlerFunc: Detail,
+										Params: nil,
+										Enforce: model.ENFORCE_CONTENT_NONE,
+										Policy: endpoint,
+										AuthN: model.AUTH_METHOD_NONE })
 		} else {
 			logger.Warn("handler disabled by configuration",
 				zap.String( "endpoint", "/v1/countries/{countryId}/heuristics" ),
