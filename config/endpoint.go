@@ -11,14 +11,14 @@ import (
 )
 
 const (
-	ENDPOINT_REST    string = "entropy.api.rest"
-	ENDPOINT_GRAPHQL string = "entropy.api.graphql"
-	ENDPOINT_SCORING string = "entropy.api.score"
-	ENDPOINT_SYSTEM  string = "entropy.api.system"
-	ENDPOINT_METRICS string = "entropy.api.metrics"
-	ENDPOINT_HEALTH  string = "entropy.api.health"
-	ENDPOINT_OPENAPI string = "entropy.api.openapi"
-	ENDPOINT_DEFAULT string = "entropy.api.default"
+	ENDPOINT_REST    string = "entropy.api.policy.rest"
+	ENDPOINT_GRAPHQL string = "entropy.api.policy.graphql"
+	ENDPOINT_SCORING string = "entropy.api.policy.score"
+	ENDPOINT_SYSTEM  string = "entropy.api.policy.system"
+	ENDPOINT_METRICS string = "entropy.api.policy.metrics"
+	ENDPOINT_HEALTH  string = "entropy.api.policy.health"
+	ENDPOINT_OPENAPI string = "entropy.api.policy.openapi"
+	ENDPOINT_DEFAULT string = "entropy.api.policy.default"
 )
 
 type Endpoint struct {

@@ -79,49 +79,49 @@
   },
   "endpoints": [
     {
-      "name": "entropy.api.rest",
+      "name": "entropy.api.policy.rest",
       "enabled": true,
       "restricted": false,
       "entitlement": "fe0558c5-4433-40b1-b5ce-8701f1460827"
     },
     {
-      "name": "entropy.api.graphql",
+      "name": "entropy.api.policy.graphql",
       "enabled": true,
       "restricted": false,
       "entitlement": "c958a56d-4ab6-4270-84a2-d53c7c238f25"
     },
     {
-      "name": "entropy.api.score",
+      "name": "entropy.api.policy.score",
       "enabled": true,
       "restricted": false,
       "entitlement": "4a05dc55-ae5a-4f08-9678-c0658e0f09fe"
     },
     {
-      "name": "entropy.api.metrics",
+      "name": "entropy.api.policy.metrics",
       "enabled": true,
       "restricted": false,
       "entitlement": "dcdf0502-4e4a-4eb1-af86-19cdabac9446"
     },
     {
-      "name": "entropy.api.health",
+      "name": "entropy.api.policy.health",
       "enabled": true,
       "restricted": false,
       "entitlement": "f3f9a69a-1a8e-4472-bb3e-1f71e0efd18e"
     },
     {
-      "name": "entropy.api.system",
+      "name": "entropy.api.policy.system",
       "enabled": true,
       "restricted": false,
       "entitlement": "628176b0-9e67-49c3-84a5-aa4e9fb88605"
     },
     {
-      "name": "entropy.api.openapi",
+      "name": "entropy.api.policy.openapi",
       "enabled": true,
       "restricted": false,
       "entitlement": "628176b0-9e67-49c3-84a5-aa4e9fb88605"
     },
     {
-      "name": "entropy.api.default",
+      "name": "entropy.api.policy.default",
       "enabled": false,
       "restricted": true,
       "entitlement": "f6df09f8-47b0-4fb8-80b3-c32ee8ddffea"
