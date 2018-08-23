@@ -6,8 +6,6 @@ import (
 	"go.uber.org/zap"
 	"github.com/graphql-go/graphql"
 
-	"github.com/mfioravanti2/entropy-api/model/source"
-	"github.com/mfioravanti2/entropy-api/model/metrics"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 )
 
@@ -15,7 +13,9 @@ func getAttributeFormatType() *graphql.Object {
 	ctx := logging.WithFuncId( context.Background(), "getAttributeFormatType", "entropyql" )
 
 	logger := logging.Logger( ctx )
-	logger.Debug("building GraphQL schema", zap.String( "type", "attributeFormatType" ) )
+	logger.Debug("building GraphQL schema",
+		zap.String( "type", "attributeFormatType" ),
+		)
 
 	var formatType *graphql.Object
 
@@ -26,30 +26,12 @@ func getAttributeFormatType() *graphql.Object {
 			"format": &graphql.Field{
 				Type: graphql.NewNonNull(graphql.String),
 				Description: "Method of Calculation for the Scored Value",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.attribute.format.method" )
-					ctrReg.Inc(1)
-
-					if f, ok := p.Source.(source.Format); ok {
-						return f.Format, nil
-					}
-
-					return nil, nil
-				},
+				Resolve: resolveFormatFormat,
 			},
 			"score": &graphql.Field{
 				Type: graphql.NewNonNull(graphql.Float),
 				Description: "Scored Value of an Attribute",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.attribute.format.score" )
-					ctrReg.Inc(1)
-
-					if f, ok := p.Source.(source.Format); ok {
-						return f.Score, nil
-					}
-
-					return nil, nil
-				},
+				Resolve: resolveFormatScore,
 			},
 		},
 	})
@@ -61,7 +43,9 @@ func getAttributeSourceType() *graphql.Object {
 	ctx := logging.WithFuncId( context.Background(), "getAttributeSourceType", "entropyql" )
 
 	logger := logging.Logger( ctx )
-	logger.Debug("building GraphQL schema", zap.String( "type", "attributeSourceType" ) )
+	logger.Debug("building GraphQL schema",
+		zap.String( "type", "attributeSourceType" ),
+		)
 
 	var sourceType *graphql.Object
 
@@ -72,46 +56,22 @@ func getAttributeSourceType() *graphql.Object {
 			"title": &graphql.Field{
 				Type: graphql.NewNonNull(graphql.String),
 				Description: "Document Title",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					if s, ok := p.Source.(source.Source); ok {
-						return s.Title, nil
-					}
-
-					return nil, nil
-				},
+				Resolve: resolveSourceTitle,
 			},
 			"date": &graphql.Field{
 				Type: graphql.NewNonNull(graphql.DateTime),
 				Description: "Date of Publication or Retrieval",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					if s, ok := p.Source.(source.Source); ok {
-						return s.Date, nil
-					}
-
-					return nil, nil
-				},
+				Resolve: resolveSourceTimestamp,
 			},
 			"organization": &graphql.Field{
 				Type: graphql.String,
 				Description: "Organization Responsible for the Source Document",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					if s, ok := p.Source.(source.Source); ok {
-						return s.Org, nil
-					}
-
-					return nil, nil
-				},
+				Resolve: resolveSourcePublisher,
 			},
 			"url": &graphql.Field{
 				Type: graphql.String,
 				Description: "URL for retrieving the Source Document",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					if s, ok := p.Source.(source.Source); ok {
-						return s.URI, nil
-					}
-
-					return nil, nil
-				},
+				Resolve: resolveSourceURL,
 			},
 		},
 	})
@@ -134,80 +94,37 @@ func getAttributeType() *graphql.Object {
 			"id": &graphql.Field{
 				Type: graphql.NewNonNull(graphql.String),
 				Description: "Globally unique identifier for the Attribute (UUID v4 format)",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.attribute.id" )
-					ctrReg.Inc(1)
-
-					if a, ok := p.Source.(source.Attribute); ok {
-						return a.Id, nil
-					}
-
-					return nil, nil
-				},
+				Resolve: resolveAttributeId,
 			},
 			"mnemonic": &graphql.Field{
 				Type: graphql.NewNonNull(graphql.String),
 				Description: "Country Model unique identifier for the Attribute",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.attribute.mnemonic" )
-					ctrReg.Inc(1)
-
-					if a, ok := p.Source.(source.Attribute); ok {
-						return a.Mnemonic, nil
-					}
-
-					return nil, nil
-				},
+				Resolve: resolveAttributeMnemonic,
 			},
 			"name": &graphql.Field{
 				Type: graphql.String,
 				Description: "Human friendly short description of the Attribute",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					if a, ok := p.Source.(source.Attribute); ok {
-						return a.Name, nil
-					}
-
-					return nil, nil
-				},
+				Resolve: resolveAttributeName,
 			},
 			"notes": &graphql.Field{
 				Type: graphql.String,
 				Description: "Description of the Attribute",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					if a, ok := p.Source.(source.Attribute); ok {
-						return a.Notes, nil
-					}
-
-					return nil, nil
-				},
+				Resolve: resolveAttributeNotes,
 			},
 			"sources": &graphql.Field{
 				Type: graphql.NewList( getAttributeSourceType() ),
 				Description: "Source Documents for the Scoring Calculations",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.attribute.sources" )
-					ctrReg.Inc(1)
-
-					if a, ok := p.Source.(source.Attribute); ok {
-						return a.Sources, nil
-					}
-
-					return nil, nil
-				},
+				Resolve: resolveAttributeSources,
 			},
 			"formats": &graphql.Field{
 				Type:  graphql.NewNonNull( graphql.NewList( getAttributeFormatType() ) ),
 				Description: "Scored Attributes Associated with the Country Model",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.attribute.format" )
-					ctrReg.Inc(1)
-
-					if a, ok := p.Source.(source.Attribute); ok {
-						return a.Formats, nil
-					}
-
-					return nil, nil
+				Args: graphql.FieldConfigArgument{
+					"format": &graphql.ArgumentConfig{
+						Type: graphql.String,
+					},
 				},
+				Resolve: resolveAttributeFormats,
 			},
 		},
 	})

@@ -8,8 +8,6 @@ import (
 	"go.uber.org/zap"
 	"github.com/graphql-go/graphql"
 
-	"github.com/mfioravanti2/entropy-api/data"
-	"github.com/mfioravanti2/entropy-api/model/metrics"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 )
 
@@ -23,22 +21,29 @@ func BuildSchema() {
 	ctx := logging.WithFuncId( context.Background(), "BuildSchema", "entropyql" )
 
 	logger := logging.Logger( ctx )
-	logger.Debug("building GraphQL schema", zap.String( "type", "schema" ) )
+	logger.Debug("building GraphQL schema",
+		zap.String( "type", "schema" ),
+		)
 
 	var countryType *graphql.Object
 	countryType = getCountryType()
+
+	logger.Debug("building GraphQL schema",
+		zap.String( "type", "query" ),
+	)
 
 	queryType := graphql.NewObject(graphql.ObjectConfig{
 		Name: "Query",
 		Fields: graphql.Fields{
 			"countries": &graphql.Field{
 				Type: graphql.NewList(countryType),
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.countries" )
-					ctrReg.Inc(1)
-
-					return data.GetAllCountries(), nil
+				Args: graphql.FieldConfigArgument{
+					"locale": &graphql.ArgumentConfig{
+						Type: graphql.String,
+						Description: "A 2-digit Country Code as defined in ISO 3166-1 alpha-2",
+					},
 				},
+				Resolve: resolveCountries,
 			},
 		},
 	})

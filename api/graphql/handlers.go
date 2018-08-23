@@ -10,12 +10,11 @@ import (
 	"go.uber.org/zap"
 	"github.com/graphql-go/graphql"
 
+	"github.com/mfioravanti2/entropy-api/config"
 	"github.com/mfioravanti2/entropy-api/model"
-	"github.com/mfioravanti2/entropy-api/command/server/logging"
-
 	"github.com/mfioravanti2/entropy-api/model/metrics"
 	"github.com/mfioravanti2/entropy-api/model/graphql"
-	"github.com/mfioravanti2/entropy-api/config"
+	"github.com/mfioravanti2/entropy-api/command/server/logging"
 	"github.com/mfioravanti2/entropy-api/command/server/enforce"
 )
 
@@ -69,7 +68,7 @@ func GraphQL(w http.ResponseWriter, r *http.Request) {
 	ctrReg, _ := metrix.GetCounter( "entropy.graphql.post" )
 	ctrReg.Inc(1)
 
-	logger.Debug("preparing to query graphql",
+	logger.Debug("preparing to parse query graphql message",
 	)
 
 	// Read the body from the request body
@@ -102,9 +101,11 @@ func GraphQL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	logger.Info( "parsing graphql query/mutation",
+	)
+
 	var gqlQuery map[string]interface{}
 	if err := json.Unmarshal(body, &gqlQuery); err != nil {
-		w.Header().Set("Content-Type", enforce.HEADER_JSON_CONTENT_TYPE)
 		w.WriteHeader( http.StatusUnprocessableEntity )
 
 		ctrReg, _ := metrix.GetCounter( "entropy.graphql.post.status.422" )
@@ -113,12 +114,17 @@ func GraphQL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query := gqlQuery["query"]
-//	variables := gqlQuery["variables"]
+	// query is type string by default
+	var query string
+	// variables is nil if no variables are supplied, or of type
+	// map[string]interface {} if variables have been supplied
+	var variables interface{}
+
 	var entropySchema *graphql.Schema
 
+	var result interface{}
+
 	if entropySchema, err = entropyql.GetSchema(); err != nil {
-		w.Header().Set("Content-Type", enforce.HEADER_JSON_CONTENT_TYPE)
 		w.WriteHeader( http.StatusUnprocessableEntity )
 
 		ctrReg, _ := metrix.GetCounter( "entropy.graphql.post.status.422" )
@@ -127,13 +133,42 @@ func GraphQL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result := graphql.Do(graphql.Params{
-		Schema:         *entropySchema,
-		RequestString:  query.(string),
-//		VariableValues: variables.(map[string]interface{}),
-	})
+	query = gqlQuery["query"].(string)
+	variables = gqlQuery["variables"]
+
+	if variables == nil {
+		ctrReg, _ := metrix.GetCounter( "entropy.graphql.post.variables" )
+		ctrReg.Inc(1)
+
+		// No variables have been provided, call the GraphQL library
+		// without assigning a variable parameter
+		logger.Info( "evaluating graphql query/mutation",
+			zap.Bool( "params", false ),
+		)
+
+		result = graphql.Do(graphql.Params{
+			Schema:         *entropySchema,
+			RequestString:  query,
+		})
+	} else {
+		ctrReg, _ := metrix.GetCounter( "entropy.graphql.post.no_variables" )
+		ctrReg.Inc(1)
+
+		// Variables have been provided, call the GraphQL library
+		// with the specified variable parameter
+		logger.Info( "evaluating graphql query/mutation",
+			zap.Bool( "params", true ),
+		)
+
+		result = graphql.Do(graphql.Params{
+			Schema:         *entropySchema,
+			RequestString:  query,
+			VariableValues: variables.(map[string]interface{}),
+		})
+	}
 
 	// Encode and return the graphql response
+	w.Header().Set("Content-Type", enforce.HEADER_JSON_CONTENT_TYPE)
 	w.WriteHeader( http.StatusOK )
 	if err := json.NewEncoder(w).Encode(result); err != nil {
 		logger.Error( "encoding graphql response",

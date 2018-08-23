@@ -6,8 +6,6 @@ import (
 	"go.uber.org/zap"
 	"github.com/graphql-go/graphql"
 
-	"github.com/mfioravanti2/entropy-api/model/source"
-	"github.com/mfioravanti2/entropy-api/model/metrics"
 	"github.com/mfioravanti2/entropy-api/command/server/logging"
 )
 
@@ -15,7 +13,9 @@ func getHeuristicType() *graphql.Object {
 	ctx := logging.WithFuncId( context.Background(), "getHeuristicType", "entropyql" )
 
 	logger := logging.Logger( ctx )
-	logger.Debug("building GraphQL schema", zap.String( "type", "heuristicType" ) )
+	logger.Debug("building GraphQL schema",
+		zap.String( "type", "heuristicType" ),
+		)
 
 	var heuristicType *graphql.Object
 
@@ -26,69 +26,27 @@ func getHeuristicType() *graphql.Object {
 			"id": &graphql.Field{
 				Type: graphql.NewNonNull(graphql.String),
 				Description: "Globally unique identifier for the Heuristic (UUID v4 format)",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.heuristics.id" )
-					ctrReg.Inc(1)
-
-					if model, ok := p.Source.(source.Heuristic); ok {
-						return model.Id, nil
-					}
-
-					return nil, nil
-				},
+				Resolve: resolveHeuristicId,
 			},
 			"notes": &graphql.Field{
 				Type: graphql.String,
 				Description: "Description of the Heuristic",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					if model, ok := p.Source.(source.Heuristic); ok {
-						return model.Notes, nil
-					}
-
-					return nil, nil
-				},
+				Resolve: resolveHeuristicNotes,
 			},
 			"match": &graphql.Field{
 				Type: graphql.NewList(graphql.String),
 				Description: "Mnemonics which must be matched before this heuristic is applied",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.heuristics.match" )
-					ctrReg.Inc(1)
-
-					if model, ok := p.Source.(source.Heuristic); ok {
-						return model.Match, nil
-					}
-
-					return nil, nil
-				},
+				Resolve: resolveHeuristicMatch,
 			},
 			"insert": &graphql.Field{
 				Type: graphql.NewList(graphql.String),
 				Description: "Mnemonics that are removed when this heuristic is triggered",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.heuristics.insert" )
-					ctrReg.Inc(1)
-
-					if model, ok := p.Source.(source.Heuristic); ok {
-						return model.Insert, nil
-					}
-
-					return nil, nil
-				},
+				Resolve: resolveHeuristicInsert,
 			},
 			"remove": &graphql.Field{
 				Type: graphql.NewList(graphql.String),
 				Description: "Mnemonics that are removed when this heuristic is triggered",
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					ctrReg, _ := metrix.GetCounter( "entropy.graphql.query.heuristics.remove" )
-					ctrReg.Inc(1)
-
-					if model, ok := p.Source.(source.Heuristic); ok {
-						return model.Remove, nil
-					}
-
-					return nil, nil
-				},
+				Resolve: resolveHeuristicRemove,
 			},
 		},
 	})
